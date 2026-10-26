@@ -4,7 +4,7 @@ A responsive Arabic-first (RTL) showcase website for Se7en Store. It is a galler
 
 ## Included
 - Polished dark-theme design with lime accents and responsive layout.
-- Three provided product photos in `assets/products/`.
+- Three provided product photos in `assets/products/`, labeled in Arabic as تيشرت برشلونة، تيشرت الأهلي، and تيشرت الزمالك.
 - Click-to-enlarge product detail modal.
 - Interactive Google Map embedded directly inside the page, centered on the location shared by the owner.
 - Instagram link: https://www.instagram.com/se7e_n770/
