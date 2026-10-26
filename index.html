@@ -187,6 +187,53 @@
     @media(max-width:680px){.back-to-top{left:13px;bottom:13px;width:40px;height:40px}.social-preview{gap:7px}.social-tile{min-height:120px}.social-tile span{right:7px;bottom:7px;font-size:7px}.social-tile img{padding:4px}.social-preview-heading{margin-top:22px}.modal-nav{width:33px;height:33px}.modal-prev{right:7px}.modal-next{left:7px}}
     @media(prefers-reduced-motion:reduce){.back-to-top,.social-tile,.social-tile img,.modal-nav{transition:none!important}.social-tile:hover{transform:none}.social-tile:hover img{transform:none}}
 
+
+    /* V12 Instagram: editorial showcase plus official live profile embed */
+    .social-showcase{padding:8px 0 104px;position:relative}
+    .social-rail{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:13px;color:#888b8e;font-size:9px;font-weight:900;letter-spacing:.13em;direction:ltr}
+    .social-rail>span:first-child{display:flex;align-items:center;gap:9px}.social-rail i,.social-bottomline>span i{display:inline-block;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 12px rgba(255,255,255,.55)}.social-rail>span:last-child{direction:rtl;letter-spacing:0}.social-rail b{color:#ececee;direction:ltr;unicode-bidi:isolate}
+    .social-feature{position:relative;display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);min-height:440px;overflow:hidden;border:1px solid rgba(255,255,255,.15);background:linear-gradient(120deg,#141517 0%,#0d0e0f 64%,#17181a 100%);isolation:isolate}
+    .social-feature::before{content:"S7";position:absolute;z-index:-1;left:-23px;bottom:-122px;font-family:Arial,sans-serif;font-size:clamp(220px,31vw,430px);font-weight:900;line-height:1;color:rgba(255,255,255,.025);letter-spacing:-.12em;pointer-events:none;direction:ltr}
+    .social-feature::after{content:"";position:absolute;top:0;bottom:0;left:0;width:1px;background:linear-gradient(transparent,rgba(255,255,255,.24),transparent)}
+    .social-feature-copy{position:relative;z-index:2;padding:clamp(25px,4vw,54px);display:flex;align-items:flex-start;flex-direction:column;justify-content:center}
+    .social-profile-row{display:flex;align-items:center;gap:12px;margin-bottom:28px;direction:ltr}
+    .social-avatar{position:relative;width:48px;height:48px;display:grid;place-items:center;flex-shrink:0;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:#080909;color:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.045)}.social-avatar b{font:900 15px Arial,sans-serif;letter-spacing:-.12em}.social-avatar i{position:absolute;right:-2px;bottom:0;width:10px;height:10px;background:#fff;border:2px solid #101112;border-radius:50%}
+    .social-profile-meta{display:flex;flex-direction:column;gap:3px}.social-profile-meta small{font-size:8px;font-weight:900;letter-spacing:.14em;color:#8f9194}.social-profile-meta strong{font:800 14px Arial,sans-serif;color:#f5f5f5;letter-spacing:-.02em}.social-profile-mark{margin-left:auto;align-self:flex-start;color:#b7b8ba;font-size:24px;line-height:1}
+    .social-feature-kicker{margin:0 0 8px;color:#afb1b3;font-size:10px;font-weight:800;letter-spacing:.03em}.social-feature-title{margin:0;font-size:clamp(31px,4vw,53px);line-height:1.35;letter-spacing:-.055em;font-weight:900}.social-feature-title span{color:transparent;-webkit-text-stroke:1px rgba(245,245,245,.8)}
+    .social-feature-description{max-width:400px;margin:15px 0 19px;color:#a5a7aa;font-size:12px;line-height:2.05}
+    .social-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:23px}.social-tags span{padding:6px 8px;border:1px solid rgba(255,255,255,.13);color:#b7b8ba;font-size:8px;font-weight:900;letter-spacing:.07em;direction:ltr}
+    .social-cta{display:flex;align-items:center;gap:12px;width:min(100%,340px);min-height:65px;padding:10px 13px;background:#f5f5f2;color:#0a0a0a;border:1px solid #fff;transition:background .25s,color .25s,transform .25s,box-shadow .25s}.social-cta:hover{background:#fff;color:#000;transform:translateY(-3px);box-shadow:0 12px 32px rgba(255,255,255,.12)}.social-cta-icon{display:grid;place-items:center;width:39px;height:39px;flex-shrink:0;border:1px solid rgba(0,0,0,.25)}.social-cta-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8}.social-cta-copy{display:flex;flex-direction:column;gap:2px;flex:1}.social-cta-copy b{font-size:11px;font-weight:900}.social-cta-copy small{font:700 9px Arial,sans-serif;color:#6d6e70}.social-cta-arrow{font:22px Arial,sans-serif;transition:transform .25s}.social-cta:hover .social-cta-arrow{transform:translate(2px,-2px)}
+    .social-feature-note{display:flex;align-items:center;gap:9px;margin-top:19px;color:#7f8184;font-size:9px;font-weight:700}.social-note-line{width:23px;height:1px;background:#77797b}
+    .social-collage{position:relative;min-height:440px;overflow:hidden;isolation:isolate}.social-collage::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 52% 48%,rgba(255,255,255,.105),transparent 55%),linear-gradient(135deg,rgba(255,255,255,.025),transparent 48%);pointer-events:none}.social-collage::after{content:"FOLLOW / FOLLOW / FOLLOW / FOLLOW";position:absolute;z-index:-1;top:50%;left:50%;width:max-content;color:rgba(255,255,255,.045);font:900 42px Arial,sans-serif;letter-spacing:.11em;transform:translate(-50%,-50%) rotate(-22deg);white-space:nowrap;pointer-events:none}
+    .social-collage-orbit{position:absolute;left:43%;top:48%;border:1px solid rgba(255,255,255,.12);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.social-orbit-one{width:68%;aspect-ratio:1}.social-orbit-two{width:88%;aspect-ratio:1;border-style:dashed;animation:socialOrbit 34s linear infinite}
+    .social-frame{position:absolute;display:block;overflow:hidden;border:1px solid rgba(255,255,255,.23);background:radial-gradient(ellipse at 50% 35%,#292a2c,#101112 75%);box-shadow:0 23px 55px rgba(0,0,0,.5);transition:border-color .35s,transform .5s var(--ease),box-shadow .35s;isolation:isolate}.social-frame img{display:block;width:100%;height:100%;object-fit:contain;padding:8px;filter:drop-shadow(0 16px 17px rgba(0,0,0,.5));transition:transform .65s var(--ease),filter .65s}.social-frame::after{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03) 43%,rgba(0,0,0,.82));pointer-events:none}.social-frame-main{left:9%;top:12%;width:51%;height:76%;transform:rotate(-4deg);z-index:2}.social-frame-top{right:5%;top:7%;width:33%;height:40%;transform:rotate(6deg);z-index:3}.social-frame-bottom{right:3%;bottom:7%;width:34%;height:41%;transform:rotate(-5deg);z-index:4}.social-frame-meta{position:absolute;right:11px;bottom:12px;z-index:3;display:flex;flex-direction:column;gap:3px;color:#fff;direction:ltr}.social-frame-meta b{font:700 8px Arial,sans-serif;color:#c3c4c6;letter-spacing:.13em}.social-frame-meta strong{font:900 8px Arial,sans-serif;letter-spacing:.08em}.social-frame>i{position:absolute;left:10px;top:10px;z-index:3;display:grid;place-items:center;width:25px;height:25px;border:1px solid rgba(255,255,255,.52);background:rgba(0,0,0,.42);font:16px Arial,sans-serif;font-style:normal;color:#fff;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}.social-frame:hover{border-color:rgba(255,255,255,.8);box-shadow:0 28px 70px rgba(0,0,0,.65)}.social-frame-main:hover{transform:rotate(-1deg) scale(1.025)}.social-frame-top:hover{transform:rotate(2deg) translateY(-4px)}.social-frame-bottom:hover{transform:rotate(-2deg) translateY(-4px)}.social-frame:hover img{transform:scale(1.055);filter:drop-shadow(0 17px 25px rgba(255,255,255,.09))}.social-frame:hover>i{opacity:1;transform:translateY(0)}
+    .social-stamp{position:absolute;left:5%;bottom:4%;z-index:5;width:91px;height:91px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;border:1px solid rgba(255,255,255,.55);border-radius:50%;background:#f4f4f0;color:#090a0b;text-align:center;transform:rotate(-12deg);box-shadow:0 8px 30px rgba(0,0,0,.35)}.social-stamp span{font:900 6px Arial,sans-serif;letter-spacing:.1em}.social-stamp b{font:900 10px/1.1 Arial,sans-serif;letter-spacing:.04em}
+    .social-bottomline{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 2px 0;color:#8e9092;font-size:9px;font-weight:800}.social-bottomline>span{display:flex;align-items:center;gap:8px;direction:ltr;letter-spacing:.1em}.social-bottomline>a{display:flex;align-items:center;gap:7px;color:#efefed;transition:opacity .2s}.social-bottomline>a:hover{opacity:.65}.social-bottomline>a b{font:800 10px Arial,sans-serif;letter-spacing:0}.social-bottomline>a>span{font:17px Arial,sans-serif}
+    @keyframes socialOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+    @media(max-width:900px){.social-feature{grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr)}.social-feature-copy{padding:28px}.social-collage{min-height:390px}.social-frame-main{left:7%;width:54%}.social-frame-top{right:3%;width:35%}.social-frame-bottom{right:2%;width:36%}.social-stamp{width:77px;height:77px;left:3%}.social-stamp b{font-size:8px}}
+    @media(max-width:680px){.social-showcase{padding-bottom:65px}.social-rail{font-size:7px;letter-spacing:.08em}.social-feature{grid-template-columns:1fr}.social-feature-copy{padding:25px 21px 27px;order:1}.social-profile-row{margin-bottom:21px}.social-profile-mark{font-size:19px}.social-feature-title{font-size:clamp(34px,9vw,46px)}.social-feature-description{font-size:12px;margin:12px 0 16px}.social-tags{margin-bottom:19px}.social-cta{width:100%;min-height:60px}.social-feature-note{margin-top:15px}.social-collage{order:0;min-height:370px}.social-frame-main{left:11%;top:10%;width:48%;height:77%}.social-frame-top{right:7%;top:6%;width:33%;height:40%}.social-frame-bottom{right:5%;bottom:6%;width:34%;height:42%}.social-stamp{width:69px;height:69px;left:6%;bottom:2%}.social-stamp span{font-size:5px}.social-stamp b{font-size:7px}.social-frame-meta{right:7px;bottom:8px}.social-frame-meta b,.social-frame-meta strong{font-size:6px}.social-frame>i{width:21px;height:21px;font-size:13px;opacity:1;transform:none}.social-bottomline{align-items:flex-start;flex-direction:column;padding-top:12px;font-size:7px}.social-bottomline>a{font-size:10px}}
+    @media(max-width:390px){.social-collage{min-height:320px}.social-feature-copy{padding:22px 16px}.social-frame-main{left:9%;width:51%}.social-stamp{width:60px;height:60px}.social-stamp b{font-size:6px}}
+    @media(prefers-reduced-motion:reduce){.social-orbit-two{animation:none!important}.social-frame,.social-frame img,.social-cta,.social-cta-arrow{transition:none!important}.social-frame:hover,.social-frame-main:hover,.social-frame-top:hover,.social-frame-bottom:hover{transform:none}.social-frame:hover img{transform:none}}
+
+
+    /* V12: official Instagram profile embed for real account media */
+    .instagram-live{display:grid;grid-template-columns:minmax(230px,.65fr) minmax(0,1fr);gap:clamp(22px,4vw,54px);align-items:stretch;margin-top:34px;padding:clamp(18px,3.2vw,38px);border:1px solid rgba(255,255,255,.14);background:linear-gradient(125deg,#151618,#0b0c0d 70%,#131416);position:relative;overflow:hidden}
+    .instagram-live::before{content:"IG";position:absolute;left:-8px;bottom:-79px;color:rgba(255,255,255,.025);font:900 clamp(160px,22vw,280px)/1 Arial,sans-serif;letter-spacing:-.12em;pointer-events:none}
+    .instagram-live-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+    .instagram-live-kicker{display:flex;align-items:center;gap:9px;font-size:9px;font-weight:900;letter-spacing:.12em;color:#b7b8ba;direction:ltr}
+    .instagram-live-kicker i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.55)}
+    .instagram-live-copy h3{margin:14px 0 9px;font-size:clamp(28px,3.4vw,43px);line-height:1.35;font-weight:900;letter-spacing:-.045em}
+    .instagram-live-copy h3 span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.78)}
+    .instagram-live-copy p{max-width:360px;margin:0 0 22px;color:#a3a5a8;font-size:12px;line-height:2.05}
+    .instagram-live-link{display:inline-flex;align-items:center;justify-content:space-between;gap:25px;min-width:190px;padding:13px 15px;background:#f4f4f0;color:#090a0b;font-size:11px;font-weight:900;border:1px solid #fff;transition:transform .25s,background .25s}
+    .instagram-live-link:hover{transform:translateY(-3px);background:#fff}.instagram-live-link b{font:22px Arial,sans-serif}
+    .instagram-live-note{max-width:365px;margin-top:15px;color:#777a7d;font-size:9px;line-height:1.9}
+    .instagram-live-frame{position:relative;z-index:1;display:flex;justify-content:center;align-items:flex-start;min-width:0;min-height:500px;padding:12px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#080909}
+    .instagram-live-frame .instagram-media{margin:0 auto!important;width:100%!important;max-width:540px!important;min-width:280px!important;border:0!important;box-shadow:none!important}
+    .instagram-live-frame iframe{max-width:100%;border:0}
+    @media(max-width:760px){.instagram-live{grid-template-columns:1fr;gap:20px;padding:20px 15px}.instagram-live-copy h3{font-size:34px}.instagram-live-copy p{max-width:100%;margin-bottom:16px}.instagram-live-frame{min-height:420px;padding:6px}.instagram-live-frame .instagram-media{min-width:260px!important;width:100%!important}.instagram-live-note{font-size:9px}}
+    @media(prefers-reduced-motion:reduce){.instagram-live-link{transition:none}.instagram-live-link:hover{transform:none}}
+
   </style>
 </head>
 <body>
@@ -284,7 +331,52 @@
         </div>
       </div>
     </section>
-    <section class="wrap social" id="social"><div class="social-panel reveal"><div class="social-copy"><small>خليك على تواصل معانا</small><h2>الجديد هتلاقيه على <span>Instagram</span></h2></div><a class="instagram-button" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg> تابع Se7en على إنستجرام ↗</a></div><div class="social-preview-heading"><div><span class="section-kicker">SE7EN / VISUAL DIARY</span><h3>من معرض <span>سيفن</span></h3></div><a href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">شوف حسابنا ↗</a></div><div class="social-preview"><a class="social-tile" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="شاهد تصميم تيشرت برشلونة على حساب Se7en"><img src="assets/products/barcelona-contrast.webp" alt="تيشرت برشلونة" loading="lazy" decoding="async"><span>01 / BARCELONA</span></a><a class="social-tile" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="شاهد تصميم تيشرت الأهلي على حساب Se7en"><img src="assets/products/al-ahly-pharaonic.webp" alt="تيشرت الأهلي" loading="lazy" decoding="async"><span>02 / AL AHLY</span></a><a class="social-tile" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="شاهد تصميم تيشرت الزمالك على حساب Se7en"><img src="assets/products/nile-developments.webp" alt="تيشرت الزمالك" loading="lazy" decoding="async"><span>03 / ZAMALEK</span></a></div></section>
+    <section class="wrap social social-showcase" id="social" aria-labelledby="social-title">
+      <div class="social-rail reveal"><span><i></i> SE7EN / COMMUNITY</span><span>تابع الجديد — <b>01 / SOCIAL</b></span></div>
+      <div class="social-feature reveal">
+        <div class="social-feature-copy">
+          <div class="social-profile-row">
+            <span class="social-avatar" aria-hidden="true"><b>S7</b><i></i></span>
+            <span class="social-profile-meta"><small>OFFICIAL INSTAGRAM</small><strong dir="ltr">@se7e_n770</strong></span>
+            <span class="social-profile-mark" aria-label="Instagram">✳</span>
+          </div>
+          <p class="social-feature-kicker">الستايل مكمل برّه الملعب</p>
+          <h2 class="social-feature-title" id="social-title">خليك قريب من<br><span>عالم سيفن.</span></h2>
+          <p class="social-feature-description">تابع أحدث التصميمات والقطع الجديدة، وشوف تفاصيل التيشرتات أول بأول على حسابنا الرسمي.</p>
+          <div class="social-tags"><span>SPORTSWEAR</span><span>FOOTBALL CULTURE</span><span>ALEXANDRIA</span></div>
+          <a class="social-cta" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">
+            <span class="social-cta-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></span>
+            <span class="social-cta-copy"><b>تابع Se7en على إنستجرام</b><small dir="ltr">@se7e_n770</small></span>
+            <span class="social-cta-arrow" aria-hidden="true">↗</span>
+          </a>
+          <div class="social-feature-note"><span class="social-note-line"></span><span>من المعرض — إلى ستايلك اليومي</span></div>
+        </div>
+        <div class="social-collage" aria-label="كولاج من تصميمات معرض Se7en">
+          <span class="social-collage-orbit social-orbit-one" aria-hidden="true"></span><span class="social-collage-orbit social-orbit-two" aria-hidden="true"></span>
+          <a class="social-frame social-frame-main" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="افتح حساب Se7en على إنستجرام لمشاهدة تيشرت برشلونة"><img src="assets/products/barcelona-contrast.webp" alt="تيشرت برشلونة الرمادي والأسود" loading="lazy" decoding="async"><span class="social-frame-meta"><b>01</b><strong>BARCELONA / CONTRAST</strong></span><i aria-hidden="true">↗</i></a>
+          <a class="social-frame social-frame-top" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="افتح حساب Se7en على إنستجرام لمشاهدة تيشرت الأهلي"><img src="assets/products/al-ahly-pharaonic.webp" alt="تيشرت الأهلي الأسود بتفاصيل فرعونية" loading="lazy" decoding="async"><span class="social-frame-meta"><b>02</b><strong>AL AHLY</strong></span><i aria-hidden="true">↗</i></a>
+          <a class="social-frame social-frame-bottom" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="افتح حساب Se7en على إنستجرام لمشاهدة تيشرت الزمالك"><img src="assets/products/nile-developments.webp" alt="تيشرت الزمالك الأسود بخطوط فوسفورية" loading="lazy" decoding="async"><span class="social-frame-meta"><b>03</b><strong>ZAMALEK</strong></span><i aria-hidden="true">↗</i></a>
+          <div class="social-stamp" aria-hidden="true"><span>SE7EN / 2026</span><b>STAY IN<br>THE GAME</b></div>
+        </div>
+      </div>
+      <section class="instagram-live reveal" aria-labelledby="instagram-live-title">
+        <div class="instagram-live-copy">
+          <span class="instagram-live-kicker"><i></i> LIVE FROM INSTAGRAM</span>
+          <h3 id="instagram-live-title">آخر صورنا<br><span>من إنستجرام.</span></h3>
+          <p>شوف أحدث الصور والمنشورات من حساب Se7en هنا داخل الموقع، من غير ما تحتاج تفتح صفحة تانية.</p>
+          <a class="instagram-live-link" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer"><span>افتح الحساب الكامل</span><b aria-hidden="true">↗</b></a>
+          <small class="instagram-live-note">المحتوى بيتعرض من إنستجرام مباشرةً؛ لازم الحساب يكون عامًا والتضمين مسموحًا.</small>
+        </div>
+        <div class="instagram-live-frame">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/se7e_n770/" data-instgrm-version="14" data-instgrm-theme="dark" style="background:#0d0e0f;border:0;border-radius:0;box-shadow:none;margin:0 auto;max-width:540px;min-width:280px;padding:0;width:100%;">
+            <div style="padding:24px;text-align:center;color:#e8e8e8;font-family:Arial,sans-serif;">
+              <a href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" style="color:#fff;text-decoration:none;font-weight:700;" aria-label="عرض حساب Se7en على إنستجرام">عرض أحدث صور Se7en على إنستجرام ↗</a>
+            </div>
+          </blockquote>
+        </div>
+      </section>
+      <div class="social-bottomline"><span><i></i> SE7EN / INSTAGRAM PROFILE</span><a href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">استكشف حسابنا <b dir="ltr">@se7e_n770</b> <span aria-hidden="true">↗</span></a></div>
+    </section>
   </main>
   <footer><div class="wrap"><div class="footer-top"><a class="brand" href="#top"><span class="brand-mark">S<span>7</span></span><span class="brand-name">Se7en<small>SPORTSWEAR / معرض</small></span></a><p class="footer-motto">ستايل رياضي بروح مختلفة.</p></div><div class="footer-bottom"><span>© <span id="year">2026</span> Se7en — جميع الحقوق محفوظة</span><div class="footer-links"><a href="#collection">المعرض</a><a href="#location">الموقع</a><a href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">إنستجرام</a></div></div></div></footer>
   <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-content"><button class="close-modal" id="close-modal" type="button" aria-label="إغلاق">×</button><div class="modal-image-wrap"><button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="التصميم السابق">‹</button><button class="modal-nav modal-next" id="modal-next" type="button" aria-label="التصميم التالي">›</button><img class="modal-image" id="modal-image" src="" alt=""><div class="modal-zoom-controls" role="group" aria-label="تكبير الصورة"><button type="button" data-zoom="out" aria-label="تصغير الصورة">−</button><span id="zoom-level" aria-live="polite">100%</span><button type="button" data-zoom="in" aria-label="تكبير الصورة">+</button></div></div><div class="modal-info"><div class="modal-kicker" id="modal-kicker">SE7EN / DESIGN</div><h2 class="modal-title" id="modal-title">تفاصيل التصميم</h2><p class="modal-desc" id="modal-desc"></p><div class="modal-actions"><a class="btn btn-primary" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">شوف الجديد على إنستجرام ↗</a><a class="btn btn-secondary" href="#location" data-scroll-location>مكاننا على الخريطة ↗</a></div></div></div></div>
@@ -423,5 +515,6 @@
       document.querySelector('#year').textContent=new Date().getFullYear();
     })();
   </script>
+  <script async src="https://www.instagram.com/embed.js"></script>
 </body>
 </html>
