@@ -1,8 +1,9 @@
-// Se7en store settings. Seller phones use international format, digits only.
-// Egypt mobile format: 201XXXXXXXXX (without a + sign or spaces).
+// Public labels for the embedded website chat. These IDs map to the two
+// support-agent accounts configured with SUPPORT_AGENT_1_PASSWORD and
+// SUPPORT_AGENT_2_PASSWORD in Vercel. No API keys belong in this file.
 window.SE7EN_CONFIG = {
-  sellers: [
-    { label: "مسؤول خدمة العملاء الأول", phone: "201159829505" },
-    { label: "مسؤول خدمة العملاء الثاني", phone: "201288019045" }
+  supportAgents: [
+    { id: 'agent1', label: 'مسؤول خدمة العملاء الأول' },
+    { id: 'agent2', label: 'مسؤول خدمة العملاء الثاني' }
   ]
 };
