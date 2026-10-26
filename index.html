@@ -234,6 +234,22 @@
     @media(max-width:760px){.instagram-live{grid-template-columns:1fr;gap:20px;padding:20px 15px}.instagram-live-copy h3{font-size:34px}.instagram-live-copy p{max-width:100%;margin-bottom:16px}.instagram-live-frame{min-height:420px;padding:6px}.instagram-live-frame .instagram-media{min-width:260px!important;width:100%!important}.instagram-live-note{font-size:9px}}
     @media(prefers-reduced-motion:reduce){.instagram-live-link{transition:none}.instagram-live-link:hover{transform:none}}
 
+  
+    /* WhatsApp contact and registration */
+    .whatsapp-link{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.035)}
+    .whatsapp-link svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
+    .whatsapp-link:hover,.whatsapp-direct-btn:hover{border-color:#fff}
+    .whatsapp-register-card{position:relative;width:min(480px,100%);max-height:90vh;overflow:auto;padding:36px 32px 30px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,#17191b,#0b0c0d);box-shadow:0 35px 100px #000;animation:modalIn .28s var(--ease) both;direction:rtl}
+    .whatsapp-register-title{margin:10px 0;font-size:clamp(24px,5vw,32px);font-weight:900;line-height:1.55;letter-spacing:-.04em}
+    .whatsapp-register-intro{margin:0 0 21px;color:#a1a3a5;font-size:12px;line-height:2}
+    .wa-field{display:flex;flex-direction:column;gap:8px;margin:15px 0;color:#e7e7e4;font-size:11px;font-weight:800}
+    .wa-field input{width:100%;min-height:48px;border:1px solid rgba(255,255,255,.17);border-radius:0;padding:0 13px;background:#0b0c0d;color:#fff;font:inherit;font-weight:600;outline:none;direction:rtl}
+    .wa-field input:focus{border-color:rgba(255,255,255,.65);box-shadow:0 0 0 3px rgba(255,255,255,.06)}
+    .wa-field input::placeholder{color:#686a6d}
+    .wa-privacy-note{margin:17px 0;color:#818487;font-size:10px;line-height:1.9}
+    .wa-submit{width:100%;border:0;cursor:pointer;font-family:inherit}
+    .wa-form-status{min-height:20px;margin:10px 0 0;color:#d8d8d5;font-size:10px;line-height:1.8}
+    @media(max-width:680px){.whatsapp-register-card{padding:32px 21px 23px}.header-actions{gap:6px}.whatsapp-link{padding-inline:10px;min-width:38px}}
   </style>
 </head>
 <body>
@@ -274,6 +290,7 @@
         <button class="icon-link mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="فتح قائمة التنقل" aria-expanded="false" aria-controls="mobile-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <a class="icon-link" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="تابع Se7en على إنستجرام"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg><span class="link-label">إنستجرام</span></a>
         <a class="icon-link" href="#location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span class="link-label">مكاننا</span></a>
+        <button class="icon-link whatsapp-link" id="open-whatsapp-register" type="button" aria-label="التسجيل والتواصل عبر واتساب"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 11.7a8.3 8.3 0 0 1-12.2 7.4L3 20l1-4.9A8.3 8.3 0 1 1 20.3 11.7Z"/><path d="M8.4 8.1c.2-.5.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .6.5.8 1.1 1.4 1.9 1.8.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.2.1.3.3.3.5 0 .4-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.6-1.8-1.1-1-1.9-2.3-2.1-3.3-.2-.9 0-1.7.5-2.2Z"/></svg><span class="link-label">تسجيل واتساب</span></button>
       </div>
     </div>
   </header>
@@ -283,7 +300,7 @@
       <div class="hero-copy">
         <div class="eyebrow"><span class="eyebrow-line"></span> معرض Se7en للملابس الرياضية</div>
         <h1 id="hero-title">ستايلك<br><span>خارج الملعب</span><b class="period">.</b></h1>
-        <p class="hero-desc">قطع رياضية مستوحاة من شغف الكورة، بتفاصيل جريئة وشكل يليق بيومك جوّه الملعب وبرّه. اتفرّج على التصميمات واختار الستايل اللي شبهك.</p>
+        <p class="hero-desc">قطع رياضية مستوحاة من شغف الكورة، بتفاصيل جريئة وشكل يليق بيومك جوّه الملعب وبرّه. اتفرّج على التصميمات واختار الستايل اللي شبهك، وبعدها تواصل مع البائع مباشرةً على واتساب.</p>
         <div class="hero-actions"><a class="btn btn-primary" href="#collection">شوف التشكيلة <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a><a class="btn btn-secondary" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">تابعنا على إنستجرام ↗</a></div>
         <div class="hero-details"><div class="detail"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg><span>معرض تصميمات</span></div><span class="detail-sep"></span><div class="detail"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>الإسكندرية</span></div></div>
       </div>
@@ -291,8 +308,8 @@
     </section>
     <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>ستايل خارج الملعب</span><i>✳</i><span>تفاصيل جريئة</span><i>✳</i><span>شغف الكورة في كل قطعة</span><i>✳</i><span>SE7EN SPORTSWEAR</span><i>✳</i><span>ستايل خارج الملعب</span></div></div>
     <section class="wrap collection" id="collection" aria-labelledby="collection-title">
-      <div class="section-top reveal"><div><div class="section-kicker"><span>المجموعة / ٠١</span> — تصفّح التصميمات</div><h2 class="section-heading" id="collection-title">كل قطعة<br><span>لها حكاية.</span></h2></div><p class="section-intro">دي التصميمات المعروضة حاليًا في Se7en. دوس على أي قطعة علشان تشوف صورتها بشكل أكبر، وتابعنا على إنستجرام عشان تعرف الجديد.</p></div>
-      <div class="collection-toolbar reveal"><div class="collection-caption"><b id="product-count">11</b> تصميمات معروضة</div><div class="available"><i></i> معرض الصور — بدون أسعار أو شراء أونلاين</div></div>
+      <div class="section-top reveal"><div><div class="section-kicker"><span>المجموعة / ٠١</span> — تصفّح التصميمات</div><h2 class="section-heading" id="collection-title">كل قطعة<br><span>لها حكاية.</span></h2></div><p class="section-intro">دي التصميمات المعروضة حاليًا في Se7en. افتح أي قطعة علشان تشوف التفاصيل، واسأل البائع على واتساب عن المقاسات والتوافر.</p></div>
+      <div class="collection-toolbar reveal"><div class="collection-caption"><b id="product-count">11</b> تصميمات معروضة</div><div class="available"><i></i> الأسعار تبدأ من 350 جنيه — استفسر واطلب عبر واتساب</div></div>
       <div class="filter-bar reveal" role="group" aria-label="فلترة التيشرتات حسب الفريق">
         <span class="filter-label">تصفّح حسب الفريق</span>
         <div class="filter-buttons">
@@ -333,7 +350,7 @@
           <h3 class="location-title">Se7en في إسكندرية.</h3>
           <div class="address-card"><span class="address-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></span><div><strong>شارع النصر</strong><p>الزقاق اللي قدّام فتح الله ماركت، الإسكندرية.</p></div></div>
           <div class="location-facts"><span><i></i> الإسكندرية، مصر</span><span>SE7EN / STORE</span></div>
-          <div class="location-actions"><a class="btn btn-primary" href="#location-map">شوف الخريطة هنا <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a><a class="btn btn-secondary" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">تواصل على إنستجرام ↗</a></div>
+          <div class="location-actions"><a class="btn btn-primary" href="#location-map">شوف الخريطة هنا <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a><a class="btn btn-secondary whatsapp-direct-btn" href="#whatsapp-contact" id="location-whatsapp-btn">تواصل مع البائع على واتساب ↗</a></div>
           <p class="location-hint">الخريطة التفاعلية ظاهرة جنب بيانات العنوان — تقدر تكبّرها وتحركها من داخل الصفحة.</p>
         </div>
         <div class="map-card reveal" id="location-map">
@@ -391,9 +408,29 @@
     </section>
   </main>
   <footer><div class="wrap"><div class="footer-top"><a class="brand" href="#top"><span class="brand-mark">S<span>7</span></span><span class="brand-name">Se7en<small>SPORTSWEAR / معرض</small></span></a><p class="footer-motto">ستايل رياضي بروح مختلفة.</p></div><div class="footer-bottom"><span>© <span id="year">2026</span> Se7en — جميع الحقوق محفوظة</span><div class="footer-links"><a href="#collection">المعرض</a><a href="#location">الموقع</a><a href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">إنستجرام</a></div></div></div></footer>
-  <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-content"><button class="close-modal" id="close-modal" type="button" aria-label="إغلاق">×</button><div class="modal-image-wrap"><button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="التصميم السابق">‹</button><button class="modal-nav modal-next" id="modal-next" type="button" aria-label="التصميم التالي">›</button><img class="modal-image" id="modal-image" src="" alt=""><div class="modal-zoom-controls" role="group" aria-label="تكبير الصورة"><button type="button" data-zoom="out" aria-label="تصغير الصورة">−</button><span id="zoom-level" aria-live="polite">100%</span><button type="button" data-zoom="in" aria-label="تكبير الصورة">+</button></div></div><div class="modal-info"><div class="modal-kicker" id="modal-kicker">SE7EN / DESIGN</div><h2 class="modal-title" id="modal-title">تفاصيل التصميم</h2><p class="modal-desc" id="modal-desc"></p><p class="modal-price" id="modal-price">350 جنيه</p><div class="modal-actions"><a class="btn btn-primary" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">شوف الجديد على إنستجرام ↗</a><a class="btn btn-secondary" href="#location" data-scroll-location>مكاننا على الخريطة ↗</a></div></div></div></div>
+  <div class="modal" id="whatsapp-register-modal" role="dialog" aria-modal="true" aria-labelledby="whatsapp-register-title" aria-hidden="true">
+    <div class="whatsapp-register-card">
+      <button class="close-modal" id="close-whatsapp-register" type="button" aria-label="إغلاق">×</button>
+      <div class="modal-kicker">SE7EN / WHATSAPP</div>
+      <h2 class="whatsapp-register-title" id="whatsapp-register-title">سجّل بياناتك وتواصل مع البائع.</h2>
+      <p class="whatsapp-register-intro">اكتب اسمك ورقم واتسابك، وهتتجهّز رسالة تسجيل تبعتها للبائع مباشرةً.</p>
+      <form id="whatsapp-register-form" novalidate>
+        <label class="wa-field" for="wa-customer-name">الاسم
+          <input id="wa-customer-name" name="name" type="text" autocomplete="name" maxlength="80" placeholder="اكتب اسمك" required>
+        </label>
+        <label class="wa-field" for="wa-customer-phone">رقم واتسابك
+          <input id="wa-customer-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="مثال: 01012345678" required>
+        </label>
+        <p class="wa-privacy-note">الموقع مش بيخزّن بياناتك. البيانات هتتضمّن في رسالة واتساب تقدر تراجعها قبل الإرسال. التسجيل مش بيتفعّل تلقائيًا؛ البائع هيتواصل معاك.</p>
+        <button class="btn btn-primary wa-submit" type="submit">إرسال طلب التسجيل على واتساب ↗</button>
+        <p class="wa-form-status" id="wa-register-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+  <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-content"><button class="close-modal" id="close-modal" type="button" aria-label="إغلاق">×</button><div class="modal-image-wrap"><button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="التصميم السابق">‹</button><button class="modal-nav modal-next" id="modal-next" type="button" aria-label="التصميم التالي">›</button><img class="modal-image" id="modal-image" src="" alt=""><div class="modal-zoom-controls" role="group" aria-label="تكبير الصورة"><button type="button" data-zoom="out" aria-label="تصغير الصورة">−</button><span id="zoom-level" aria-live="polite">100%</span><button type="button" data-zoom="in" aria-label="تكبير الصورة">+</button></div></div><div class="modal-info"><div class="modal-kicker" id="modal-kicker">SE7EN / DESIGN</div><h2 class="modal-title" id="modal-title">تفاصيل التصميم</h2><p class="modal-desc" id="modal-desc"></p><p class="modal-price" id="modal-price">350 جنيه</p><div class="modal-actions"><a class="btn btn-primary whatsapp-direct-btn" href="#whatsapp-contact" id="product-whatsapp-btn">اسأل البائع عن التيشيرت على واتساب ↗</a><a class="btn btn-secondary" href="#location" data-scroll-location>مكاننا على الخريطة ↗</a></div></div></div></div>
   <button class="back-to-top" id="back-to-top" type="button" aria-label="الرجوع لأعلى الصفحة">↑</button>
   <div class="toast" id="toast" role="status" aria-live="polite">تم فتح تفاصيل التصميم</div>
+  <script src="store-config.js"></script>
   <script>
     (()=>{
       // Cinematic sequence: circle opens, each shirt takes a turn, then the brand name appears.
@@ -500,6 +537,58 @@
       document.querySelectorAll('[data-product]').forEach(button=>button.addEventListener('click',()=>openModal(button.dataset.product)));
       document.querySelector('#modal-prev')?.addEventListener('click',()=>stepModal(-1));document.querySelector('#modal-next')?.addEventListener('click',()=>stepModal(1));
       closeButton.addEventListener('click',closeModal);modal.addEventListener('click',event=>{if(event.target===modal)closeModal()});document.addEventListener('keydown',event=>{if(!modal.classList.contains('open'))return;if(event.key==='Escape'){event.preventDefault();closeModal()}else if(event.key==='ArrowLeft'){event.preventDefault();stepModal(1)}else if(event.key==='ArrowRight'){event.preventDefault();stepModal(-1)}else if(event.key==='Tab'){const focusable=[...modal.querySelectorAll('button:not([disabled]),a[href]')].filter(el=>el.offsetParent!==null);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}});
+
+      // WhatsApp contact and registration request. The static site only prepares a message;
+      // the visitor reviews it and sends it from WhatsApp. No customer details are stored here.
+      const waConfig=window.SE7EN_CONFIG||{};
+      const getSellerWhatsApp=()=>String(waConfig.sellerWhatsApp||'').replace(/\D/g,'');
+      const toastNode=document.querySelector('#toast');let waToastTimer=null;
+      function showNotice(message){if(!toastNode)return;toastNode.textContent=message;toastNode.classList.add('show');window.clearTimeout(waToastTimer);waToastTimer=window.setTimeout(()=>toastNode.classList.remove('show'),4200)}
+      function makeWhatsAppUrl(message){
+        const sellerNumber=getSellerWhatsApp();
+        if(!sellerNumber||sellerNumber.length<8||sellerNumber.length>15){showNotice('رقم واتساب البائع غير مُضاف. أضِفه في ملف store-config.js أولًا.');return null}
+        return `https://wa.me/${sellerNumber}?text=${encodeURIComponent(message)}`;
+      }
+      function openSellerWhatsApp(message){const url=makeWhatsAppUrl(message);if(!url)return false;window.open(url,'_blank','noopener,noreferrer');return true}
+      const registerModal=document.querySelector('#whatsapp-register-modal');
+      const registerOpenButton=document.querySelector('#open-whatsapp-register');
+      const registerCloseButton=document.querySelector('#close-whatsapp-register');
+      const registerForm=document.querySelector('#whatsapp-register-form');
+      const registerName=document.querySelector('#wa-customer-name');
+      const registerPhone=document.querySelector('#wa-customer-phone');
+      const registerStatus=document.querySelector('#wa-register-status');
+      let registerPreviousFocus=null;
+      function openRegisterModal(){if(!registerModal)return;registerPreviousFocus=document.activeElement;registerModal.classList.add('open');registerModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';window.setTimeout(()=>registerName?.focus(),40)}
+      function closeRegisterModal(){if(!registerModal)return;registerModal.classList.remove('open');registerModal.setAttribute('aria-hidden','true');document.body.style.overflow=modal.classList.contains('open')?'hidden':'';if(registerPreviousFocus&&typeof registerPreviousFocus.focus==='function')registerPreviousFocus.focus()}
+      registerOpenButton?.addEventListener('click',openRegisterModal);
+      registerCloseButton?.addEventListener('click',closeRegisterModal);
+      registerModal?.addEventListener('click',event=>{if(event.target===registerModal)closeRegisterModal()});
+      document.addEventListener('keydown',event=>{if(event.key==='Escape'&&registerModal?.classList.contains('open'))closeRegisterModal()});
+      registerForm?.addEventListener('submit',event=>{
+        event.preventDefault();
+        const name=String(registerName?.value||'').trim();
+        const rawPhone=String(registerPhone?.value||'').trim();
+        let phone=rawPhone.replace(/\D/g,'');
+        if(phone.startsWith('00'))phone=phone.slice(2);
+        if(phone.startsWith('0')&&phone.length===11)phone='20'+phone.slice(1);
+        if(name.length<2){if(registerStatus)registerStatus.textContent='اكتب اسمك بشكل صحيح الأول.';registerName?.focus();return}
+        if(phone.length<8||phone.length>15){if(registerStatus)registerStatus.textContent='اكتب رقم واتساب صحيح بكود الدولة لو الرقم مش مصري.';registerPhone?.focus();return}
+        const message=`السلام عليكم، عايز أسجّل بياناتي وأتواصل مع Se7en.\nالاسم: ${name}\nرقم واتسابي: +${phone}\nمن فضلكم ابعتولي تفاصيل المقاسات والتوافر وطريقة الطلب.`;
+        if(!getSellerWhatsApp().length){if(registerStatus)registerStatus.textContent='رقم واتساب البائع لم يُضف بعد. أضِفه في store-config.js قبل نشر الموقع.';return}
+        const opened=openSellerWhatsApp(message);
+        if(opened&&registerStatus)registerStatus.textContent='اتفتحت محادثة واتساب برسالة التسجيل. راجع الرسالة واضغط إرسال داخل واتساب.';
+      });
+      document.querySelectorAll('.whatsapp-direct-btn').forEach(button=>button.addEventListener('click',event=>{
+        event.preventDefault();
+        if(button.id==='product-whatsapp-btn'){
+          const p=products[currentProductId];
+          const productName=p?.name||'التيشيرتات المعروضة';
+          openSellerWhatsApp(`السلام عليكم، عايز أستفسر عن ${productName} من Se7en، سعره 350 جنيه. هل متاح؟ وممكن أعرف المقاسات وطريقة الطلب؟`);
+        }else{
+          openSellerWhatsApp('السلام عليكم، عايز أستفسر عن تيشيرتات Se7en المتاحة والمقاسات وطريقة الطلب.');
+        }
+      }));
+
       document.querySelectorAll('[data-scroll-location]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();closeModal();document.querySelector('#location').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});history.replaceState(null,'','#location')}));
       const revealEls=[...document.querySelectorAll('.reveal')];if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.1});revealEls.forEach(el=>observer.observe(el))}else revealEls.forEach(el=>el.classList.add('visible'));
       const hoverOK=window.matchMedia('(hover:hover) and (pointer:fine)').matches;if(hoverOK){document.querySelectorAll('.product-card').forEach(card=>{card.addEventListener('pointermove',event=>{const r=card.getBoundingClientRect(),x=(event.clientX-r.left)/r.width,y=(event.clientY-r.top)/r.height;card.style.setProperty('--rx',((.5-y)*2.8).toFixed(2)+'deg');card.style.setProperty('--ry',((x-.5)*2.8).toFixed(2)+'deg')});card.addEventListener('pointerleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg')})})}
