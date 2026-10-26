@@ -1,36 +1,23 @@
-# Se7en Store — Drop 001
+# Se7en Store — Vercel-ready static site
 
-A responsive, dark-mode ecommerce landing page for Se7en Store. Built with HTML, CSS and vanilla JavaScript; no build step or framework installation is required.
-
-## Included
-
-- Animated hero and staged product entrances
-- Five transparent-background product mockups
-- Product hover glow and pointer tilt on desktop
-- Collection filters (All / Club Edits / Concept Series)
-- Interactive demo shopping bag with quantity controls and subtotal
-- Responsive mobile layout, reduced-motion support and accessible labels
-- Vercel-ready static deployment configuration
-
-## Run locally
-
-From this folder, run:
-
-```bash
-python -m http.server 8080
-```
-
-Then open `http://localhost:8080`.
+This version uses the **three product photos supplied by the store owner** and has its CSS and JavaScript embedded directly inside `index.html`. That keeps the visual design from disappearing if separate stylesheet or script files are omitted during deployment.
 
 ## Deploy to Vercel
 
-1. Extract the ZIP.
-2. Import the folder as a new Vercel project, or run `npx vercel` from this folder.
-3. Keep the project as a static site; no build command is required.
+1. Extract this ZIP. The project root must contain `index.html`, `README.md`, `vercel.json`, and the `assets/` folder.
+2. Upload/commit **the contents of this folder** to the root of the GitHub repository connected to Vercel (do not upload the ZIP as a nested file).
+3. In Vercel → Project Settings → Build & Development Settings, use **Other** as the framework preset. Leave Build Command and Output Directory empty/default for a plain static site. Confirm the Root Directory points to the folder containing `index.html`.
+4. Redeploy. Open the deployed site and press `Ctrl + F5` to bypass the browser cache.
 
-## Before taking real orders
+## Included products
 
-- Product prices are illustrative sample values in EGP. Edit them in `index.html` and `script.js`.
-- The Nile Graphite and Celeste Stripe product visuals are colorway concept mockups made from the supplied design direction; confirm or replace these with approved product photography before selling them.
-- The shopping bag is front-end demo behavior only. Connect inventory, shipping, checkout and a payment provider before launch.
-- Club / team marks shown on concept artwork are for visual mockup purposes. Confirm all required brand permissions before commercial use.
+- Barcelona Contrast — `assets/products/barcelona-contrast.jpg`
+- Pharaoh's Legacy — `assets/products/pharaoh-legacy.jpg`
+- Nile Developments — `assets/products/nile-developments.jpg`
+
+## Notes
+
+- Product images are the three photographs supplied by the owner; the original hangers and light studio backgrounds are retained intentionally as clean catalog photography.
+- The cart, quantity controls, filters, reveal animations, and hover tilt run client-side. No actual payment, shipping, inventory, or order submission is connected.
+- Prices are demo placeholders; update them in the `products` object and product-card markup before launch.
+- Since CSS and JavaScript are inline, the main visual experience doesn't depend on separate `.css` or `.js` requests.
