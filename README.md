@@ -4,15 +4,15 @@ This version replaces the old `wa.me` handoff with a real **on-site chat interfa
 
 ## Important: the live API integration must be configured before use
 
-The UI and Vercel server routes are included, but OTP delivery and persistent chat will not work until the store owner connects their Meta WhatsApp Business Platform credentials and Supabase database. The public website does not contain API access tokens or a Supabase service-role key.
+The UI and Vercel server routes are included, but OTP delivery and persistent chat will not work until the store owner connects their Meta WhatsApp Business Platform credentials and Supabase database. The public website does not contain API access tokens or a Supabase secret/service-role key.
 
 The in-site chat is a website chat system: customers and the two support agents exchange messages inside Se7en. The agents reply from the Se7en support dashboard. It does **not** mirror the reps' existing WhatsApp personal chats. The two numbers previously supplied for customer care are not used by this site's in-page chat; the two people are mapped to separate agent accounts (`agent1` and `agent2`) and reply from `/support.html`. WhatsApp OTP is sent from the WhatsApp Business Platform sender configured by `WA_PHONE_NUMBER_ID`. If agents must reply from their ordinary WhatsApp apps and have those replies appear in the site, a separate WhatsApp Business API/webhook bridge and message-routing setup is required; that is not activated in this version.
 
 ## 1. Create and prepare the database (Supabase)
 
-1. Create a Supabase project.
-2. Open **SQL Editor** and run the complete file `sql/schema.sql`.
-3. Copy the project URL and the **service_role** key from Supabase project settings. Store the service-role key only in Vercel environment variables; never paste it into frontend code or share it publicly.
+1. Create a Supabase project. Recommended setup options: **Enable Data API: ON**; **Automatically expose new tables: OFF**; **Enable automatic RLS: ON**. If the project was already created with automatic exposure enabled, open the Data API settings and turn automatic exposure off for future tables.
+2. Open **SQL Editor** and run the complete file `sql/schema.sql`. This script enables RLS, revokes table privileges from the browser roles (`anon` and `authenticated`), and grants the minimum table permissions needed to the server-only `service_role` role. The new Supabase secret key maps to this role.
+3. In **Settings → API Keys → Publishable and secret API keys**, copy the **secret key** beginning with `sb_secret_`. Use this server-only key for the backend. Do not use the publishable key for this setting. Store the secret key only in Vercel environment variables; never paste it into frontend code or share it publicly. The older `service_role` JWT is still supported as a fallback, but the new secret key is preferred.
 
 ## 2. Prepare WhatsApp OTP (Meta)
 
@@ -30,7 +30,7 @@ Add the variables under **Project → Settings → Environment Variables**, for 
 | Variable | Value |
 |---|---|
 | `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (server only) |
+| `SUPABASE_SECRET_KEY` | Supabase secret key beginning `sb_secret_` (server only; recommended) |
 | `SESSION_SECRET` | Random secret of at least 32 characters |
 | `OTP_HMAC_SECRET` | Separate random secret of at least 32 characters |
 | `WA_ACCESS_TOKEN` | Meta WhatsApp Business Platform access token |

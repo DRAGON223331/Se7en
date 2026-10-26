@@ -1,6 +1,6 @@
 {
   "name": "se7en-v19-site-chat",
-  "version": "19.0.0",
+  "version": "19.2.0",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20" }

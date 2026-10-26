@@ -50,4 +50,23 @@ create index if not exists se7en_messages_conversation_idx on public.se7en_messa
 alter table public.se7en_customers enable row level security;
 alter table public.se7en_otp_challenges enable row level security;
 alter table public.se7en_conversations enable row level security;
+
 alter table public.se7en_messages enable row level security;
+
+-- Least-privilege Data API setup:
+-- The Vercel API uses the service_role key only on the server. Remove table
+-- grants from browser roles and grant the server role the CRUD permissions it needs.
+revoke all privileges on table
+  public.se7en_customers,
+  public.se7en_otp_challenges,
+  public.se7en_conversations,
+  public.se7en_messages
+from anon, authenticated;
+
+grant usage on schema public to service_role;
+grant select, insert, update, delete on table
+  public.se7en_customers,
+  public.se7en_otp_challenges,
+  public.se7en_conversations,
+  public.se7en_messages
+ to service_role;
