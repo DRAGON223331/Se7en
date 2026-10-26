@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="description" content="Se7en Store — elevated football-inspired training tops, made for match days and every day." />
+  <title>Se7en Store — Beyond the Game</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <div class="page-noise" aria-hidden="true"></div>
+  <div class="announcement-bar">
+    <span class="announcement-dot"></span>
+    <span>THE FIRST DROP IS HERE</span>
+    <span class="announcement-divider">/</span>
+    <span class="announcement-muted">SPORTSWEAR, REDEFINED</span>
+  </div>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="Se7en Store home">
+      <span class="brand-mark">S<span>7</span></span>
+      <span class="brand-word">Se7en<span class="brand-word-dot">.</span><small>STORE / 001</small></span>
+    </a>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#collection">Collection <span>05</span></a>
+      <a href="#standard">Our standard</a>
+      <a href="#footer">Contact</a>
+    </nav>
+
+    <button class="bag-button" id="open-cart" type="button" aria-label="Open shopping bag">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8.5h13l1 12h-15l1-12Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+      <span>Bag</span><span class="bag-count" id="bag-count">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero section-shell" aria-labelledby="hero-title">
+      <div class="hero-copy" data-reveal>
+        <div class="eyebrow"><span class="eyebrow-line"></span> SE7EN ATHLETIC DEPARTMENT <span class="eyebrow-index">[ 01 — 05 ]</span></div>
+        <h1 id="hero-title">BEYOND<br />THE <span>GAME<span class="title-period">.</span></span></h1>
+        <p class="hero-description">Football culture meets everyday uniform. Statement training tops built around the details, the energy, and the feeling of the game.</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="#collection">Explore the drop <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+          <a class="text-link" href="#standard">Discover Se7en <span>↗</span></a>
+        </div>
+        <div class="hero-metrics">
+          <div><strong>05</strong><span>DESIGNED PIECES</span></div>
+          <div class="metric-separator"></div>
+          <div><strong>01</strong><span>FIRST DROP</span></div>
+          <div class="metric-note"><span class="metric-note-dot"></span> BUILT TO STAND OUT</div>
+        </div>
+      </div>
+
+      <div class="hero-art" data-reveal style="--reveal-delay: 140ms" aria-label="Featured Se7en football training top">
+        <div class="hero-art-grid" aria-hidden="true"></div>
+        <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+        <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+        <span class="art-label art-label-top">S7 / PERFORMANCE SERIES</span>
+        <div class="hero-product-glow" aria-hidden="true"></div>
+        <img class="hero-product-image" src="/assets/products/barcelona-night.webp" alt="Barcelona-inspired black and pale grey quarter-zip training top" fetchpriority="high" />
+        <div class="art-sticker"><span>SE7EN</span><strong>FIRST<br />EDITION</strong><i>2026</i></div>
+        <div class="art-caption"><span class="caption-line"></span><span>01 / BARCELONA NIGHT</span><span class="caption-right">CLUB EDITION</span></div>
+        <div class="art-coordinate">30° 02' N<br />31° 14' E</div>
+      </div>
+      <div class="hero-bottomline" aria-hidden="true"><span>DESIGNED TO MOVE</span><span>CAIRO, EGYPT</span><span>SCROLL TO EXPLORE ↓</span></div>
+    </section>
+
+    <section class="ticker" aria-label="Se7en collection highlights">
+      <div class="ticker-track"><span>CLUB CULTURE</span><i>✳</i><span>DAILY UNIFORM</span><i>✳</i><span>BUILT DIFFERENT</span><i>✳</i><span>CLUB CULTURE</span><i>✳</i><span>DAILY UNIFORM</span><i>✳</i><span>BUILT DIFFERENT</span><i>✳</i></div>
+    </section>
+
+    <section class="collection section-shell" id="collection" aria-labelledby="collection-title">
+      <div class="section-heading" data-reveal>
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> THE CAPSULE / DROP 001</div>
+          <h2 id="collection-title">THE FIRST <span>FIVE.</span></h2>
+        </div>
+        <p>Five expressions of the game.<br />One unmistakable attitude.</p>
+      </div>
+
+      <div class="collection-toolbar" data-reveal style="--reveal-delay: 70ms">
+        <div class="filter-group" role="group" aria-label="Filter collection">
+          <button class="filter-button is-active" data-filter="all" type="button" aria-pressed="true">All pieces <span>05</span></button>
+          <button class="filter-button" data-filter="club" type="button" aria-pressed="false">Club edits</button>
+          <button class="filter-button" data-filter="concept" type="button" aria-pressed="false">Concept series</button>
+        </div>
+        <div class="sort-label"><span class="status-dot"></span> DROP 001 — AVAILABLE NOW</div>
+      </div>
+
+      <div class="product-grid" id="product-grid">
+        <article class="product-card" data-category="club" data-product="zamalek" data-reveal style="--delay: 0ms">
+          <div class="product-visual">
+            <span class="product-index">01 / S7</span><span class="product-badge">CLUB EDITION</span>
+            <img class="product-image" src="/assets/products/zamalek-inspired.webp" alt="White training top with red pinstripes and dark navy sleeves, Zamalek-inspired" loading="lazy" />
+            <div class="visual-bottom"><span>FIELD / 01</span><span>↗</span></div>
+          </div>
+          <div class="product-info"><div><p class="product-category">CLUB SERIES</p><h3>White Line</h3><p class="product-subtitle">Red pinstripe edition</p></div><div class="product-price">EGP 1,250</div></div>
+          <button class="add-button" type="button" data-add="zamalek"><span>Add to bag</span><span class="add-icon">+</span></button>
+        </article>
+
+        <article class="product-card" data-category="concept" data-product="nile" data-reveal style="--delay: 90ms">
+          <div class="product-visual visual-nile">
+            <span class="product-index">02 / S7</span><span class="product-badge badge-muted">CONCEPT SERIES</span>
+            <img class="product-image" src="/assets/products/nile-graphite-concept.webp" alt="Graphite and silver pinstripe quarter-zip training top, Nile-inspired concept design" loading="lazy" />
+            <div class="visual-bottom"><span>RIVER / 02</span><span>↗</span></div>
+          </div>
+          <div class="product-info"><div><p class="product-category">CONCEPT SERIES</p><h3>Nile Graphite</h3><p class="product-subtitle">Metallic charcoal concept</p></div><div class="product-price">EGP 1,400</div></div>
+          <button class="add-button" type="button" data-add="nile"><span>Add to bag</span><span class="add-icon">+</span></button>
+        </article>
+
+        <article class="product-card" data-category="club" data-product="ahly" data-reveal style="--delay: 180ms">
+          <div class="product-visual visual-ahly">
+            <span class="product-index">03 / S7</span><span class="product-badge">LIMITED ARTWORK</span>
+            <img class="product-image" src="/assets/products/al-ahly-pharaonic.webp" alt="Black and gold Al Ahly-inspired pharaonic quarter-zip top with eagle artwork" loading="lazy" />
+            <div class="visual-bottom"><span>LEGACY / 03</span><span>↗</span></div>
+          </div>
+          <div class="product-info"><div><p class="product-category">LEGACY SERIES</p><h3>Pharaoh's Legacy</h3><p class="product-subtitle">Black, red and antique gold</p></div><div class="product-price">EGP 1,550</div></div>
+          <button class="add-button" type="button" data-add="ahly"><span>Add to bag</span><span class="add-icon">+</span></button>
+        </article>
+
+        <article class="product-card" data-category="club" data-product="barcelona" data-reveal style="--delay: 270ms">
+          <div class="product-visual visual-barca">
+            <span class="product-index">04 / S7</span><span class="product-badge">BEST SELLER</span>
+            <img class="product-image" src="/assets/products/barcelona-night.webp" alt="Pale grey and black Barcelona-inspired quarter-zip training top" loading="lazy" />
+            <div class="visual-bottom"><span>NIGHT / 04</span><span>↗</span></div>
+          </div>
+          <div class="product-info"><div><p class="product-category">CLUB SERIES</p><h3>Barcelona Night</h3><p class="product-subtitle">Stone grey / all black</p></div><div class="product-price">EGP 1,350</div></div>
+          <button class="add-button" type="button" data-add="barcelona"><span>Add to bag</span><span class="add-icon">+</span></button>
+        </article>
+
+        <article class="product-card" data-category="concept" data-product="argentina" data-reveal style="--delay: 360ms">
+          <div class="product-visual visual-argentina">
+            <span class="product-index">05 / S7</span><span class="product-badge badge-muted">CONCEPT SERIES</span>
+            <img class="product-image" src="/assets/products/argentina-inspired.webp" alt="White training top with sky-blue pinstripes and dark sleeves, Argentina-inspired concept" loading="lazy" />
+            <div class="visual-bottom"><span>CELESTE / 05</span><span>↗</span></div>
+          </div>
+          <div class="product-info"><div><p class="product-category">CONCEPT SERIES</p><h3>Celeste Stripe</h3><p class="product-subtitle">Argentina-inspired sky blue</p></div><div class="product-price">EGP 1,300</div></div>
+          <button class="add-button" type="button" data-add="argentina"><span>Add to bag</span><span class="add-icon">+</span></button>
+        </article>
+      </div>
+      <p class="concept-note"><span>NOTE</span> Nile Graphite and Celeste Stripe are visual concepts made for this landing-page demo. Prices are sample values and can be edited before launch.</p>
+    </section>
+
+    <section class="manifesto" id="standard">
+      <div class="manifesto-inner section-shell" data-reveal>
+        <div class="manifesto-number">S7<br /><span>EST. 2026</span></div>
+        <div class="manifesto-copy"><div class="eyebrow"><span class="eyebrow-line"></span> OUR STANDARD</div><h2>NOT JUST FOR<br />MATCH <span>DAY.</span></h2><p>Inspired by the terraces. Designed for the everyday. Se7en brings football energy into a sharper, more considered uniform — with strong silhouettes, confident detail, and a little edge.</p><a href="#collection" class="text-link">Find your edition <span>↗</span></a></div>
+        <div class="manifesto-mark" aria-hidden="true"><span class="mark-ring ring-a"></span><span class="mark-ring ring-b"></span><span class="mark-seven">7</span><span class="mark-small">S7 / 001</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer section-shell" id="footer">
+    <a class="brand footer-brand" href="#top"><span class="brand-mark">S<span>7</span></span><span class="brand-word">Se7en<span class="brand-word-dot">.</span><small>STORE / 001</small></span></a>
+    <p>THE GAME DOESN'T END AT THE WHISTLE.</p>
+    <div class="footer-bottom"><span>© 2026 SE7EN STORE. DEMO EXPERIENCE.</span><a href="#top">BACK TO TOP ↑</a><span>MADE FOR THE MOVEMENT.</span></div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping bag" aria-hidden="true">
+    <div class="drawer-header"><div><span class="drawer-kicker">SE7EN / YOUR SELECTION</span><h2>Your bag <span id="drawer-count">(0)</span></h2></div><button class="icon-button" id="close-cart" type="button" aria-label="Close shopping bag">×</button></div>
+    <div class="cart-items" id="cart-items"><div class="empty-bag"><span class="empty-bag-mark">S7</span><p>Your bag is waiting.</p><span>Find the piece that moves you.</span><button type="button" class="button button-light" id="empty-shop">Explore collection ↗</button></div></div>
+    <div class="drawer-footer"><div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">EGP 0</strong></div><p>Shipping and payment are not connected in this demo.</p><button class="button button-light checkout-button" id="checkout-button" type="button">Checkout <span>↗</span></button></div>
+  </aside>
+</body>
+</html>
