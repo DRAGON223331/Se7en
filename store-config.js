@@ -1,5 +1,8 @@
-// Se7en store settings. Use the seller's WhatsApp phone number in international format, digits only.
-// Egypt example format: 2010XXXXXXXX (replace Xs with the real number; do not include +, spaces, or dashes).
+// Se7en store settings. Seller phones use international format, digits only.
+// Egypt mobile format: 201XXXXXXXXX (without a + sign or spaces).
 window.SE7EN_CONFIG = {
-  sellerWhatsApp: ""
+  sellers: [
+    { label: "مسؤول خدمة العملاء الأول", phone: "201159829505" },
+    { label: "مسؤول خدمة العملاء الثاني", phone: "201288019045" }
+  ]
 };

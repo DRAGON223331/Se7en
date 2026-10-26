@@ -249,6 +249,16 @@
     .wa-privacy-note{margin:17px 0;color:#818487;font-size:10px;line-height:1.9}
     .wa-submit{width:100%;border:0;cursor:pointer;font-family:inherit}
     .wa-form-status{min-height:20px;margin:10px 0 0;color:#d8d8d5;font-size:10px;line-height:1.8}
+    .wa-seller-card{width:min(500px,100%)}
+    .wa-seller-options{display:grid;gap:10px;margin:22px 0 10px}
+    .wa-seller-choice{display:flex;align-items:center;gap:13px;width:100%;padding:15px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(100deg,#17191b,#0d0e0f);color:#f4f4f1;text-align:right;cursor:pointer;font-family:inherit;transition:border-color .2s,transform .2s,background .2s}
+    .wa-seller-choice:hover,.wa-seller-choice:focus-visible{border-color:rgba(255,255,255,.7);background:#1d1f21;transform:translateY(-2px);outline:none}
+    .wa-seller-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border:1px solid rgba(255,255,255,.2);background:#222426;color:#fff;font-size:18px}
+    .wa-seller-copy{display:flex;flex:1;flex-direction:column;gap:5px;min-width:0}
+    .wa-seller-copy strong{font-size:12px;font-weight:900}
+    .wa-seller-copy small{color:#9ea0a3;font-size:11px;direction:ltr;text-align:right}
+    .wa-seller-arrow{font-size:20px;color:#e8e8e4}
+    .wa-seller-hint{margin:15px 0 0;color:#818487;font-size:10px;line-height:1.9}
     @media(max-width:680px){.whatsapp-register-card{padding:32px 21px 23px}.header-actions{gap:6px}.whatsapp-link{padding-inline:10px;min-width:38px}}
   </style>
 </head>
@@ -427,6 +437,19 @@
       </form>
     </div>
   </div>
+  <div class="modal" id="whatsapp-seller-modal" role="dialog" aria-modal="true" aria-labelledby="whatsapp-seller-title" aria-hidden="true">
+    <div class="whatsapp-register-card wa-seller-card">
+      <button class="close-modal" id="close-whatsapp-seller" type="button" aria-label="إغلاق اختيار خدمة العملاء">×</button>
+      <div class="modal-kicker">SE7EN / CUSTOMER CARE</div>
+      <h2 class="whatsapp-register-title" id="whatsapp-seller-title">تتواصل مع مين؟</h2>
+      <p class="whatsapp-register-intro">اختار أحد مسؤولي خدمة العملاء، وهتفتح محادثة واتساب برسالتك الجاهزة.</p>
+      <div class="wa-seller-options" id="wa-seller-options">
+        <button class="wa-seller-choice" type="button" data-seller-choice="0"><span class="wa-seller-icon" aria-hidden="true">↗</span><span class="wa-seller-copy"><strong data-seller-label>مسؤول خدمة العملاء الأول</strong><small data-seller-phone dir="ltr">+20 11 59829505</small></span><span class="wa-seller-arrow" aria-hidden="true">›</span></button>
+        <button class="wa-seller-choice" type="button" data-seller-choice="1"><span class="wa-seller-icon" aria-hidden="true">↗</span><span class="wa-seller-copy"><strong data-seller-label>مسؤول خدمة العملاء الثاني</strong><small data-seller-phone dir="ltr">+20 12 88019045</small></span><span class="wa-seller-arrow" aria-hidden="true">›</span></button>
+      </div>
+      <p class="wa-seller-hint">رسالتك مش هتتبعت تلقائيًا؛ راجعها واضغط إرسال داخل واتساب.</p>
+    </div>
+  </div>
   <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-content"><button class="close-modal" id="close-modal" type="button" aria-label="إغلاق">×</button><div class="modal-image-wrap"><button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="التصميم السابق">‹</button><button class="modal-nav modal-next" id="modal-next" type="button" aria-label="التصميم التالي">›</button><img class="modal-image" id="modal-image" src="" alt=""><div class="modal-zoom-controls" role="group" aria-label="تكبير الصورة"><button type="button" data-zoom="out" aria-label="تصغير الصورة">−</button><span id="zoom-level" aria-live="polite">100%</span><button type="button" data-zoom="in" aria-label="تكبير الصورة">+</button></div></div><div class="modal-info"><div class="modal-kicker" id="modal-kicker">SE7EN / DESIGN</div><h2 class="modal-title" id="modal-title">تفاصيل التصميم</h2><p class="modal-desc" id="modal-desc"></p><p class="modal-price" id="modal-price">350 جنيه</p><div class="modal-actions"><a class="btn btn-primary whatsapp-direct-btn" href="#whatsapp-contact" id="product-whatsapp-btn">اسأل البائع عن التيشيرت على واتساب ↗</a><a class="btn btn-secondary" href="#location" data-scroll-location>مكاننا على الخريطة ↗</a></div></div></div></div>
   <button class="back-to-top" id="back-to-top" type="button" aria-label="الرجوع لأعلى الصفحة">↑</button>
   <div class="toast" id="toast" role="status" aria-live="polite">تم فتح تفاصيل التصميم</div>
@@ -538,32 +561,86 @@
       document.querySelector('#modal-prev')?.addEventListener('click',()=>stepModal(-1));document.querySelector('#modal-next')?.addEventListener('click',()=>stepModal(1));
       closeButton.addEventListener('click',closeModal);modal.addEventListener('click',event=>{if(event.target===modal)closeModal()});document.addEventListener('keydown',event=>{if(!modal.classList.contains('open'))return;if(event.key==='Escape'){event.preventDefault();closeModal()}else if(event.key==='ArrowLeft'){event.preventDefault();stepModal(1)}else if(event.key==='ArrowRight'){event.preventDefault();stepModal(-1)}else if(event.key==='Tab'){const focusable=[...modal.querySelectorAll('button:not([disabled]),a[href]')].filter(el=>el.offsetParent!==null);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}});
 
-      // WhatsApp contact and registration request. The static site only prepares a message;
-      // the visitor reviews it and sends it from WhatsApp. No customer details are stored here.
+      // WhatsApp contact and registration request. Visitors choose one of the two customer-care contacts.
+      // The static site prepares the message only; it never sends or stores customer details automatically.
       const waConfig=window.SE7EN_CONFIG||{};
-      const getSellerWhatsApp=()=>String(waConfig.sellerWhatsApp||'').replace(/\D/g,'');
+      const getSellerContacts=()=>{
+        const contacts=Array.isArray(waConfig.sellers)?waConfig.sellers:[];
+        return contacts.map((seller,index)=>({
+          label:String(seller?.label||`مسؤول خدمة العملاء ${index+1}`),
+          phone:String(seller?.phone||'').replace(/\D/g,'')
+        })).filter(seller=>seller.phone.length>=8&&seller.phone.length<=15).slice(0,2);
+      };
+      const formatSellerPhone=phone=>phone.startsWith('20')?`+20 ${phone.slice(2,4)} ${phone.slice(4)}`:`+${phone}`;
       const toastNode=document.querySelector('#toast');let waToastTimer=null;
       function showNotice(message){if(!toastNode)return;toastNode.textContent=message;toastNode.classList.add('show');window.clearTimeout(waToastTimer);waToastTimer=window.setTimeout(()=>toastNode.classList.remove('show'),4200)}
-      function makeWhatsAppUrl(message){
-        const sellerNumber=getSellerWhatsApp();
-        if(!sellerNumber||sellerNumber.length<8||sellerNumber.length>15){showNotice('رقم واتساب البائع غير مُضاف. أضِفه في ملف store-config.js أولًا.');return null}
-        return `https://wa.me/${sellerNumber}?text=${encodeURIComponent(message)}`;
-      }
-      function openSellerWhatsApp(message){const url=makeWhatsAppUrl(message);if(!url)return false;window.open(url,'_blank','noopener,noreferrer');return true}
+      function makeWhatsAppUrl(message,seller){return `https://wa.me/${seller.phone}?text=${encodeURIComponent(message)}`;}
       const registerModal=document.querySelector('#whatsapp-register-modal');
+      const sellerChooserModal=document.querySelector('#whatsapp-seller-modal');
       const registerOpenButton=document.querySelector('#open-whatsapp-register');
       const registerCloseButton=document.querySelector('#close-whatsapp-register');
+      const sellerChooserCloseButton=document.querySelector('#close-whatsapp-seller');
       const registerForm=document.querySelector('#whatsapp-register-form');
       const registerName=document.querySelector('#wa-customer-name');
       const registerPhone=document.querySelector('#wa-customer-phone');
       const registerStatus=document.querySelector('#wa-register-status');
       let registerPreviousFocus=null;
+      let sellerChooserPreviousFocus=null;
+      let pendingWhatsAppMessage='';
+      let pendingWhatsAppStatus=null;
       function openRegisterModal(){if(!registerModal)return;registerPreviousFocus=document.activeElement;registerModal.classList.add('open');registerModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';window.setTimeout(()=>registerName?.focus(),40)}
-      function closeRegisterModal(){if(!registerModal)return;registerModal.classList.remove('open');registerModal.setAttribute('aria-hidden','true');document.body.style.overflow=modal.classList.contains('open')?'hidden':'';if(registerPreviousFocus&&typeof registerPreviousFocus.focus==='function')registerPreviousFocus.focus()}
+      function closeRegisterModal(){if(!registerModal)return;registerModal.classList.remove('open');registerModal.setAttribute('aria-hidden','true');document.body.style.overflow=(modal.classList.contains('open')||sellerChooserModal?.classList.contains('open'))?'hidden':'';if(registerPreviousFocus&&typeof registerPreviousFocus.focus==='function')registerPreviousFocus.focus()}
+      function openSellerChooser(message,statusTarget=null){
+        const contacts=getSellerContacts();
+        if(!contacts.length){showNotice('أرقام خدمة العملاء غير مضبوطة. راجع ملف store-config.js.');return false}
+        pendingWhatsAppMessage=message;
+        pendingWhatsAppStatus=statusTarget;
+        sellerChooserPreviousFocus=document.activeElement;
+        const choiceButtons=[...document.querySelectorAll('[data-seller-choice]')];
+        choiceButtons.forEach((button,index)=>{
+          const seller=contacts[index];
+          button.hidden=!seller;
+          if(!seller)return;
+          const labelNode=button.querySelector('[data-seller-label]');
+          const phoneNode=button.querySelector('[data-seller-phone]');
+          if(labelNode)labelNode.textContent=seller.label;
+          if(phoneNode)phoneNode.textContent=formatSellerPhone(seller.phone);
+          button.setAttribute('aria-label',`${seller.label} ${formatSellerPhone(seller.phone)}`);
+        });
+        sellerChooserModal?.classList.add('open');
+        sellerChooserModal?.setAttribute('aria-hidden','false');
+        document.body.style.overflow='hidden';
+        window.setTimeout(()=>document.querySelector('[data-seller-choice]:not([hidden])')?.focus(),30);
+        return true;
+      }
+      function closeSellerChooser(){
+        if(!sellerChooserModal)return;
+        sellerChooserModal.classList.remove('open');
+        sellerChooserModal.setAttribute('aria-hidden','true');
+        document.body.style.overflow=(modal.classList.contains('open')||registerModal?.classList.contains('open'))?'hidden':'';
+        if(sellerChooserPreviousFocus&&typeof sellerChooserPreviousFocus.focus==='function')sellerChooserPreviousFocus.focus();
+      }
       registerOpenButton?.addEventListener('click',openRegisterModal);
       registerCloseButton?.addEventListener('click',closeRegisterModal);
       registerModal?.addEventListener('click',event=>{if(event.target===registerModal)closeRegisterModal()});
-      document.addEventListener('keydown',event=>{if(event.key==='Escape'&&registerModal?.classList.contains('open'))closeRegisterModal()});
+      sellerChooserCloseButton?.addEventListener('click',()=>{closeSellerChooser();pendingWhatsAppMessage='';pendingWhatsAppStatus=null});
+      sellerChooserModal?.addEventListener('click',event=>{if(event.target===sellerChooserModal){closeSellerChooser();pendingWhatsAppMessage='';pendingWhatsAppStatus=null}});
+      document.addEventListener('keydown',event=>{
+        if(event.key==='Escape'&&sellerChooserModal?.classList.contains('open')){closeSellerChooser();pendingWhatsAppMessage='';pendingWhatsAppStatus=null;return}
+        if(event.key==='Escape'&&registerModal?.classList.contains('open'))closeRegisterModal();
+      });
+      document.querySelectorAll('[data-seller-choice]').forEach(button=>button.addEventListener('click',()=>{
+        const index=Number(button.dataset.sellerChoice);
+        const seller=getSellerContacts()[index];
+        if(!seller){showNotice('رقم خدمة العملاء غير متاح حاليًا.');return}
+        const message=pendingWhatsAppMessage;
+        const statusTarget=pendingWhatsAppStatus;
+        const url=makeWhatsAppUrl(message,seller);
+        window.open(url,'_blank','noopener,noreferrer');
+        if(statusTarget)statusTarget.textContent=`اتفتحت محادثة ${seller.label} على واتساب. راجع الرسالة واضغط إرسال داخل واتساب.`;
+        closeSellerChooser();
+        pendingWhatsAppMessage='';pendingWhatsAppStatus=null;
+      }));
       registerForm?.addEventListener('submit',event=>{
         event.preventDefault();
         const name=String(registerName?.value||'').trim();
@@ -574,18 +651,18 @@
         if(name.length<2){if(registerStatus)registerStatus.textContent='اكتب اسمك بشكل صحيح الأول.';registerName?.focus();return}
         if(phone.length<8||phone.length>15){if(registerStatus)registerStatus.textContent='اكتب رقم واتساب صحيح بكود الدولة لو الرقم مش مصري.';registerPhone?.focus();return}
         const message=`السلام عليكم، عايز أسجّل بياناتي وأتواصل مع Se7en.\nالاسم: ${name}\nرقم واتسابي: +${phone}\nمن فضلكم ابعتولي تفاصيل المقاسات والتوافر وطريقة الطلب.`;
-        if(!getSellerWhatsApp().length){if(registerStatus)registerStatus.textContent='رقم واتساب البائع لم يُضف بعد. أضِفه في store-config.js قبل نشر الموقع.';return}
-        const opened=openSellerWhatsApp(message);
-        if(opened&&registerStatus)registerStatus.textContent='اتفتحت محادثة واتساب برسالة التسجيل. راجع الرسالة واضغط إرسال داخل واتساب.';
+        if(!getSellerContacts().length){if(registerStatus)registerStatus.textContent='أرقام خدمة العملاء غير مضبوطة. راجع ملف store-config.js قبل النشر.';return}
+        openSellerChooser(message,registerStatus);
+        if(registerStatus)registerStatus.textContent='اختار أحد مسؤولي خدمة العملاء لإرسال رسالة التسجيل عبر واتساب.';
       });
       document.querySelectorAll('.whatsapp-direct-btn').forEach(button=>button.addEventListener('click',event=>{
         event.preventDefault();
         if(button.id==='product-whatsapp-btn'){
           const p=products[currentProductId];
           const productName=p?.name||'التيشيرتات المعروضة';
-          openSellerWhatsApp(`السلام عليكم، عايز أستفسر عن ${productName} من Se7en، سعره 350 جنيه. هل متاح؟ وممكن أعرف المقاسات وطريقة الطلب؟`);
+          openSellerChooser(`السلام عليكم، عايز أستفسر عن ${productName} من Se7en، سعره 350 جنيه. هل متاح؟ وممكن أعرف المقاسات وطريقة الطلب؟`);
         }else{
-          openSellerWhatsApp('السلام عليكم، عايز أستفسر عن تيشيرتات Se7en المتاحة والمقاسات وطريقة الطلب.');
+          openSellerChooser('السلام عليكم، عايز أستفسر عن تيشيرتات Se7en المتاحة والمقاسات وطريقة الطلب.');
         }
       }));
 
