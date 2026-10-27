@@ -1,7 +1,7 @@
 {
-  "name": "se7en-store-direct-telegram-orders",
-  "version": "21.0.0",
+  "name": "se7en-store-telegram-otp",
+  "version": "20.0.0",
   "private": true,
   "type": "module",
-  "description": "Se7en storefront with direct server-side Telegram order notifications to the seller"
+  "description": "Se7en storefront with Telegram OTP sign-in and in-site customer chat"
 }

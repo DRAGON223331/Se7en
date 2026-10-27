@@ -1,0 +1,1 @@
+Product backgrounds were removed with automatic object segmentation. Transparent PNG files were used for all site images; original WebP assets are retained. Check edges before print use. Shirt prices updated from 350 EGP to old site price 250 EGP. All other order and auth logic preserved.
