@@ -1,0 +1,10 @@
+SE7EN Store — catalogue and pricing update (2026-10-27)
+- 11 existing football shirts: 250 EGP each.
+- 3 newly added superhero shirts: 250 EGP each.
+- 3 newly added bag entries: 450 EGP each (navy T60, red T60, multicolour Nike photo).
+- Total 17 product cards (14 shirts + 3 bag entries).
+- Both card and product-detail prices match. Telegram/chat inquiry prefills now use the selected item's actual price.
+- All new products use their original photos intact with object-fit: contain; the original photographic backgrounds remain.
+- Previous fix preserved all original photos and removed damaged cutout PNG images.
+- The Nike image shows multiple colours together and contains sunglasses emoji overlays in the user-provided source photo; these have not been altered.
+- Bag-navy alternate angle source preserved in assets/originals/bag-t60-navy-02.jpeg.
