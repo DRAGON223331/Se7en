@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     requireMethod(req, ['GET', 'POST']);
     requireCoreConfig();
     const session = readSession(req);
-    if (!session || session.role !== 'customer') throw new HttpError(401, 'سجّل الدخول برقم واتسابك الأول.');
+    if (!session || session.role !== 'customer') throw new HttpError(401, 'سجّل الدخول بتيليجرام الأول.');
     const phone = String(session.phone || '');
     if (req.method === 'GET') {
       const conversationId = String(req.query?.conversation_id || '');

@@ -235,11 +235,12 @@
     @media(prefers-reduced-motion:reduce){.instagram-live-link{transition:none}.instagram-live-link:hover{transform:none}}
 
   
-    /* V19: embedded customer chat and WhatsApp OTP login */
+    /* V20: embedded customer chat and Telegram OTP login */
     [hidden]{display:none!important}
-    .whatsapp-link{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.035)}
-    .whatsapp-link svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
-    .whatsapp-link:hover,.whatsapp-direct-btn:hover{border-color:#fff}
+    .telegram-login-link{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.035)}
+    .site-chat-telegram-link[hidden]{display:none!important}
+    .telegram-login-link svg{width:18px;height:18px;fill:currentColor;stroke:none}
+    .telegram-login-link:hover,.store-chat-btn:hover{border-color:#fff}
     .site-chat-card{position:relative;width:min(690px,100%);height:min(780px,calc(100dvh - 28px));max-height:calc(100vh - 28px);display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#0e0f10;box-shadow:0 35px 100px #000;animation:modalIn .28s var(--ease) both;direction:rtl}
     .site-chat-topbar{grid-row:1;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.12);background:linear-gradient(120deg,#1b1d1f,#0b0c0d)}
     .site-chat-brand{display:flex;align-items:center;gap:12px;min-width:0}.site-chat-brand-mark{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border:1px solid rgba(255,255,255,.6);color:#fff;font:900 13px Arial,sans-serif;letter-spacing:-.08em}.site-chat-brand>span:last-child{display:flex;flex-direction:column;gap:4px;min-width:0}.site-chat-brand strong{font-size:13px;font-weight:900}.site-chat-brand small{color:#9c9fa1;font-size:9px;line-height:1.6}
@@ -250,7 +251,7 @@
     .site-chat-field{display:flex;flex-direction:column;gap:8px;margin:13px 0;color:#e8e8e5;font-size:11px;font-weight:800}.site-chat-field input{width:100%;min-height:49px;padding:0 13px;border:1px solid rgba(255,255,255,.16);border-radius:0;background:#090a0b;color:#fff;font:inherit;font-weight:600;outline:none}.site-chat-field input:focus{border-color:rgba(255,255,255,.65);box-shadow:0 0 0 3px rgba(255,255,255,.06)}.site-chat-field input::placeholder{color:#696c6e}.site-chat-submit{width:100%;min-height:48px;margin-top:7px;border:0;cursor:pointer;font-family:inherit}.site-chat-submit:disabled,.site-chat-send:disabled{opacity:.55;cursor:wait}.site-chat-text-button{display:inline-flex;align-items:center;justify-content:center;padding:8px 3px;border:0;background:transparent;color:#bfc1c2;font:inherit;font-size:10px;text-decoration:underline;cursor:pointer}.site-chat-status{min-height:20px;margin:10px 0 0;color:#d8d8d5;font-size:10px;line-height:1.9}.site-chat-privacy{margin:19px 0 0;color:#777b7e;font-size:9px;line-height:1.9}
     .site-chat-app{grid-row:3;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;overflow:hidden}.site-chat-accountbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 17px;border-bottom:1px solid rgba(255,255,255,.1);background:#141516}.site-chat-accountbar>span{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:10px}.site-chat-accountbar strong{font-size:11px}.site-chat-accountbar small{color:#909396;direction:ltr}.site-chat-assignment{display:grid;grid-template-columns:auto minmax(130px,1fr);align-items:center;gap:7px 12px;padding:11px 17px;border-bottom:1px solid rgba(255,255,255,.09)}.site-chat-assignment label{color:#bcbfc1;font-size:10px;font-weight:800}.site-chat-assignment select{min-width:0;width:100%;height:36px;padding:0 9px;border:1px solid rgba(255,255,255,.18);border-radius:0;background:#0b0c0d;color:#fff;font:inherit;font-size:10px}.site-chat-assignment span{grid-column:1/-1;color:#7f8386;font-size:9px}
     .site-chat-thread{display:flex;flex-direction:column;gap:10px;min-height:0;overflow:auto;padding:18px;background:radial-gradient(ellipse at 100% 0,rgba(255,255,255,.035),transparent 50%);scroll-behavior:smooth}.site-chat-empty{max-width:88%;align-self:flex-start;padding:13px 15px;border:1px solid rgba(255,255,255,.1);background:#1a1c1e;color:#b8bbbd;font-size:11px;line-height:2}.site-chat-bubble{max-width:86%;display:flex;flex-direction:column;gap:6px;padding:10px 13px;border:1px solid rgba(255,255,255,.14);background:#1c1e20;color:#f1f1ee;font-size:11px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}.site-chat-bubble.customer{align-self:flex-end;background:#f2f2ee;color:#111;border-color:#fff}.site-chat-bubble.agent{align-self:flex-start}.site-chat-bubble-meta{display:flex;justify-content:space-between;gap:13px;font-size:8px;opacity:.62}.site-chat-compose{display:flex;align-items:stretch;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.12);background:#131415}.site-chat-compose textarea{resize:vertical;flex:1;min-width:0;min-height:47px;max-height:115px;padding:11px;border:1px solid rgba(255,255,255,.16);border-radius:0;background:#08090a;color:#fff;font:inherit;font-size:11px;line-height:1.8;outline:none}.site-chat-compose textarea:focus{border-color:rgba(255,255,255,.55)}.site-chat-compose .btn{min-width:94px;border:0;cursor:pointer;font-family:inherit;font-size:11px}.site-chat-app>.site-chat-status{padding:0 14px;margin:0;background:#131415}.site-chat-foot{grid-row:4;display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid rgba(255,255,255,.1);color:#777b7e;font-size:9px}.site-chat-dot{width:6px;height:6px;border-radius:50%;background:#a9d6ab;box-shadow:0 0 10px rgba(169,214,171,.3)}
-    @media(max-width:680px){.header-actions{gap:6px}.whatsapp-link{padding-inline:10px;min-width:38px}.site-chat-card{height:calc(100dvh - 16px);max-height:calc(100vh - 16px)}.site-chat-topbar{padding:13px 14px}.site-chat-auth{padding:24px 18px}.site-chat-assignment{padding:10px}.site-chat-thread{padding:12px}.site-chat-compose{padding:9px}.site-chat-compose .btn{min-width:72px}.site-chat-bubble{max-width:94%}}
+    @media(max-width:680px){.header-actions{gap:6px}.telegram-login-link{padding-inline:10px;min-width:38px}.site-chat-card{height:calc(100dvh - 16px);max-height:calc(100vh - 16px)}.site-chat-topbar{padding:13px 14px}.site-chat-auth{padding:24px 18px}.site-chat-assignment{padding:10px}.site-chat-thread{padding:12px}.site-chat-compose{padding:9px}.site-chat-compose .btn{min-width:72px}.site-chat-bubble{max-width:94%}}
     @media(prefers-reduced-motion:reduce){.site-chat-card{animation:none}}
   </style>
 </head>
@@ -292,7 +293,7 @@
         <button class="icon-link mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="فتح قائمة التنقل" aria-expanded="false" aria-controls="mobile-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
         <a class="icon-link" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer" aria-label="تابع Se7en على إنستجرام"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg><span class="link-label">إنستجرام</span></a>
         <a class="icon-link" href="#location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span class="link-label">مكاننا</span></a>
-        <button class="icon-link whatsapp-link" id="open-whatsapp-register" type="button" aria-label="الدخول والشات داخل الموقع"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 11.7a8.3 8.3 0 0 1-12.2 7.4L3 20l1-4.9A8.3 8.3 0 1 1 20.3 11.7Z"/><path d="M8.4 8.1c.2-.5.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.2.2-.2.4 0 .6.5.8 1.1 1.4 1.9 1.8.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.2.1.3.3.3.5 0 .4-.2 1-.6 1.3-.5.4-1.1.6-1.8.5-1-.1-2.3-.7-3.6-1.8-1.1-1-1.9-2.3-2.1-3.3-.2-.9 0-1.7.5-2.2Z"/></svg><span class="link-label">حسابي / الشات</span></button>
+        <button class="icon-link telegram-login-link" id="open-store-chat" type="button" aria-label="الدخول والشات داخل الموقع"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 3.5 18.2 20c-.2 1.1-.9 1.4-1.8.9l-5.2-3.8-2.5 2.4c-.3.3-.5.5-1 .5l.4-5.3 9.7-8.8c.4-.4-.1-.6-.6-.2L5.2 13.4l-5-1.6c-1.1-.3-1.1-1.1.2-1.6L20 2.6c1-.4 1.9.2 1.6.9Z"/></svg><span class="link-label">حسابي / الشات</span></button>
       </div>
     </div>
   </header>
@@ -352,7 +353,7 @@
           <h3 class="location-title">Se7en في إسكندرية.</h3>
           <div class="address-card"><span class="address-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.3"/></svg></span><div><strong>شارع النصر</strong><p>الزقاق اللي قدّام فتح الله ماركت، الإسكندرية.</p></div></div>
           <div class="location-facts"><span><i></i> الإسكندرية، مصر</span><span>SE7EN / STORE</span></div>
-          <div class="location-actions"><a class="btn btn-primary" href="#location-map">شوف الخريطة هنا <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a><a class="btn btn-secondary whatsapp-direct-btn" href="#whatsapp-contact" id="location-whatsapp-btn">افتح شات خدمة العملاء ↗</a></div>
+          <div class="location-actions"><a class="btn btn-primary" href="#location-map">شوف الخريطة هنا <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a><a class="btn btn-secondary store-chat-btn" href="#store-chat" id="location-chat-btn">افتح شات خدمة العملاء ↗</a></div>
           <p class="location-hint">الخريطة التفاعلية ظاهرة جنب بيانات العنوان — تقدر تكبّرها وتحركها من داخل الصفحة.</p>
         </div>
         <div class="map-card reveal" id="location-map">
@@ -416,27 +417,25 @@
         <div class="site-chat-brand"><span class="site-chat-brand-mark">S7</span><span><strong id="site-chat-title">Se7en Customer Care</strong><small>دعم العملاء / محادثة داخل الموقع</small></span></div>
         <button class="close-modal site-chat-close" id="site-chat-close" type="button" aria-label="إغلاق الشات">×</button>
       </header>
-      <div class="site-chat-setup-note" id="site-chat-setup-note" hidden>الشات الداخلي وتسجيل واتساب محتاجين تفعيل إعدادات الخادم أول مرة. راجع ملف README في نسخة الموقع.</div>
+      <div class="site-chat-setup-note" id="site-chat-setup-note" hidden>الشات الداخلي وتسجيل تيليجرام محتاجين تفعيل إعدادات الخادم أول مرة. راجع ملف README في نسخة الموقع.</div>
       <section class="site-chat-auth" id="site-chat-auth">
-        <div class="site-chat-welcome"><span class="site-chat-kicker">SE7EN / YOUR ACCOUNT</span><h2>سجّل برقم واتسابك.</h2><p>هنبعت كود تحقق على واتساب، وبعد التأكيد تقدر تكلم خدمة العملاء من هنا من غير ما تخرج من الموقع.</p></div>
+        <div class="site-chat-welcome"><span class="site-chat-kicker">SE7EN / YOUR ACCOUNT</span><h2>سجّل دخولك بتيليجرام.</h2><p>اكتب اسمك، افتح بوت Se7en على تيليجرام، شارك رقمك من زر تيليجرام الرسمي، وبعدها هيوصلك كود الدخول داخل البوت.</p></div>
         <form id="site-chat-phone-form">
           <label class="site-chat-field">اسمك
             <input id="site-chat-name" name="name" type="text" autocomplete="name" maxlength="80" placeholder="اكتب اسمك" required>
           </label>
-          <label class="site-chat-field">رقم واتسابك بكود الدولة
-            <input id="site-chat-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="01012345678 أو +201012345678" required>
-          </label>
-          <button class="btn btn-primary site-chat-submit" id="site-chat-request-code" type="submit">إرسال كود التحقق على واتساب</button>
+          <button class="btn btn-primary site-chat-submit" id="site-chat-request-code" type="submit">بدء تسجيل الدخول عبر تيليجرام ↗</button>
         </form>
+        <a class="btn btn-secondary site-chat-submit site-chat-telegram-link" id="site-chat-telegram-link" href="#" target="_blank" rel="noopener noreferrer" hidden>فتح بوت Se7en على تيليجرام ↗</a>
         <form id="site-chat-otp-form" hidden>
           <label class="site-chat-field">كود التحقق المكوّن من 6 أرقام
             <input id="site-chat-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="••••••" required>
           </label>
-          <button class="btn btn-primary site-chat-submit" type="submit">تأكيد الرقم وفتح الشات</button>
-          <button class="site-chat-text-button" id="site-chat-back-phone" type="button">تغيير رقم واتساب</button>
+          <button class="btn btn-primary site-chat-submit" type="submit">تأكيد الكود وفتح الشات</button>
+          <button class="site-chat-text-button" id="site-chat-back-phone" type="button">إعادة البدء</button>
         </form>
         <p class="site-chat-status" id="site-chat-auth-status" role="status" aria-live="polite"></p>
-        <p class="site-chat-privacy">رقمك ورسائلك تُحفظ لتشغيل المحادثة والرد عليك. لا تكتب بيانات بطاقة أو معلومات مالية في الشات.</p>
+        <p class="site-chat-privacy">لازم تشارك رقمك من زر تيليجرام الرسمي لتأكيد إنه رقمك. كود الدخول صالح لمدة 5 دقائق، ولا تشاركه مع أي شخص.</p>
       </section>
       <section class="site-chat-app" id="site-chat-app" hidden>
         <div class="site-chat-accountbar"><span>أهلًا <strong id="site-chat-customer-name">عميل Se7en</strong><small id="site-chat-customer-phone" dir="ltr"></small></span><button class="site-chat-text-button" id="site-chat-logout" type="button">تسجيل خروج</button></div>
@@ -448,7 +447,7 @@
       <footer class="site-chat-foot"><span class="site-chat-dot"></span> شات داخل Se7en — خدمة العملاء</footer>
     </section>
   </div>
-  <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-content"><button class="close-modal" id="close-modal" type="button" aria-label="إغلاق">×</button><div class="modal-image-wrap"><button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="التصميم السابق">‹</button><button class="modal-nav modal-next" id="modal-next" type="button" aria-label="التصميم التالي">›</button><img class="modal-image" id="modal-image" src="" alt=""><div class="modal-zoom-controls" role="group" aria-label="تكبير الصورة"><button type="button" data-zoom="out" aria-label="تصغير الصورة">−</button><span id="zoom-level" aria-live="polite">100%</span><button type="button" data-zoom="in" aria-label="تكبير الصورة">+</button></div></div><div class="modal-info"><div class="modal-kicker" id="modal-kicker">SE7EN / DESIGN</div><h2 class="modal-title" id="modal-title">تفاصيل التصميم</h2><p class="modal-desc" id="modal-desc"></p><p class="modal-price" id="modal-price">350 جنيه</p><div class="modal-actions"><a class="btn btn-primary whatsapp-direct-btn" href="#whatsapp-contact" id="product-whatsapp-btn">اسأل عن التيشيرت في الشات ↗</a><a class="btn btn-secondary" href="#location" data-scroll-location>مكاننا على الخريطة ↗</a></div></div></div></div>
+  <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true"><div class="modal-content"><button class="close-modal" id="close-modal" type="button" aria-label="إغلاق">×</button><div class="modal-image-wrap"><button class="modal-nav modal-prev" id="modal-prev" type="button" aria-label="التصميم السابق">‹</button><button class="modal-nav modal-next" id="modal-next" type="button" aria-label="التصميم التالي">›</button><img class="modal-image" id="modal-image" src="" alt=""><div class="modal-zoom-controls" role="group" aria-label="تكبير الصورة"><button type="button" data-zoom="out" aria-label="تصغير الصورة">−</button><span id="zoom-level" aria-live="polite">100%</span><button type="button" data-zoom="in" aria-label="تكبير الصورة">+</button></div></div><div class="modal-info"><div class="modal-kicker" id="modal-kicker">SE7EN / DESIGN</div><h2 class="modal-title" id="modal-title">تفاصيل التصميم</h2><p class="modal-desc" id="modal-desc"></p><p class="modal-price" id="modal-price">350 جنيه</p><div class="modal-actions"><a class="btn btn-primary store-chat-btn" href="#store-chat" id="product-chat-btn">اسأل عن التيشيرت في الشات ↗</a><a class="btn btn-secondary" href="#location" data-scroll-location>مكاننا على الخريطة ↗</a></div></div></div></div>
   <button class="back-to-top" id="back-to-top" type="button" aria-label="الرجوع لأعلى الصفحة">↑</button>
   <div class="toast" id="toast" role="status" aria-live="polite">تم فتح تفاصيل التصميم</div>
   <script src="store-config.js"></script>
@@ -559,15 +558,16 @@
       document.querySelector('#modal-prev')?.addEventListener('click',()=>stepModal(-1));document.querySelector('#modal-next')?.addEventListener('click',()=>stepModal(1));
       closeButton.addEventListener('click',closeModal);modal.addEventListener('click',event=>{if(event.target===modal)closeModal()});document.addEventListener('keydown',event=>{if(!modal.classList.contains('open'))return;if(event.key==='Escape'){event.preventDefault();closeModal()}else if(event.key==='ArrowLeft'){event.preventDefault();stepModal(1)}else if(event.key==='ArrowRight'){event.preventDefault();stepModal(-1)}else if(event.key==='Tab'){const focusable=[...modal.querySelectorAll('button:not([disabled]),a[href]')].filter(el=>el.offsetParent!==null);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}});
 
-      // V19: in-site customer chat. Real OTP and message storage are served by secure Vercel API routes.
+      // V20: in-site customer chat. Telegram OTP and chat storage are served by secure Vercel API routes.
       const chatModal=document.querySelector('#site-chat-modal');
-      const chatOpenButton=document.querySelector('#open-whatsapp-register');
+      const chatOpenButton=document.querySelector('#open-store-chat');
       const chatCloseButton=document.querySelector('#site-chat-close');
       const chatAuthView=document.querySelector('#site-chat-auth');
       const chatAppView=document.querySelector('#site-chat-app');
       const chatSetupNote=document.querySelector('#site-chat-setup-note');
       const chatNameInput=document.querySelector('#site-chat-name');
-      const chatPhoneInput=document.querySelector('#site-chat-phone');
+      const chatTelegramLink=document.querySelector('#site-chat-telegram-link');
+      let chatTelegramChallengeId='';
       const chatCodeInput=document.querySelector('#site-chat-code');
       const chatPhoneForm=document.querySelector('#site-chat-phone-form');
       const chatOtpForm=document.querySelector('#site-chat-otp-form');
@@ -594,7 +594,7 @@
       function setChatStatus(target,message){if(target)target.textContent=message||''}
       function setChatBusy(button,busy,label){if(!button)return;button.disabled=busy;if(label){if(busy){button.dataset.originalLabel=button.textContent;button.textContent=label}else if(button.dataset.originalLabel){button.textContent=button.dataset.originalLabel;delete button.dataset.originalLabel}}}
       async function checkChatConfigured(){try{const status=await chatApi('/api/status');chatConfigured=!!status.configured}catch{chatConfigured=false}if(chatSetupNote)chatSetupNote.hidden=chatConfigured;for(const button of [document.querySelector('#site-chat-request-code')])if(button)button.disabled=!chatConfigured;return chatConfigured}
-      function showChatAuth(){if(chatAuthView)chatAuthView.hidden=false;if(chatAppView)chatAppView.hidden=true;chatPhoneForm.hidden=false;chatOtpForm.hidden=true;setChatStatus(chatAuthStatus,chatConfigured?'':'الشات الداخلي غير مفعّل بعد. أكمل إعدادات Meta وSupabase في Vercel.');}
+      function showChatAuth(){if(chatAuthView)chatAuthView.hidden=false;if(chatAppView)chatAppView.hidden=true;chatPhoneForm.hidden=false;chatOtpForm.hidden=true;if(chatTelegramLink)chatTelegramLink.hidden=true;chatTelegramChallengeId='';setChatStatus(chatAuthStatus,chatConfigured?'':'الشات الداخلي غير مفعّل بعد. أكمل إعدادات تيليجرام وSupabase في Vercel.');}
       function showChatApp(){chatAuthView.hidden=true;chatAppView.hidden=false;chatCustomerName.textContent=chatUser?.name||'عميل Se7en';chatCustomerPhone.textContent=chatUser?.phone||'';setChatStatus(chatAuthStatus,'');setChatStatus(chatSendStatus,'');}
       function closeSiteChat(){if(!chatModal)return;chatModal.classList.remove('open');chatModal.setAttribute('aria-hidden','true');document.body.style.overflow=modal.classList.contains('open')?'hidden':'';stopChatPolling();if(chatPreviousFocus&&typeof chatPreviousFocus.focus==='function')chatPreviousFocus.focus()}
       async function openSiteChat(productName=''){chatPendingProduct=productName||'';chatPreviousFocus=document.activeElement;if(modal.classList.contains('open'))closeModal();chatModal.classList.add('open');chatModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';await checkChatConfigured();try{const status=await chatApi('/api/auth/status');if(status.loggedIn){chatUser=status.user;showChatApp();await refreshChat(true);startChatPolling();if(chatPendingProduct){chatMessageInput.value=`السلام عليكم، عايز أستفسر عن ${chatPendingProduct}. سعره 350 جنيه. هل متاح؟ وممكن أعرف المقاسات وطريقة الطلب؟`;chatPendingProduct='';chatMessageInput.focus()}else chatMessageInput.focus();return}}catch{}showChatAuth();window.setTimeout(()=>chatNameInput?.focus(),40)}
@@ -604,25 +604,44 @@
       document.addEventListener('keydown',event=>{if(event.key==='Escape'&&chatModal?.classList.contains('open'))closeSiteChat()});
       chatPhoneForm?.addEventListener('submit',async event=>{
         event.preventDefault();setChatStatus(chatAuthStatus,'');
-        const name=String(chatNameInput.value||'').trim();const phone=String(chatPhoneInput.value||'').trim();
+        const name=String(chatNameInput.value||'').trim();
         if(name.length<2){setChatStatus(chatAuthStatus,'اكتب اسمك الأول.');chatNameInput.focus();return}
-        if(!chatConfigured){setChatStatus(chatAuthStatus,'تسجيل واتساب لسه محتاج تفعيل إعدادات الخادم من ملف README.');return}
-        const button=chatPhoneForm.querySelector('button[type="submit"]');setChatBusy(button,true,'جاري إرسال الكود…');
-        try{const result=await chatApi('/api/auth/send-otp',{method:'POST',body:{name,phone}});chatOtpForm.hidden=false;chatPhoneForm.hidden=true;chatCodeInput.focus();setChatStatus(chatAuthStatus,result.message||'تم إرسال الكود.')}catch(error){setChatStatus(chatAuthStatus,error.message)}finally{setChatBusy(button,false)}
+        if(!chatConfigured){setChatStatus(chatAuthStatus,'تسجيل تيليجرام لسه محتاج تفعيل إعدادات البوت وSupabase في Vercel.');return}
+        const button=chatPhoneForm.querySelector('button[type="submit"]');setChatBusy(button,true,'جاري تجهيز تسجيل الدخول…');
+        try{
+          const result=await chatApi('/api/auth/telegram-start',{method:'POST',body:{name}});
+          chatTelegramChallengeId=result.challenge_id;
+          chatTelegramLink.href=result.telegram_url;
+          chatTelegramLink.hidden=false;
+          chatPhoneForm.hidden=true;
+          chatOtpForm.hidden=false;
+          setChatStatus(chatAuthStatus,'افتح البوت من الزر، واضغط Start ثم شارك رقم هاتفك من الزر داخل تيليجرام. هيوصلك الكود في محادثة البوت.');
+          chatCodeInput.focus();
+        }catch(error){setChatStatus(chatAuthStatus,error.message)}finally{setChatBusy(button,false)}
       });
-      document.querySelector('#site-chat-back-phone')?.addEventListener('click',()=>{chatOtpForm.hidden=true;chatPhoneForm.hidden=false;chatCodeInput.value='';setChatStatus(chatAuthStatus,'');chatPhoneInput.focus()});
+      document.querySelector('#site-chat-back-phone')?.addEventListener('click',()=>{
+        chatOtpForm.hidden=true;chatPhoneForm.hidden=false;chatCodeInput.value='';chatTelegramChallengeId='';
+        if(chatTelegramLink)chatTelegramLink.hidden=true;
+        setChatStatus(chatAuthStatus,'');chatNameInput.focus();
+      });
       chatOtpForm?.addEventListener('submit',async event=>{
-        event.preventDefault();setChatStatus(chatAuthStatus,'');const code=String(chatCodeInput.value||'').trim();const phone=String(chatPhoneInput.value||'').trim();const name=String(chatNameInput.value||'').trim();
+        event.preventDefault();setChatStatus(chatAuthStatus,'');const code=String(chatCodeInput.value||'').trim();
+        if(!chatTelegramChallengeId){setChatStatus(chatAuthStatus,'ابدأ تسجيل الدخول من جديد وافتح بوت تيليجرام.');return}
         const button=chatOtpForm.querySelector('button[type="submit"]');setChatBusy(button,true,'جاري التحقق…');
-        try{const result=await chatApi('/api/auth/verify-otp',{method:'POST',body:{phone,code}});chatUser=result.user;showChatApp();await refreshChat(true);startChatPolling();if(chatPendingProduct){chatMessageInput.value=`السلام عليكم، عايز أستفسر عن ${chatPendingProduct}. سعره 350 جنيه. هل متاح؟ وممكن أعرف المقاسات وطريقة الطلب؟`;chatPendingProduct='';}chatMessageInput.focus()}catch(error){setChatStatus(chatAuthStatus,error.message)}finally{setChatBusy(button,false)}
+        try{
+          const result=await chatApi('/api/auth/verify-telegram-otp',{method:'POST',body:{challenge_id:chatTelegramChallengeId,code}});
+          chatUser=result.user;chatTelegramChallengeId='';showChatApp();await refreshChat(true);startChatPolling();
+          if(chatPendingProduct){chatMessageInput.value=`السلام عليكم، عايز أستفسر عن ${chatPendingProduct}. سعره 350 جنيه. هل متاح؟ وممكن أعرف المقاسات وطريقة الطلب؟`;chatPendingProduct='';}
+          chatMessageInput.focus();
+        }catch(error){setChatStatus(chatAuthStatus,error.message)}finally{setChatBusy(button,false)}
       });
-      document.querySelector('#site-chat-logout')?.addEventListener('click',async()=>{try{await chatApi('/api/auth/logout',{method:'POST'})}catch{}chatUser=null;chatConversation=null;stopChatPolling();showChatAuth();chatPhoneInput.value='';chatNameInput.value='';chatCodeInput.value='';setChatStatus(chatAuthStatus,'تم تسجيل الخروج.');});
+      document.querySelector('#site-chat-logout')?.addEventListener('click',async()=>{try{await chatApi('/api/auth/logout',{method:'POST'})}catch{}chatUser=null;chatConversation=null;stopChatPolling();showChatAuth();chatNameInput.value='';chatCodeInput.value='';setChatStatus(chatAuthStatus,'تم تسجيل الخروج.');});
       function startChatPolling(){stopChatPolling();chatPollTimer=window.setInterval(()=>refreshChat(false),4500)}
       function stopChatPolling(){if(chatPollTimer)window.clearInterval(chatPollTimer);chatPollTimer=null;chatPolling=false}
       function renderChatMessages(messages){const wasNearBottom=chatMessages.scrollHeight-chatMessages.scrollTop-chatMessages.clientHeight<100;chatMessages.replaceChildren();if(!messages?.length){const empty=document.createElement('div');empty.className='site-chat-empty';empty.textContent='أهلًا بيك في Se7en. اكتب سؤالك عن المقاسات أو التوافر أو الطلب، وهنرد عليك هنا.';chatMessages.appendChild(empty);return}for(const item of messages){const bubble=document.createElement('article');bubble.className=`site-chat-bubble ${item.sender_role==='customer'?'customer':'agent'}`;const content=document.createElement('div');content.textContent=item.body||'';const meta=document.createElement('div');meta.className='site-chat-bubble-meta';const name=document.createElement('span');name.textContent=item.sender_role==='customer'?'أنت':(item.sender_name||'خدمة العملاء');const time=document.createElement('time');try{time.textContent=new Date(item.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}catch{time.textContent=''}meta.append(name,time);bubble.append(content,meta);chatMessages.appendChild(bubble)}if(wasNearBottom)chatMessages.scrollTop=chatMessages.scrollHeight}
       async function refreshChat(initial=false){if(chatPolling||!chatUser||!chatModal.classList.contains('open')||chatAppView.hidden)return;chatPolling=true;try{const data=await chatApi('/api/chat');chatConversation=data.conversation||null;renderChatMessages(data.messages||[]);if(chatConversation){chatAgentSelect.value=chatConversation.assigned_agent||'agent1';chatAgentSelect.disabled=true;chatAgentNote.textContent=`المحادثة مخصصة لـ ${chatAgentSelect.options[chatAgentSelect.selectedIndex]?.text||'خدمة العملاء'}.`}else{chatAgentSelect.disabled=false;chatAgentNote.textContent='اختار المسؤول اللي تحب يرد عليك.'}if(initial)setChatStatus(chatSendStatus,'')}catch(error){if(initial)setChatStatus(chatSendStatus,error.message)}finally{chatPolling=false}}
       chatMessageForm?.addEventListener('submit',async event=>{event.preventDefault();if(chatSending)return;const message=String(chatMessageInput.value||'').trim();if(!message)return;if(!chatUser){showChatAuth();return}chatSending=true;setChatBusy(chatSendButton,true,'إرسال…');try{const result=await chatApi('/api/chat',{method:'POST',body:{message,assigned_agent:chatAgentSelect.value,conversation_id:chatConversation?.id||undefined}});chatConversation=result.conversation||chatConversation;chatMessageInput.value='';setChatStatus(chatSendStatus,'');await refreshChat(true)}catch(error){setChatStatus(chatSendStatus,error.message)}finally{chatSending=false;setChatBusy(chatSendButton,false);chatMessageInput.focus()}});
-      document.querySelectorAll('.whatsapp-direct-btn').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();const productName=button.id==='product-whatsapp-btn'?(products[currentProductId]?.name||'التيشيرت المعروض'):'';openSiteChat(productName)}));
+      document.querySelectorAll('.store-chat-btn').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();const productName=button.id==='product-chat-btn'?(products[currentProductId]?.name||'التيشيرت المعروض'):'';openSiteChat(productName)}));
 
       document.querySelectorAll('[data-scroll-location]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();closeModal();document.querySelector('#location').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});history.replaceState(null,'','#location')}));
       const revealEls=[...document.querySelectorAll('.reveal')];if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.1});revealEls.forEach(el=>observer.observe(el))}else revealEls.forEach(el=>el.classList.add('visible'));

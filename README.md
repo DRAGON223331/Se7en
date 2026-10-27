@@ -1,71 +1,98 @@
-# Se7en Store — V19: in-site chat + WhatsApp OTP
+# Se7en Store — V20: Telegram OTP + in-site customer chat
 
-This version replaces the old `wa.me` handoff with a real **on-site chat interface**, adds WhatsApp one-time-code sign-in, and includes a private support-agent dashboard at `/support.html`.
+This project keeps the Se7en sportswear storefront, product gallery, in-site customer chat, and private support dashboard. Customer sign-in now uses a Telegram bot OTP instead of WhatsApp/Meta.
 
-## Important: the live API integration must be configured before use
+## What the Telegram flow does
 
-The UI and Vercel server routes are included, but OTP delivery and persistent chat will not work until the store owner connects their Meta WhatsApp Business Platform credentials and Supabase database. The public website does not contain API access tokens or a Supabase secret/service-role key.
+1. A customer opens the in-site chat, enters a name, and presses **بدء تسجيل الدخول عبر تيليجرام**.
+2. The server creates a random, short-lived sign-in challenge and returns a private Telegram deep link.
+3. The customer opens the bot, presses **Start**, and shares their own phone number using Telegram's official `request_contact` button.
+4. The bot verifies that the shared contact belongs to the Telegram user, then sends a six-digit one-time code in Telegram.
+5. The customer enters the code on Se7en. The server verifies it and creates the signed, HttpOnly customer session.
+6. Customer and support-agent chat stays inside the website. Replies are stored in Supabase and appear in `/support.html`.
 
-The in-site chat is a website chat system: customers and the two support agents exchange messages inside Se7en. The agents reply from the Se7en support dashboard. It does **not** mirror the reps' existing WhatsApp personal chats. The two numbers previously supplied for customer care are not used by this site's in-page chat; the two people are mapped to separate agent accounts (`agent1` and `agent2`) and reply from `/support.html`. WhatsApp OTP is sent from the WhatsApp Business Platform sender configured by `WA_PHONE_NUMBER_ID`. If agents must reply from their ordinary WhatsApp apps and have those replies appear in the site, a separate WhatsApp Business API/webhook bridge and message-routing setup is required; that is not activated in this version.
+**Important limitation:** Customers must have Telegram and must open/start the bot before it can message them. Telegram does not permit a bot to start a private conversation with a user who has never started it. Sharing a phone number through the button requires user consent. Telegram sign-in confirms the phone number that the user voluntarily shares from their Telegram account; it does not independently verify legal identity. In-site chat remains in the website and is not a mirror of chats in the sellers' personal messaging apps.
 
-## 1. Create and prepare the database (Supabase)
+## 1. Supabase
 
-1. Create a Supabase project. Recommended setup options: **Enable Data API: ON**; **Automatically expose new tables: OFF**; **Enable automatic RLS: ON**. If the project was already created with automatic exposure enabled, open the Data API settings and turn automatic exposure off for future tables.
-2. Open **SQL Editor** and run the complete file `sql/schema.sql`. This script enables RLS, revokes table privileges from the browser roles (`anon` and `authenticated`), and grants the minimum table permissions needed to the server-only `service_role` role. The new Supabase secret key maps to this role.
-3. In **Settings → API Keys → Publishable and secret API keys**, copy the **secret key** beginning with `sb_secret_`. Use this server-only key for the backend. Do not use the publishable key for this setting. Store the secret key only in Vercel environment variables; never paste it into frontend code or share it publicly. The older `service_role` JWT is still supported as a fallback, but the new secret key is preferred.
+Use the existing project. Open SQL Editor and run `sql/schema.sql` if setting up from scratch. It creates the customer, OTP, conversation and message tables with RLS, and the new private `se7en_telegram_otp_challenges` table. If the existing V19 schema is already installed, the Telegram table is created with `CREATE TABLE IF NOT EXISTS`.
 
-## 2. Prepare WhatsApp OTP (Meta)
+The Vercel server uses `SUPABASE_SECRET_KEY` (`sb_secret_...`) only in server-side functions. Do not use a publishable key for this server variable. Keep secret keys out of browser code and Git.
 
-1. Set up a Meta business portfolio and a WhatsApp Business Account, and add a business phone number to the WhatsApp Business Platform / Cloud API.
-2. Create and get approval for an **AUTHENTICATION** message template with the OTP button (Copy Code or approved supported variant). Use the exact approved template name and language code below.
-3. Create a server-side access token with `whatsapp_business_messaging` permission and retrieve the Phone Number ID.
-4. The sender number used for OTP must belong to the configured WhatsApp Business Account. The two support people are represented as `agent1` and `agent2`; the customer-care phone numbers previously shared are not used to send or route in-site chat messages in this version.
+## 2. Create the Telegram bot
 
-Meta's Cloud API requires a business portfolio, WhatsApp Business Account, business phone number, and access token. See [Meta's WhatsApp Cloud API collection](https://www.postman.com/meta/whatsapp-business-platform/documentation/wlk6lh4/whatsapp-cloud-api) and the [WhatsApp Business developer hub](https://whatsappbusiness.com/developers/developer-hub/).
+1. Open Telegram and start a chat with **@BotFather**.
+2. Send `/newbot`, then follow the prompts for a bot display name and a unique username ending in `bot`.
+3. Copy the bot token from BotFather. Treat it like a password; do not paste it into chat or commit it to Git.
+4. Use the bot username without the leading `@` for `TELEGRAM_BOT_USERNAME`.
 
-## 3. Add these Environment Variables in Vercel
+## 3. Configure Vercel variables
 
-Add the variables under **Project → Settings → Environment Variables**, for Preview and Production as appropriate:
+Open the project in Vercel → **Settings → Environment Variables**. Set these for Production (and Preview too if you test on preview deployments):
 
 | Variable | Value |
 |---|---|
 | `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_SECRET_KEY` | Supabase secret key beginning `sb_secret_` (server only; recommended) |
-| `SESSION_SECRET` | Random secret of at least 32 characters |
-| `OTP_HMAC_SECRET` | Separate random secret of at least 32 characters |
-| `WA_ACCESS_TOKEN` | Meta WhatsApp Business Platform access token |
-| `WA_PHONE_NUMBER_ID` | WhatsApp Business **Phone Number ID**, not the visible phone number |
-| `WA_GRAPH_API_VERSION` | The Graph API version currently supported for your Meta app; set it from Meta documentation/dashboard |
-| `WA_OTP_TEMPLATE_NAME` | Exact approved AUTHENTICATION template name |
-| `WA_OTP_TEMPLATE_LANGUAGE` | Exact approved template language code shown for your template, e.g. `ar` or `ar_EG` |
-| `SUPPORT_AGENT_1_PASSWORD` | Strong private password for support agent 1 |
-| `SUPPORT_AGENT_2_PASSWORD` | Different strong private password for support agent 2 |
-| `SUPPORT_AGENT_1_NAME` | Optional display name for support agent 1 |
-| `SUPPORT_AGENT_2_NAME` | Optional display name for support agent 2 |
+| `SUPABASE_SECRET_KEY` | Server-side Supabase secret key beginning `sb_secret_` |
+| `SESSION_SECRET` | Unique random secret, at least 32 characters |
+| `OTP_HMAC_SECRET` | A different unique random secret, at least 32 characters |
+| `TELEGRAM_BOT_TOKEN` | BotFather token; keep secret |
+| `TELEGRAM_BOT_USERNAME` | Telegram bot username without `@` |
+| `TELEGRAM_WEBHOOK_SECRET` | Random secret for the webhook, using only letters, digits, `_`, and `-` |
+| `SUPPORT_AGENT_1_PASSWORD` | Strong password for support agent 1 |
+| `SUPPORT_AGENT_2_PASSWORD` | Different strong password for support agent 2 |
+| `SUPPORT_AGENT_1_NAME` | Optional support-agent display name |
+| `SUPPORT_AGENT_2_NAME` | Optional support-agent display name |
 
-Generate different random values for `SESSION_SECRET` and `OTP_HMAC_SECRET`; never use the sample text from this README. After changing environment variables, redeploy the site.
+Generate different random values for `SESSION_SECRET`, `OTP_HMAC_SECRET`, and `TELEGRAM_WEBHOOK_SECRET`. Do not use the same secret for multiple variables. After saving variables, redeploy the site so the new deployment receives them.
 
-## 4. How to use it
+## 4. Register the Telegram webhook
 
-- Customers click **حسابي / الشات**, enter their name and WhatsApp number, receive the OTP via the configured WhatsApp Business sender, verify it, then chat without leaving the website.
-- Customers can choose one of the two support-agent accounts before their first message. An existing open conversation stays assigned to its original agent.
-- Agent 1 and Agent 2 open `/support.html`, choose their account, and enter their own Vercel-configured password. Each agent sees only their assigned conversations and replies in that dashboard.
-- Product inquiry buttons open the embedded chat and prefill a question about the selected shirt at 350 EGP; the user still chooses when to send it.
+After deploying with the environment variables, set the Telegram webhook URL to your production site's endpoint. Use the active production domain in place of `https://YOUR-DOMAIN`:
 
-## Security and limitations
+On Windows, you can use PowerShell. It will prompt you for the two values instead of saving them into the script. Replace the domain if you use a different production domain:
 
-- OTP codes expire after 5 minutes, the same phone cannot request another code for 60 seconds, and verification is limited to 5 attempts per challenge.
-- The signed session is stored in an HttpOnly cookie; database and WhatsApp secrets are used only in server routes.
-- This is an initial production integration scaffold. Before launch, test the exact approved Meta template, rate limits, account recovery, privacy notice, and agent access in your own business accounts. WhatsApp template approval and Meta setup cannot be done from the website source itself.
-- The agent dashboard is the reply interface; a message typed by a support agent there is stored and shown in the customer's site chat. It does not automatically send that reply through the seller's normal WhatsApp app.
+```powershell
+$botToken = Read-Host "Paste BotFather token"
+$webhookSecret = Read-Host "Paste TELEGRAM_WEBHOOK_SECRET from Vercel"
+$payload = @{
+  url = "https://se7en-seven.vercel.app/api/telegram/webhook"
+  secret_token = $webhookSecret
+} | ConvertTo-Json
+Invoke-RestMethod -Method Post `
+  -Uri "https://api.telegram.org/bot$botToken/setWebhook" `
+  -ContentType "application/json" `
+  -Body $payload
+Remove-Variable botToken, webhookSecret, payload
+```
 
-## Local testing
+Run the command locally only; do not commit the token or secret to the repository or paste them into chat. The `setWebhook` response should contain `ok: true`. The webhook endpoint checks Telegram's `X-Telegram-Bot-Api-Secret-Token` header against `TELEGRAM_WEBHOOK_SECRET`.
 
-This version is not a static-only page. Opening `index.html` directly or using a basic static file server will not enable OTP or chat. Use Vercel's development runtime with environment variables, or deploy to Vercel after completing the setup steps above.
+To inspect the webhook status, run:
 
-## Deploy on Vercel
+```bash
+curl "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getWebhookInfo"
+```
 
-- Import or upload the project root (the folder containing `index.html`, `api/`, `lib/`, `sql/`, `support.html`, and `vercel.json`).
-- Framework preset: **Other**. No build command is needed.
-- Add the environment variables above, then deploy/redeploy.
-- The main page shows a setup warning and disables OTP sending while required configuration is missing.
+Do not share the response if it contains private deployment information.
+
+## 5. Deploy the site
+
+- Upload/import the project root folder containing `index.html`, `api/`, `lib/`, `sql/`, `support.html`, and `vercel.json`.
+- Vercel framework preset: **Other**; no build command is needed.
+- Set all environment variables, deploy, then register the webhook.
+- Open the site, click **حسابي / الشات**, enter your name, open the bot link, press Start, share your own contact with the bot, then enter the OTP shown in Telegram.
+- The support team logs in at `/support.html` using its configured agent account and password.
+
+## Security notes
+
+- Sign-in challenges are random and expire after 10 minutes; the issued OTP expires after 5 minutes.
+- The bot accepts only a contact shared by the same Telegram user who started the challenge. A typed phone number is not accepted as proof of ownership.
+- OTP verification is limited to five guesses per challenge. The bot also enforces a one-minute cooldown and a five-code hourly window per Telegram account.
+- Supabase tables are not granted to the browser's `anon` or `authenticated` roles. Database access runs through server-only Vercel routes.
+- Keep bot tokens, Supabase secret keys, session secrets, and webhook secrets private. Rotate them if accidentally disclosed.
+- This integration is an initial deployment package. Before public launch, test the bot/webhook with a real Telegram account and check Vercel runtime logs after a test login.
+
+## Support dashboard
+
+The customer-facing chat stores messages in Supabase. Support agents use `/support.html` to see their assigned conversations and answer inside Se7en. Messages typed by agents in this panel show up in the customer's site chat; they are not automatically sent through WhatsApp or Telegram as support-agent messages.

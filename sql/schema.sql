@@ -70,3 +70,28 @@ grant select, insert, update, delete on table
   public.se7en_conversations,
   public.se7en_messages
  to service_role;
+
+
+-- Telegram OTP flow: browser challenge -> bot contact sharing -> one-time code.
+create table if not exists public.se7en_telegram_otp_challenges (
+  challenge_id text primary key,
+  pending_name text not null,
+  phone text,
+  telegram_user_id text,
+  telegram_chat_id text,
+  code_hash text,
+  stage text not null default 'created'
+    check (stage in ('created', 'awaiting_contact', 'code_sent', 'verified', 'blocked')),
+  expires_at timestamptz not null,
+  attempts integer not null default 0 check (attempts >= 0),
+  sent_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index if not exists se7en_telegram_challenges_user_recent_idx
+  on public.se7en_telegram_otp_challenges(telegram_user_id, created_at desc);
+create index if not exists se7en_telegram_challenges_sent_recent_idx
+  on public.se7en_telegram_otp_challenges(telegram_user_id, sent_at desc);
+alter table public.se7en_telegram_otp_challenges enable row level security;
+revoke all privileges on table public.se7en_telegram_otp_challenges from anon, authenticated;
+grant usage on schema public to service_role;
+grant select, insert, update, delete on table public.se7en_telegram_otp_challenges to service_role;
