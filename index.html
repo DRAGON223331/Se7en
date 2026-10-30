@@ -4438,6 +4438,33 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
                `⚡ يرجى التواصل مع العميل لتأكيد الشحن والتوصيل.`;
       }
 
+      /* Shared System & Notification Logs */
+      function addSystemLog(log) {
+        try {
+          let logs = [];
+          const raw = localStorage.getItem('se7en_system_logs');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) logs = parsed;
+          }
+          const newEntry = {
+            id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            date: new Date().toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' }),
+            timestamp: Date.now(),
+            type: log.type || 'info', // 'success', 'error', 'warning', 'info'
+            category: log.category || 'general', // 'telegram', 'whatsapp', 'order', 'status'
+            title: log.title || 'عملية في المتجر',
+            recipient: log.recipient || '—',
+            message: log.message || '',
+            orderId: log.orderId || null
+          };
+          logs.unshift(newEntry);
+          if (logs.length > 150) logs.length = 150;
+          localStorage.setItem('se7en_system_logs', JSON.stringify(logs));
+        } catch(e) {}
+      }
+
       async function sendTelegramOrder(orderData){
         try{
           const raw = localStorage.getItem('se7en_telegram_config');
@@ -4449,19 +4476,54 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           const chatIds = String(cfg.chatId).split(/[,،\s]+/).filter(Boolean);
           if(chatIds.length === 0) return { ok: false, reason: 'no_chat_ids' };
 
-          const results = await Promise.allSettled(chatIds.map(cid => {
-            return fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: cid,
-                text: textMsg,
-                parse_mode: 'HTML'
-              })
-            }).then(r => r.json());
-          }));
+          const results = [];
+          for (const cid of chatIds) {
+            try {
+              const res = await fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  chat_id: cid,
+                  text: textMsg,
+                  parse_mode: 'HTML'
+                })
+              });
+              const data = await res.json();
+              if (data.ok) {
+                results.push({ cid, ok: true });
+                addSystemLog({
+                  type: 'success',
+                  category: 'telegram',
+                  title: `إشعار طلب جديد #${orderData.id}`,
+                  recipient: `شات: ${cid}`,
+                  message: `تم إرسال إشعار الطلب بنجاح إلى البائع (${cid})`,
+                  orderId: orderData.id
+                });
+              } else {
+                results.push({ cid, ok: false, desc: data.description });
+                addSystemLog({
+                  type: 'error',
+                  category: 'telegram',
+                  title: `فشل إرسال إشعار الطلب #${orderData.id}`,
+                  recipient: `شات: ${cid}`,
+                  message: `فشل الإرسال: ${data.description || 'chat not found'} (تأكد أن البائع ضغط Start في البوت)`,
+                  orderId: orderData.id
+                });
+              }
+            } catch (err) {
+              results.push({ cid, ok: false, desc: err.message });
+              addSystemLog({
+                type: 'error',
+                category: 'telegram',
+                title: `تعذر الاتصال بتيليجرام للطلب #${orderData.id}`,
+                recipient: `شات: ${cid}`,
+                message: `خطأ في الاتصال: ${err.message}`,
+                orderId: orderData.id
+              });
+            }
+          }
 
-          const anyOk = results.some(r => r.status === 'fulfilled' && r.value && r.value.ok);
+          const anyOk = results.some(r => r.ok);
           return { ok: anyOk, results };
         }catch(err){
           return { ok: false, error: err.message };
@@ -4607,6 +4669,16 @@ ${itemsSummary}
 
           // Always save locally in store orders
           saveOrderToStore(orderData);
+
+          // Log order creation
+          addSystemLog({
+            type: 'info',
+            category: 'order',
+            title: `تم تسجيل طلب شراء جديد #${orderData.id}`,
+            recipient: orderData.customer.name,
+            message: `قيمة الطلب: ${orderData.total} ج.م | العميل: ${orderData.customer.name} (${orderData.customer.phone}) | المحافظة: ${orderData.customer.gov}`,
+            orderId: orderData.id
+          });
 
           // Send to Telegram
           await sendTelegramOrder(orderData);

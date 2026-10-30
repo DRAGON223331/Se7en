@@ -1043,6 +1043,175 @@
       }
     }
 
+
+    /* ==========================================================
+       LOGS SYSTEM & MULTI-SELLER NOTIFICATIONS STYLES
+       ========================================================== */
+    .logs-header-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .logs-metric-card {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .logs-metric-card .num {
+      font-size: 22px;
+      font-weight: 950;
+      color: #fff;
+      font-family: monospace;
+    }
+    .logs-metric-card .label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .logs-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .logs-filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .log-filter-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .log-filter-chip.active {
+      background: #ffffff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .log-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .log-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .log-card.level-success {
+      border-right: 4px solid #22c55e;
+    }
+    .log-card.level-error {
+      border-right: 4px solid #ef4444;
+      background: rgba(239, 68, 68, 0.035);
+    }
+    .log-card.level-warning {
+      border-right: 4px solid #f59e0b;
+    }
+    .log-card.level-info {
+      border-right: 4px solid #3b82f6;
+    }
+
+    .log-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .log-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .log-badge.badge-success { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .log-badge.badge-error { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .log-badge.badge-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .log-badge.badge-info { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    /* Floating Status Widget (visible in every page) */
+    .floating-logs-widget {
+      position: fixed;
+      bottom: 18px;
+      left: 20px;
+      background: rgba(12, 14, 18, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 999px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      font-size: 11px;
+      font-weight: 850;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .floating-logs-widget:hover {
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+    .status-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+    .status-pulse-dot.has-error {
+      background: #ef4444;
+      box-shadow: 0 0 12px #ef4444;
+      animation: pulseAlert 1.5s infinite;
+    }
+    @keyframes pulseAlert {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    /* Multiple Sellers Manager Cards */
+    .tg-seller-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
 </style>
 </head>
 <body>
@@ -1147,6 +1316,7 @@
         <button class="tab-btn" type="button" data-tab="tab-add">➕ إضافة منتج جديد</button>
         
         <button class="tab-btn" type="button" data-tab="tab-settings">⚙️ إعدادات الموقع الكاملة</button>
+        <button class="tab-btn" type="button" data-tab="tab-logs">📜 سجل الإشعارات والعمليات (Logs) <span id="logs-count-badge" style="background:#ef4444;color:#fff;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;display:none;">0</span></button>
         <button class="tab-btn" type="button" data-tab="tab-backup">💾 النسخ الاحتياطي والأمان</button>
       </div>
 
@@ -1431,6 +1601,42 @@
             </form>
           </div>
 
+          <!-- Multiple Sellers Notification Manager -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #fff;">👥 قائمة مستلمي إشعارات الطلبات (أكثر من بائع)</h3>
+                <p style="margin: 3px 0 0; font-size: 11px; color: var(--muted);">كل بائع أو شريك مسجل هنا سيصله إشعار فوري على تيليجرام عند حدوث أي طلب شراء جديد من العملاء.</p>
+              </div>
+              <span class="admin-phone-pill" id="tg-recipients-count-pill">1 بائع مسجل</span>
+            </div>
+
+            <!-- Add Recipient Form -->
+            <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+              <input class="form-control" id="new-recipient-name" type="text" placeholder="اسم البائع (مثال: أحمد - إدارة المخزن)" style="flex: 1.2; font-size: 12px;">
+              <input class="form-control" id="new-recipient-chatid" type="text" placeholder="الـ Chat ID (مثال: 6539782143)" dir="ltr" style="flex: 1; font-size: 12px;">
+              <button class="btn btn-primary" id="btn-add-tg-recipient" type="button" style="font-size: 12px; white-space: nowrap; padding: 0 16px;">
+                + إضافة بائع للقائمة
+              </button>
+            </div>
+
+            <!-- List of Recipients -->
+            <div id="tg-recipients-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Recent Telegram Dispatch History Widget in Tab-Telegram -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+              <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #fff;">📡 سجل محاولات إرسال تيليجرام الأخيرة (Live Dispatch Logs)</h3>
+              <button class="btn btn-secondary" onclick="switchTab('tab-logs')" type="button" style="font-size: 11px; padding: 4px 10px;">عرض السجل الكامل 📜</button>
+            </div>
+            <div id="tg-recent-logs-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
           <!-- Quick Guide -->
           <div style="background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.25); border-radius: var(--radius); padding: 18px 22px;">
             <h4 style="margin: 0 0 10px; color: #60a5fa; font-size: 14px;">📖 كيفية تجهيز بوت تيليجرام للطلبات في دقيقتين:</h4>
@@ -1443,6 +1649,68 @@
           </div>
         </div>
       </div>
+      <!-- TAB: SYSTEM & NOTIFICATION LOGS -->
+      <div class="tab-content" id="tab-logs" style="display: none;">
+        <div class="settings-panel">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap;">
+            <div>
+              <h2 style="margin: 0; font-size: 20px; font-weight: 950; color: #fff;">📜 سجل الإشعارات والعمليات الكاملة (System & Dispatch Logs)</h2>
+              <p style="margin: 4px 0 0; color: var(--muted); font-size: 11px;">مراقبة حية وتفصيلية لكافة محاولات إرسال إشعارات تيليجرام وواتساب لكل بائع، والطلبات الواردة، لمعرفة هل وصل الإشعار أم حدثت مشكلة بالتفصيل.</p>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-secondary" id="btn-export-logs-csv" type="button" style="font-size: 11px; padding: 7px 14px;">
+                <span>📥 تصدير السجل (CSV)</span>
+              </button>
+              <button class="btn btn-danger" id="btn-clear-system-logs" type="button" style="font-size: 11px; padding: 7px 14px;">
+                <span>🗑️ مسح السجل</span>
+              </button>
+              <button class="btn btn-primary" id="btn-refresh-system-logs" type="button" style="font-size: 11px; padding: 7px 14px;">
+                <span>🔄 تحديث فوري</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Logs Header Metrics -->
+          <div class="logs-header-metrics">
+            <div class="logs-metric-card" style="border-right: 3px solid #22c55e;">
+              <span class="label">🟢 إشعارات وعمليات ناجحة</span>
+              <span class="num" id="log-stat-success">0</span>
+            </div>
+            <div class="logs-metric-card" style="border-right: 3px solid #ef4444;">
+              <span class="label">🔴 أخطاء تحتاج مراجعة</span>
+              <span class="num" id="log-stat-error" style="color: #f87171;">0</span>
+            </div>
+            <div class="logs-metric-card" style="border-right: 3px solid #3b82f6;">
+              <span class="label">🤖 إشعارات تيليجرام</span>
+              <span class="num" id="log-stat-telegram">0</span>
+            </div>
+            <div class="logs-metric-card" style="border-right: 3px solid #a855f7;">
+              <span class="label">📦 إجمالي العمليات المسجلة</span>
+              <span class="num" id="log-stat-total">0</span>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="logs-filter-bar">
+            <div class="logs-filter-chips">
+              <button class="log-filter-chip active" type="button" data-log-filter="all">الكل</button>
+              <button class="log-filter-chip" type="button" data-log-filter="error" style="color:#f87171;">🔴 الأخطاء فقط</button>
+              <button class="log-filter-chip" type="button" data-log-filter="telegram">🤖 تيليجرام</button>
+              <button class="log-filter-chip" type="button" data-log-filter="order">📦 الطلبات</button>
+              <button class="log-filter-chip" type="button" data-log-filter="whatsapp">💬 واتساب</button>
+            </div>
+            <div style="width: min(320px, 100%);">
+              <input class="search-input" id="search-logs-input" type="text" placeholder="🔍 بحث في السجل (برقم الطلب، اسم البائع، أو نص الخطأ)..." style="width: 100%; font-size: 11px;">
+            </div>
+          </div>
+
+          <!-- Logs List Container -->
+          <div id="system-logs-list-container" style="max-height: 600px; overflow-y: auto; padding-left: 4px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
 <div class="tab-content" id="tab-settings" style="display: none;">
         <div class="settings-panel">
           <h2 style="margin: 0 0 18px; font-size: 20px; font-weight: 950;">التحكم في إعدادات الموقع بالكامل</h2>
@@ -2210,24 +2478,38 @@
         showLogin();
       });
 
-      // Tab Navigation
+      // Tab Navigation with Full System & Logs Integration
       const tabButtons = document.querySelectorAll('.tab-btn');
-      tabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          tabButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const target = btn.dataset.tab;
-          document.querySelectorAll('.tab-content').forEach(c => {
-            c.style.display = (c.id === target) ? 'block' : 'none';
-          });
-          if (target === 'tab-add') {
-            openProductModal();
-          }
-          if (target === 'tab-analytics') {
-            renderAnalytics();
+      window.switchTab = function(target) {
+        tabButtons.forEach(b => {
+          if (b.dataset.tab === target) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
           }
         });
+        document.querySelectorAll('.tab-content').forEach(c => {
+          c.style.display = (c.id === target) ? 'block' : 'none';
+        });
+        if (target === 'tab-add') openProductModal();
+        if (target === 'tab-analytics') renderAnalytics();
+        if (target === 'tab-logs') renderLogsList();
+        if (target === 'tab-telegram') renderTgRecipientsUI();
+      };
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+          window.switchTab(target);
+        });
       });
+
+      const floatingLogsWidget = document.querySelector('#floating-logs-widget');
+      if (floatingLogsWidget) {
+        floatingLogsWidget.addEventListener('click', () => {
+          window.switchTab('tab-logs');
+        });
+      }
 
       // Quick Order Toggle
       const toggleOrderBtn = document.querySelector('#toggle-order-btn');
@@ -2768,6 +3050,249 @@
         } catch(e) {}
       }
 
+      // ==========================================
+      // SYSTEM & NOTIFICATION LOGS SYSTEM
+      // ==========================================
+      function getSystemLogs() {
+        try {
+          const raw = localStorage.getItem('se7en_system_logs');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed;
+          }
+        } catch(e) {}
+        return [];
+      }
+
+      function addSystemLog(log) {
+        try {
+          const logs = getSystemLogs();
+          const newEntry = {
+            id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            date: new Date().toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' }),
+            timestamp: Date.now(),
+            type: log.type || 'info', // 'success', 'error', 'warning', 'info'
+            category: log.category || 'general', // 'telegram', 'whatsapp', 'order', 'status'
+            title: log.title || 'عملية في المتجر',
+            recipient: log.recipient || '—',
+            message: log.message || '',
+            orderId: log.orderId || null
+          };
+          logs.unshift(newEntry);
+          if (logs.length > 250) logs.length = 250;
+          localStorage.setItem('se7en_system_logs', JSON.stringify(logs));
+          updateLogsBadge();
+          updateFloatingLogsWidget();
+          return newEntry;
+        } catch(e) {}
+      }
+
+      function clearSystemLogs() {
+        if (confirm('هل أنت متأكد من مسح جميع السجلات والإشعارات المخزنة؟')) {
+          localStorage.removeItem('se7en_system_logs');
+          renderLogsList();
+          renderTgRecentLogs();
+          updateLogsBadge();
+          updateFloatingLogsWidget();
+        }
+      }
+
+      function exportLogsCSV() {
+        const logs = getSystemLogs();
+        if (logs.length === 0) {
+          alert('لا توجد سجلات لتصديرها حالياً.');
+          return;
+        }
+        let csv = '\uFEFF'; // UTF-8 BOM for Arabic in Excel
+        csv += 'التاريخ,الوقت,النوع,التصنيف,العنوان,المستلم,رقم الطلب,الرسالة / سبب الخطأ\n';
+        logs.forEach(l => {
+          const row = [
+            `"${(l.date || '').replace(/"/g, '""')}"`,
+            `"${(l.time || '').replace(/"/g, '""')}"`,
+            `"${(l.type || '').replace(/"/g, '""')}"`,
+            `"${(l.category || '').replace(/"/g, '""')}"`,
+            `"${(l.title || '').replace(/"/g, '""')}"`,
+            `"${(l.recipient || '').replace(/"/g, '""')}"`,
+            `"${(l.orderId || '').replace(/"/g, '""')}"`,
+            `"${(l.message || '').replace(/"/g, '""')}"`
+          ];
+          csv += row.join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `se7en_logs_${Date.now()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      let currentLogFilter = 'all';
+      let currentLogQuery = '';
+
+      function renderLogsList() {
+        const container = document.querySelector('#system-logs-list-container');
+        if (!container) return;
+
+        const logs = getSystemLogs();
+
+        // Update stats
+        const successCount = logs.filter(l => l.type === 'success').length;
+        const errorCount = logs.filter(l => l.type === 'error').length;
+        const telegramCount = logs.filter(l => l.category === 'telegram').length;
+
+        const statSucc = document.querySelector('#log-stat-success');
+        const statErr = document.querySelector('#log-stat-error');
+        const statTg = document.querySelector('#log-stat-telegram');
+        const statTot = document.querySelector('#log-stat-total');
+
+        if (statSucc) statSucc.textContent = successCount;
+        if (statErr) statErr.textContent = errorCount;
+        if (statTg) statTg.textContent = telegramCount;
+        if (statTot) statTot.textContent = logs.length;
+
+        // Filter logs
+        let filtered = logs.filter(l => {
+          if (currentLogFilter === 'error' && l.type !== 'error') return false;
+          if (currentLogFilter === 'telegram' && l.category !== 'telegram') return false;
+          if (currentLogFilter === 'order' && l.category !== 'order') return false;
+          if (currentLogFilter === 'whatsapp' && l.category !== 'whatsapp') return false;
+          if (currentLogQuery) {
+            const str = `${l.title} ${l.recipient} ${l.message} ${l.orderId || ''}`.toLowerCase();
+            return str.includes(currentLogQuery);
+          }
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 20px; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); margin-top: 10px;">
+              <div style="font-size: 32px; margin-bottom: 8px;">📜</div>
+              <h4 style="margin: 0; color: #fff; font-size: 14px;">لا توجد سجلات تطابق الفلتر الحالي</h4>
+              <p style="font-size: 11px; margin: 4px 0 0;">كافة العمليات ومحاولات إرسال الإشعارات لكل بائع تسجل هنا بصورة حية فور حدوثها.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const typeBadges = {
+          success: '<span class="log-level-badge badge-success">🟢 نجاح</span>',
+          error: '<span class="log-level-badge badge-error">🔴 خطأ / فشل</span>',
+          warning: '<span class="log-level-badge badge-warning">🟡 تنبيه</span>',
+          info: '<span class="log-level-badge badge-info">ℹ️ معلومة</span>'
+        };
+
+        const catBadges = {
+          telegram: '<span class="log-cat-pill cat-telegram">🤖 تيليجرام</span>',
+          whatsapp: '<span class="log-cat-pill cat-whatsapp">💬 واتساب</span>',
+          order: '<span class="log-cat-pill cat-order">📦 طلب شراء</span>',
+          status: '<span class="log-cat-pill cat-general">⚙️ حالة المتجر</span>',
+          general: '<span class="log-cat-pill cat-general">⚙️ عام</span>'
+        };
+
+        container.innerHTML = filtered.map(item => `
+          <div class="log-item-card ${item.type === 'error' ? 'has-error' : ''}">
+            <div class="log-item-header">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                ${typeBadges[item.type] || typeBadges.info}
+                ${catBadges[item.category] || catBadges.general}
+                <strong style="font-size: 13px; color: #fff;">${escapeHtml(item.title)}</strong>
+                ${item.orderId ? `<span style="font-family: monospace; font-size: 10px; background: rgba(255,255,255,0.08); padding: 2px 7px; border-radius: 4px; color: #e2e8f0;">#${escapeHtml(item.orderId)}</span>` : ''}
+              </div>
+              <div style="font-size: 11px; color: var(--muted); font-family: monospace; direction: ltr;">
+                ${escapeHtml(item.date)} ${escapeHtml(item.time)}
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 16px; margin-bottom: 6px; font-size: 11px; color: var(--muted); flex-wrap: wrap;">
+              <span><strong>المستلم / الوجهة:</strong> <span style="color: #cbd5e1; font-family: monospace; font-weight: 800;">${escapeHtml(item.recipient || '—')}</span></span>
+            </div>
+
+            <div style="font-size: 12px; color: ${item.type === 'error' ? '#fca5a5' : '#e2e8f0'}; line-height: 1.5; background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 6px; word-break: break-word; font-family: system-ui, sans-serif;">
+              ${escapeHtml(item.message)}
+            </div>
+
+            ${(item.type === 'error' && item.category === 'telegram' && item.orderId) ? `
+              <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="resendOrderTelegram('${item.orderId}')" type="button" style="font-size: 10px; padding: 4px 10px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; cursor: pointer;">
+                  🔄 إعادة محاولة إرسال تيليجرام للطلب #${escapeHtml(item.orderId)}
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+      }
+
+      function updateLogsBadge() {
+        const badge = document.querySelector('#logs-count-badge');
+        if (!badge) return;
+        const logs = getSystemLogs();
+        const errs = logs.filter(l => l.type === 'error').length;
+        if (errs > 0) {
+          badge.textContent = `${errs} ⚠️`;
+          badge.style.background = '#ef4444';
+          badge.style.color = '#fff';
+        } else {
+          badge.textContent = logs.length;
+          badge.style.background = 'rgba(255,255,255,0.1)';
+          badge.style.color = 'var(--muted)';
+        }
+      }
+
+      function updateFloatingLogsWidget() {
+        const dot = document.querySelector('#widget-status-dot');
+        const text = document.querySelector('#widget-status-text');
+        if (!dot || !text) return;
+
+        const logs = getSystemLogs();
+        const recentErrors = logs.filter(l => l.type === 'error' && (Date.now() - (l.timestamp || 0)) < 86400000);
+
+        if (recentErrors.length > 0) {
+          dot.className = 'status-pulse-dot error';
+          text.textContent = `⚠️ تنبيه: يوجد (${recentErrors.length}) خطأ أو فشل إرسال!`;
+          text.style.color = '#fca5a5';
+        } else {
+          dot.className = 'status-pulse-dot';
+          text.textContent = `🟢 سجل العمليات: جميع الإشعارات تعمل (${logs.length} حدث)`;
+          text.style.color = '#86efac';
+        }
+      }
+
+      // Wire Tab-Logs Actions and Filters
+      const btnRefreshLogs = document.querySelector('#btn-refresh-system-logs');
+      const btnClearLogs = document.querySelector('#btn-clear-system-logs');
+      const btnExportLogs = document.querySelector('#btn-export-logs-csv');
+      const searchLogsInput = document.querySelector('#search-logs-input');
+      const logFilterChips = document.querySelectorAll('.log-filter-chip');
+
+      if (btnRefreshLogs) btnRefreshLogs.onclick = () => {
+        renderLogsList();
+        updateLogsBadge();
+        updateFloatingLogsWidget();
+      };
+      if (btnClearLogs) btnClearLogs.onclick = clearSystemLogs;
+      if (btnExportLogs) btnExportLogs.onclick = exportLogsCSV;
+
+      if (searchLogsInput) {
+        searchLogsInput.addEventListener('input', () => {
+          currentLogQuery = searchLogsInput.value.trim().toLowerCase();
+          renderLogsList();
+        });
+      }
+
+      if (logFilterChips) {
+        logFilterChips.forEach(chip => {
+          chip.addEventListener('click', () => {
+            logFilterChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentLogFilter = chip.dataset.logFilter || 'all';
+            renderLogsList();
+          });
+        });
+      }
+
       function renderOrdersList() {
         const ordersListEl = document.querySelector('#admin-orders-list');
         const countBadge = document.querySelector('#orders-count-badge');
@@ -2818,6 +3343,22 @@
 
         ordersListEl.innerHTML = filtered.map(order => {
           const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleString('ar-EG') : '—';
+          
+          // Telegram delivery status for this order
+          const sysLogs = getSystemLogs();
+          const tgLogsForOrder = sysLogs.filter(l => l.orderId === order.id && l.category === 'telegram');
+          const latestTgLog = tgLogsForOrder[0];
+          let tgStatusBadgeHtml = '';
+          if (latestTgLog) {
+            if (latestTgLog.type === 'success') {
+              tgStatusBadgeHtml = `<span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">🟢 تيليجرام: وصل للبائعين</span>`;
+            } else {
+              const shortReason = (latestTgLog.message || '').replace(/.*فشل الإرسال:\s*/, '').substring(0, 30);
+              tgStatusBadgeHtml = `<span style="background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;" title="${escapeHtml(latestTgLog.message)}">🔴 تيليجرام: لم يصل (${escapeHtml(shortReason)}...)</span>`;
+            }
+          } else {
+            tgStatusBadgeHtml = `<span style="background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;">⚪ تيليجرام: لم يُرسل</span>`;
+          }
           const cust = order.customer || {};
           const items = Array.isArray(order.items) ? order.items : [];
           const status = order.status || 'new';
@@ -2852,6 +3393,7 @@
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                   <span class="order-id-badge">#${escapeHtml(order.id || 'ORDER')}</span>
                   <span class="order-status-badge status-${status}">${statusLabels[status] || status}</span>
+                  ${tgStatusBadgeHtml}
                   <span style="font-size: 11px; color: var(--muted);">${dateStr}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -2938,6 +3480,9 @@
                     </a>
                   ` : ''}
 
+                  <button class="btn btn-secondary btn-resend-tg" data-order-id="${order.id}" type="button" style="font-size: 11px; padding: 6px 11px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.35); color: #93c5fd;" title="إرسال أو إعادة إرسال تفاصيل هذا الطلب لجميع البائعين على تيليجرام">
+                    🤖 إرسال تيليجرام
+                  </button>
                   <button class="btn btn-danger btn-delete-order" data-order-id="${order.id}" type="button" style="font-size: 11px; padding: 6px 12px;">
                     🗑️ حذف الطلب
                   </button>
@@ -2967,6 +3512,14 @@
           btn.addEventListener('click', () => {
             const id = btn.dataset.orderId;
             if(id) printShippingSlip(id);
+          });
+        });
+
+        // Wire resend Telegram buttons
+        ordersListEl.querySelectorAll('.btn-resend-tg').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.orderId;
+            if (id) resendOrderTelegram(id);
           });
         });
 
@@ -3008,20 +3561,230 @@
       }
 
       // ==========================================
-      // TELEGRAM BOT CONFIGURATION
+      // TELEGRAM BOT & MULTIPLE SELLERS CONFIGURATION
       // ==========================================
       function getTelegramConfig() {
         try {
           const raw = localStorage.getItem('se7en_telegram_config');
-          if (raw) return JSON.parse(raw);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (!parsed.recipients || !Array.isArray(parsed.recipients)) {
+              const chatIds = (parsed.chatId || '').split(/[,،\s]+/).filter(Boolean);
+              parsed.recipients = chatIds.map((cid, i) => ({
+                id: 'rec_' + (i + 1) + '_' + Math.random().toString(36).substr(2, 4),
+                name: (i === 0 ? 'البائع الرئيسي' : `بائع ${i+1}`),
+                chatId: cid
+              }));
+            }
+            return parsed;
+          }
         } catch(e) {}
-        return { botToken: '', chatId: '', enabled: true };
+        return {
+          botToken: '',
+          chatId: '',
+          recipients: [],
+          enabled: true
+        };
       }
 
       function saveTelegramConfig(cfg) {
         try {
+          if (Array.isArray(cfg.recipients) && cfg.recipients.length > 0) {
+            cfg.chatId = cfg.recipients.map(r => r.chatId.trim()).filter(Boolean).join(', ');
+          }
           localStorage.setItem('se7en_telegram_config', JSON.stringify(cfg));
         } catch(e) {}
+      }
+
+      function renderTgRecipientsUI() {
+        const cfg = getTelegramConfig();
+        const listEl = document.querySelector('#tg-recipients-list');
+        const countPill = document.querySelector('#tg-recipients-count-pill');
+        if (!listEl) return;
+
+        const recipients = Array.isArray(cfg.recipients) ? cfg.recipients : [];
+        if (countPill) countPill.textContent = `${recipients.length} بائع مسجل`;
+
+        if (recipients.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align: center; padding: 24px; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); font-size: 11px;">
+              لا يوجد بائعون مسجلون في القائمة حتى الآن. أضف أسماء ومعرفات البائعين بالأعلى ليصلهم إشعار كل طلب فوراً!
+            </div>
+          `;
+        } else {
+          listEl.innerHTML = recipients.map((r, idx) => `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 13px; font-weight: 850; color: #fff;">👤 ${escapeHtml(r.name || 'بائع')}</span>
+                <span style="font-family: monospace; font-size: 11px; background: rgba(255,255,255,0.07); padding: 2px 8px; border-radius: 4px; color: #93c5fd; direction: ltr;">ID: ${escapeHtml(r.chatId || '')}</span>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn btn-secondary" onclick="testSingleTgRecipient('${r.chatId}', '${escapeHtml(r.name || 'بائع')}')" type="button" style="font-size: 11px; padding: 4px 10px; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); color: #93c5fd;">
+                  ⚡ تجربة إرسال فردي
+                </button>
+                <button class="btn btn-danger" onclick="removeTgRecipient('${r.id}')" type="button" style="font-size: 11px; padding: 4px 8px;">
+                  🗑️ حذف
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        renderTgRecentLogs();
+      }
+
+      function renderTgRecentLogs() {
+        const listEl = document.querySelector('#tg-recent-logs-list');
+        if (!listEl) return;
+        const allLogs = getSystemLogs();
+        const tgLogs = allLogs.filter(l => l.category === 'telegram').slice(0, 8);
+
+        if (tgLogs.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align: center; padding: 18px; color: var(--muted); font-size: 11px; border: 1px dashed var(--line); border-radius: var(--radius);">
+              لم تسجل أية محاولات إرسال تيليجرام بعد. جرب الضغط على "تجربة إرسال إشعار فوري" لتسجيل أول محاولة حية!
+            </div>
+          `;
+          return;
+        }
+
+        listEl.innerHTML = tgLogs.map(l => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(0,0,0,0.3); border: 1px solid ${l.type === 'error' ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.05)'}; border-radius: 6px; margin-bottom: 6px; font-size: 11px; flex-wrap: wrap; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>${l.type === 'error' ? '🔴' : '🟢'}</span>
+              <strong style="color: #fff;">${escapeHtml(l.title)}</strong>
+              <span style="color: var(--muted); font-family: monospace;">(${escapeHtml(l.recipient)})</span>
+              <span style="color: ${l.type === 'error' ? '#fca5a5' : '#94a3b8'}; word-break: break-all;">${escapeHtml(l.message)}</span>
+            </div>
+            <span style="font-family: monospace; color: var(--muted); direction: ltr; font-size: 10px;">${escapeHtml(l.time)}</span>
+          </div>
+        `).join('');
+      }
+
+      window.testSingleTgRecipient = async function(chatId, name) {
+        const cfg = getTelegramConfig();
+        if (!cfg.botToken) {
+          alert('يرجى كتابة وحفظ رمز Bot Token بالأعلى أولاً.');
+          return;
+        }
+        if (!chatId) {
+          alert('معرف Chat ID غير صالح.');
+          return;
+        }
+
+        try {
+          const testMsg = `⚡ <b>تجربة إشعار Se7en Store الفردي!</b>\n━━━━━━━━━━━━━━━━━━━━\nمرحباً <b>${name}</b>، هذا اختبار مباشر يؤكد أن حسابك مسجل ويصله إشعار أي طلب شراء جديد فوراً! 🚀👕`;
+          const res = await fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: testMsg,
+              parse_mode: 'HTML'
+            })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            addSystemLog({
+              type: 'success',
+              category: 'telegram',
+              title: `تجربة إرسال فردي للبائع (${name})`,
+              recipient: `${name} (${chatId})`,
+              message: `تم تسليم رسالة الاختبار بنجاح إلى البائع ${name}`
+            });
+            alert(`✅ وصل إشعار الاختبار بنجاح إلى البائع (${name})! راجع التيليجرام الآن.`);
+          } else {
+            const desc = data.description || 'chat not found';
+            addSystemLog({
+              type: 'error',
+              category: 'telegram',
+              title: `فشل تجربة إرسال للبائع (${name})`,
+              recipient: `${name} (${chatId})`,
+              message: `فشل الإرسال: ${desc} (تأكد أن البائع ضغط Start في البوت)`
+            });
+            alert(`❌ فشل الإرسال للبائع (${name}):\n${desc}\n\nملاحظة هامة: تأكد أن الشخص قد دخل على البوت وضغط زر Start أولاً.`);
+          }
+        } catch(err) {
+          addSystemLog({
+            type: 'error',
+            category: 'telegram',
+            title: `خطأ اتصال بتيليجرام للبائع (${name})`,
+            recipient: `${name} (${chatId})`,
+            message: `خطأ اتصال: ${err.message}`
+          });
+          alert(`❌ خطأ في الاتصال: ${err.message}`);
+        }
+        renderTgRecentLogs();
+        updateLogsBadge();
+        updateFloatingLogsWidget();
+      };
+
+      window.removeTgRecipient = function(recId) {
+        const cfg = getTelegramConfig();
+        if (confirm('هل أنت متأكد من حذف هذا البائع من قائمة مستلمي الإشعارات؟')) {
+          cfg.recipients = (cfg.recipients || []).filter(r => r.id !== recId);
+          saveTelegramConfig(cfg);
+          loadTelegramUI();
+          addSystemLog({
+            type: 'warning',
+            category: 'telegram',
+            title: 'حذف بائع من قائمة تيليجرام',
+            recipient: recId,
+            message: 'تم حذف البائع من قائمة مستلمي إشعارات الطلبات'
+          });
+        }
+      };
+
+      // Add new recipient button handler
+      const btnAddTgRec = document.querySelector('#btn-add-tg-recipient');
+      if (btnAddTgRec) {
+        btnAddTgRec.addEventListener('click', () => {
+          const nameInput = document.querySelector('#new-recipient-name');
+          const chatIdInput = document.querySelector('#new-recipient-chatid');
+          const name = nameInput ? nameInput.value.trim() : '';
+          const chatId = chatIdInput ? chatIdInput.value.trim() : '';
+
+          if (!name || !chatId) {
+            alert('يرجى كتابة اسم البائع ومعرف الـ Chat ID معاً.');
+            return;
+          }
+
+          const isPhone = /^(\+?20|01)[0-9]{8,10}/.test(chatId.replace(/[\s-]/g, ''));
+          if (isPhone) {
+            alert('⚠️ تنبيه: لقد كتبت رقم هاتف في حقل Chat ID!\n\nبوت تيليجرام لا يقبل أرقام التليفونات في حقل Chat ID، بل يحتاج الـ ID الرقمي.\nاضغط زر "استخراج الـ Chat ID تلقائياً" بالأسفل لمعرفة الـ ID الخاص به بسهولة.');
+            return;
+          }
+
+          const cfg = getTelegramConfig();
+          if (!Array.isArray(cfg.recipients)) cfg.recipients = [];
+
+          if (cfg.recipients.some(r => r.chatId === chatId)) {
+            alert('معرف الـ Chat ID هذا مضاف بالفعل في القائمة!');
+            return;
+          }
+
+          cfg.recipients.push({
+            id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+            name: name,
+            chatId: chatId
+          });
+
+          saveTelegramConfig(cfg);
+          loadTelegramUI();
+
+          if (nameInput) nameInput.value = '';
+          if (chatIdInput) chatIdInput.value = '';
+
+          addSystemLog({
+            type: 'info',
+            category: 'telegram',
+            title: `إضافة بائع جديد (${name})`,
+            recipient: `${name} (${chatId})`,
+            message: `تمت إضافة البائع ${name} لقائمة مستلمي إشعارات الطلبات بنجاح`
+          });
+
+          alert(`✅ تمت إضافة البائع (${name}) بنجاح إلى قائمة المستلمين!`);
+        });
       }
 
       function loadTelegramUI() {
@@ -3033,15 +3796,18 @@
         if (tokenInput) tokenInput.value = cfg.botToken || '';
         if (chatInput) chatInput.value = cfg.chatId || '';
 
+        const recipientsCount = Array.isArray(cfg.recipients) ? cfg.recipients.length : (cfg.chatId ? 1 : 0);
         if (statusPill) {
-          if (cfg.botToken && cfg.chatId) {
-            statusPill.textContent = 'مربوط وجاهز 🟢';
+          if (cfg.botToken && recipientsCount > 0) {
+            statusPill.textContent = `مربوط وجاهز (${recipientsCount} بائع) 🟢`;
             statusPill.style.color = '#4ade80';
           } else {
             statusPill.textContent = 'غير مربوط ⚪';
             statusPill.style.color = 'var(--muted)';
           }
         }
+
+        renderTgRecipientsUI();
       }
 
       const tgForm = document.querySelector('#telegram-settings-form');
@@ -3054,12 +3820,35 @@
           const token = document.querySelector('#tg-bot-token').value.trim();
           const chatId = document.querySelector('#tg-chat-id').value.trim();
 
-          saveTelegramConfig({ botToken: token, chatId: chatId, enabled: true });
+          const cfg = getTelegramConfig();
+          cfg.botToken = token;
+          cfg.chatId = chatId;
+          cfg.enabled = true;
+
+          // Sync recipients from comma-separated input if recipients list is empty
+          if ((!cfg.recipients || cfg.recipients.length === 0) && chatId) {
+            const cids = chatId.split(/[,،\s]+/).filter(Boolean);
+            cfg.recipients = cids.map((cid, i) => ({
+              id: 'rec_' + (i + 1),
+              name: (i === 0 ? 'البائع الرئيسي' : `بائع ${i+1}`),
+              chatId: cid
+            }));
+          }
+
+          saveTelegramConfig(cfg);
           loadTelegramUI();
+
+          addSystemLog({
+            type: 'info',
+            category: 'telegram',
+            title: 'حفظ إعدادات تيليجرام',
+            recipient: `${(cfg.recipients || []).length} بائع`,
+            message: 'تم تحديث وحفظ توكن البوت ومعرفات البائعين في لوحة التحكم'
+          });
 
           if (tgStatusMsg) {
             tgStatusMsg.style.color = '#4ade80';
-            tgStatusMsg.textContent = '✅ تم حفظ إعدادات بوت تيليجرام بنجاح!';
+            tgStatusMsg.textContent = '✅ تم حفظ إعدادات بوت تيليجرام وقائمة البائعين بنجاح!';
             setTimeout(() => { tgStatusMsg.textContent = ''; }, 4000);
           }
         });
@@ -3107,22 +3896,41 @@
             });
 
             if (foundChats.size > 0) {
-              const chatIdsArray = Array.from(foundChats.keys());
-              if (inputChatId) {
-                inputChatId.value = chatIdsArray.join(', ');
-                if (phoneWarning) phoneWarning.style.display = 'none';
-              }
+              const cfg = getTelegramConfig();
+              if (!Array.isArray(cfg.recipients)) cfg.recipients = [];
+
+              foundChats.forEach((name, cid) => {
+                if (!cfg.recipients.some(r => r.chatId === cid)) {
+                  cfg.recipients.push({
+                    id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                    name: name,
+                    chatId: cid
+                  });
+                }
+              });
+
+              saveTelegramConfig(cfg);
+              loadTelegramUI();
+
               const namesList = Array.from(foundChats.entries()).map(([cid, name]) => `${name} (${cid})`).join('، ');
               if (tgStatusMsg) {
                 tgStatusMsg.style.color = '#4ade80';
-                tgStatusMsg.textContent = `✅ تم استخراج ${foundChats.size} شات بنجاح: [${namesList}] وتم وضعهم في الحقل! اضغط "حفظ إعدادات تيليجرام" الآن.`;
+                tgStatusMsg.textContent = `✅ تم استخراج ${foundChats.size} شات بنجاح وإضافتهم لقائمة البائعين: [${namesList}]! اضغط "حفظ إعدادات تيليجرام".`;
               }
+              alert(`✅ تم استخراج ${foundChats.size} شات بنجاح وإضافتهم لقائمة البائعين:
+
+${namesList}
+
+تم تحديث القائمة تلقائياً!`);
             } else {
               if (tgStatusMsg) {
                 tgStatusMsg.style.color = '#60a5fa';
                 tgStatusMsg.textContent = 'ℹ️ لم نجد رسائل بعد! افتح البوت على تيليجرام واضغط Start أو أرسل له أي كلمة، ثم اضغط هنا مرة أخرى.';
               }
-              alert('خطوة بسيطة جداً لاستخراج الـ ID:\n1. افتح تطبيق تيليجرام.\n2. ابحث عن اسم البوت بتاعك واضغط Start أو أرسل له أي رسالة (أو أضفه لجروب المحل).\n3. ارجع هنا واضغط "استخراج الـ Chat ID تلقائياً" وسيتم ربطه فوراً!');
+              alert('خطوة بسيطة جداً لاستخراج الـ ID:
+1. افتح تطبيق تيليجرام.
+2. ابحث عن اسم البوت واضغط Start أو أرسل له أي رسالة (أو أضفه لجروب المحل).
+3. ارجع هنا واضغط "استخراج الـ Chat ID تلقائياً" وسيتم ربطه فوراً!');
             }
           } catch (err) {
             if (tgStatusMsg) {
@@ -3135,45 +3943,48 @@
 
       if (btnTestTg) {
         btnTestTg.addEventListener('click', async () => {
-          const token = document.querySelector('#tg-bot-token').value.trim();
-          const rawChatId = document.querySelector('#tg-chat-id').value.trim();
+          const cfg = getTelegramConfig();
+          const token = (document.querySelector('#tg-bot-token')?.value || cfg.botToken || '').trim();
+          const rawChatId = (document.querySelector('#tg-chat-id')?.value || cfg.chatId || '').trim();
 
-          if (!token || !rawChatId) {
-            alert('يرجى كتابة رمز الـ Bot Token ومعرف الـ Chat ID أولاً.');
+          if (!token) {
+            alert('يرجى كتابة رمز الـ Bot Token وحفظه أولاً.');
             return;
           }
 
-          // Check if user entered a phone number
-          const isPhone = /^(\+?20|01)[0-9]{8,10}/.test(rawChatId.replace(/[\s-]/g, ''));
-          if (isPhone) {
-            alert('⚠️ تنبيه: لقد كتبت رقم هاتف!\n\nبوت تيليجرام لا يقبل أرقام التليفونات في حقل Chat ID، بل يتطلب الـ ID الرقمي لحسابك أو لجروب المحل.\n\nالحل:\nاضغط زر "استخراج الـ Chat ID تلقائياً" لجلب المعرف بضغطة واحدة، أو يمكنك استقبال الطلبات على أرقام التليفونات عبر واتساب مباشرة.');
-            return;
+          // Build recipients list
+          let targetRecipients = [];
+          if (Array.isArray(cfg.recipients) && cfg.recipients.length > 0) {
+            targetRecipients = cfg.recipients.map(r => ({ name: r.name, chatId: r.chatId.trim() })).filter(r => r.chatId);
+          }
+          if (targetRecipients.length === 0 && rawChatId) {
+            const chatIds = rawChatId.split(/[,،\s]+/).filter(Boolean);
+            targetRecipients = chatIds.map((cid, i) => ({ name: `بائع ${i+1}`, chatId: cid }));
           }
 
-          const chatIds = rawChatId.split(/[,،\s]+/).filter(Boolean);
-          if (chatIds.length === 0) {
-            alert('يرجى كتابة معرف Chat ID واحد على الأقل.');
+          if (targetRecipients.length === 0) {
+            alert('يرجى إضافة بائع واحد على الأقل أو كتابة معرف Chat ID واحد.');
             return;
           }
 
           if (tgStatusMsg) {
             tgStatusMsg.style.color = '#facc15';
-            tgStatusMsg.textContent = `⏳ جاري إرسال إشعار التجربة إلى (${chatIds.length}) شات على تيليجرام...`;
+            tgStatusMsg.textContent = `⏳ جاري إرسال إشعار التجربة إلى (${targetRecipients.length}) بائع على تيليجرام...`;
           }
 
-          const testMsg = `🚀 <b>تجربة ربط بوت Se7en Store بنجاح!</b>\n━━━━━━━━━━━━━━━━━━━━\nهذا إشعار تجريبي يؤكد أن البوت متصل ومستعد لإرسال بيانات طلبات العملاء فوراً إلى البائعين ⚡`;
+          const testMsg = `🚀 <b>تجربة ربط بوت Se7en Store بنجاح!</b>\n━━━━━━━━━━━━━━━━━━━━\nهذا إشعار تجريبي يؤكد أن البوت متصل ومستعد لإرسال بيانات طلبات العملاء فوراً إلى كافة البائعين ⚡👕`;
 
           let successCount = 0;
           let failMessages = [];
 
-          for (const cid of chatIds) {
+          for (const rec of targetRecipients) {
             try {
               const url = `https://api.telegram.org/bot${token}/sendMessage`;
               const res = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  chat_id: cid,
+                  chat_id: rec.chatId,
                   text: testMsg,
                   parse_mode: 'HTML'
                 })
@@ -3181,28 +3992,166 @@
               const data = await res.json();
               if (data.ok) {
                 successCount++;
+                addSystemLog({
+                  type: 'success',
+                  category: 'telegram',
+                  title: `تجربة ربط ناجحة للبائع (${rec.name})`,
+                  recipient: `${rec.name} (${rec.chatId})`,
+                  message: `وصل إشعار الاختبار بنجاح إلى ${rec.name} (${rec.chatId})`
+                });
               } else {
-                failMessages.push(`${cid}: ${data.description || 'chat not found'}`);
+                const desc = data.description || 'chat not found';
+                failMessages.push(`${rec.name} (${rec.chatId}): ${desc}`);
+                addSystemLog({
+                  type: 'error',
+                  category: 'telegram',
+                  title: `فشل تجربة الإشعار للبائع (${rec.name})`,
+                  recipient: `${rec.name} (${rec.chatId})`,
+                  message: `فشل الإرسال: ${desc} (تأكد أن البائع ضغط Start في البوت)`
+                });
               }
             } catch (err) {
-              failMessages.push(`${cid}: ${err.message}`);
+              failMessages.push(`${rec.name}: ${err.message}`);
+              addSystemLog({
+                type: 'error',
+                category: 'telegram',
+                title: `تعذر الاتصال بالبوت للبائع (${rec.name})`,
+                recipient: `${rec.name} (${rec.chatId})`,
+                message: `خطأ اتصال: ${err.message}`
+              });
             }
           }
 
+          renderTgRecentLogs();
+          updateLogsBadge();
+          updateFloatingLogsWidget();
+
           if (tgStatusMsg) {
-            if (successCount === chatIds.length) {
+            if (successCount === targetRecipients.length) {
               tgStatusMsg.style.color = '#4ade80';
-              tgStatusMsg.textContent = `✅ وصل الإشعار لـ (${successCount}) شات على تيليجرام بنجاح! راجع هاتفك الآن.`;
+              tgStatusMsg.textContent = `✅ وصل الإشعار لجميع البائعين (${successCount} بائع) على تيليجرام بنجاح! راجع هواتفكم الآن.`;
             } else if (successCount > 0) {
               tgStatusMsg.style.color = '#facc15';
-              tgStatusMsg.textContent = `⚠️ تم الإرسال لـ (${successCount}) شات بنجاح، وفشل لـ: ${failMessages.join(' | ')}`;
+              tgStatusMsg.textContent = `⚠️ تم الإرسال لـ (${successCount}) بائع بنجاح، وفشل لـ: ${failMessages.join(' | ')}`;
             } else {
               tgStatusMsg.style.color = '#f87171';
-              tgStatusMsg.textContent = `❌ فشل الإرسال من تيليجرام: ${failMessages.join(' | ')}. تأكد أن كل شخص قد ضغط Start في البوت أولاً!`;
+              tgStatusMsg.textContent = `❌ فشل الإرسال: ${failMessages.join(' | ')}. تأكد أن كل شخص قد ضغط Start في البوت أولاً!`;
             }
           }
         });
       }
+
+      // Resend Telegram Notification for a Specific Order
+      window.resendOrderTelegram = async function(orderId) {
+        const orders = getStoredOrders();
+        const order = orders.find(o => o.id === orderId);
+        if (!order) {
+          alert('تعذر العثور على بيانات الطلب.');
+          return;
+        }
+
+        const cfg = getTelegramConfig();
+        if (!cfg.botToken) {
+          alert('يرجى ضبط وحفظ رمز Bot Token في صفحة إعدادات تيليجرام أولاً.');
+          return;
+        }
+
+        let recipients = [];
+        if (Array.isArray(cfg.recipients) && cfg.recipients.length > 0) {
+          recipients = cfg.recipients.map(r => ({ name: r.name, chatId: r.chatId.trim() })).filter(r => r.chatId);
+        }
+        if (recipients.length === 0 && cfg.chatId) {
+          const cids = cfg.chatId.split(/[,،\s]+/).filter(Boolean);
+          recipients = cids.map((cid, i) => ({ name: `بائع ${i+1}`, chatId: cid }));
+        }
+
+        if (recipients.length === 0) {
+          alert('يرجى إضافة معرف شات (Chat ID) واحد على الأقل في قائمة البائعين.');
+          return;
+        }
+
+        const cust = order.customer || {};
+        const items = Array.isArray(order.items) ? order.items : [];
+        const itemsText = items.map((it, idx) => `  ${idx + 1}. <b>${it.name || 'منتج'}</b> - مقاس: [${it.size || 'حر'}] - كمية: (${it.qty || 1}) - سعر: ${it.price || 0} ج.م`).join('\n');
+
+        const textMsg = `🔥 <b>طلب شراء جديد من متجر SE7EN!</b> 🛒\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `🔢 <b>رقم الطلب:</b> #${order.id}\n` +
+          `👤 <b>العميل:</b> ${cust.name || '—'}\n` +
+          `📱 <b>الهاتف:</b> <code>${cust.phone || '—'}</code>\n` +
+          `📍 <b>المحافظة / المدينة:</b> ${cust.gov || '—'}\n` +
+          `🏠 <b>العنوان:</b> ${cust.address || '—'}\n` +
+          (cust.notes ? `📝 <b>ملاحظات:</b> ${cust.notes}\n` : '') +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `👕 <b>المنتجات المطلوبة:</b>\n${itemsText}\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `💰 <b>إجمالي الحساب:</b> <b>${order.total || 0} جنيه مصري</b>\n` +
+          `⚡ <b>الحالة:</b> قيد المراجعة الفورية`;
+
+        let successCount = 0;
+        let failMessages = [];
+
+        for (const r of recipients) {
+          try {
+            const res = await fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: r.chatId,
+                text: textMsg,
+                parse_mode: 'HTML'
+              })
+            });
+            const data = await res.json();
+            if (data.ok) {
+              successCount++;
+              addSystemLog({
+                type: 'success',
+                category: 'telegram',
+                title: `إعادة إرسال طلب #${order.id} بنجاح`,
+                recipient: `${r.name} (${r.chatId})`,
+                message: `تم تسليم إشعار الطلب بنجاح إلى البائع ${r.name} (${r.chatId})`,
+                orderId: order.id
+              });
+            } else {
+              const reason = data.description || 'chat not found';
+              failMessages.push(`${r.name} (${r.chatId}): ${reason}`);
+              addSystemLog({
+                type: 'error',
+                category: 'telegram',
+                title: `فشل إعادة إرسال طلب #${order.id}`,
+                recipient: `${r.name} (${r.chatId})`,
+                message: `فشل الإرسال: ${reason} (تأكد أن البائع ضغط Start في البوت)`,
+                orderId: order.id
+              });
+            }
+          } catch(err) {
+            failMessages.push(`${r.name}: ${err.message}`);
+            addSystemLog({
+              type: 'error',
+              category: 'telegram',
+              title: `تعذر الاتصال بتيليجرام للطلب #${order.id}`,
+              recipient: `${r.name} (${r.chatId})`,
+              message: `خطأ اتصال: ${err.message}`,
+              orderId: order.id
+            });
+          }
+        }
+
+        renderOrdersList();
+        renderLogsList();
+        renderTgRecentLogs();
+        updateLogsBadge();
+        updateFloatingLogsWidget();
+
+        if (successCount === recipients.length) {
+          alert(`✅ تم إرسال إشعار الطلب #${order.id} بنجاح لجميع البائعين (${successCount})!`);
+        } else if (successCount > 0) {
+          alert(`⚠️ تم الإرسال لـ (${successCount}) وفشل لـ: \n${failMessages.join('\n')}`);
+        } else {
+          alert(`❌ فشل الإرسال لجميع البائعين:\n${failMessages.join('\n')}\n\nراجع سجل الأخطاء في صفحة Logs لمعرفة السبب.`);
+        }
+      };
 
       /* ==========================================================
          ANALYTICS & PRINTABLE SHIPPING SLIP JAVASCRIPT LOGIC
@@ -3582,7 +4531,16 @@
         renderOrdersList();
         renderAnalytics();
         loadTelegramUI();
+        renderLogsList();
+        updateLogsBadge();
+        updateFloatingLogsWidget();
       }
+
+      // Auto-refresh pulse monitor for logs & status
+      setInterval(() => {
+        updateLogsBadge();
+        updateFloatingLogsWidget();
+      }, 10000);
 
       // Wire Analytics Action Buttons
       const btnExportCSV = document.querySelector('#btn-export-orders-csv');
