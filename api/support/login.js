@@ -1,4 +1,4 @@
-import { bodyJson, json, requireMethod, createSessionToken, setSessionCookie, safeEqualText, sendError, HttpError } from '../../lib/server.js';
+import { bodyJson, json, requireMethod, createSessionToken, setSessionCookie, safeEqualText, sendError, HttpError, checkRateLimit } from '../../lib/server.js';
 const AGENTS = {
   agent1: { label: process.env.SUPPORT_AGENT_1_NAME || 'مسؤول خدمة العملاء الأول', passwordEnv: 'SUPPORT_AGENT_1_PASSWORD' },
   agent2: { label: process.env.SUPPORT_AGENT_2_NAME || 'مسؤول خدمة العملاء الثاني', passwordEnv: 'SUPPORT_AGENT_2_PASSWORD' }
@@ -6,6 +6,7 @@ const AGENTS = {
 export default async function handler(req, res) {
   try {
     requireMethod(req, ['POST']);
+    checkRateLimit(req, { action: 'support_login', max: 5, windowMs: 60000 });
     const body = await bodyJson(req);
     const agentId = body.agent === 'agent2' ? 'agent2' : body.agent === 'agent1' ? 'agent1' : '';
     if (!agentId) throw new HttpError(400, 'اختار حساب خدمة العملاء.');

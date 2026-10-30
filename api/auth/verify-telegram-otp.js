@@ -1,9 +1,10 @@
-import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, normalizePhone, getOtpHash, safeEqualText, createSessionToken, setSessionCookie, sendError, HttpError } from '../../lib/server.js';
+import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, normalizePhone, getOtpHash, safeEqualText, createSessionToken, setSessionCookie, sendError, HttpError, checkRateLimit } from '../../lib/server.js';
 
 export default async function handler(req, res) {
   try {
     requireMethod(req, ['POST']);
     requireCoreConfig();
+    checkRateLimit(req, { action: 'verify_otp', max: 10, windowMs: 60000 });
     const body = await bodyJson(req);
     const challengeId = String(body.challenge_id || '');
     const code = String(body.code || '').replace(/\D/g, '');

@@ -1,4 +1,4 @@
-import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, readSession, sendError, HttpError } from '../../lib/server.js';
+import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, readSession, sendError, HttpError, checkRateLimit } from '../../lib/server.js';
 
 function requireAgent(req) {
   const session = readSession(req);
@@ -19,6 +19,7 @@ async function messagesFor(id) {
   })) || [];
 }
 export default async function handler(req, res) {
+  checkRateLimit(req, { action: 'support_chat', max: 60, windowMs: 60000 });
   try {
     requireMethod(req, ['GET', 'POST']);
     requireCoreConfig();

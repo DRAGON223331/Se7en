@@ -1,10 +1,11 @@
 import crypto from 'node:crypto';
-import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, normalizeName, sendError, HttpError } from '../../lib/server.js';
+import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, normalizeName, sendError, HttpError, checkRateLimit } from '../../lib/server.js';
 
 export default async function handler(req, res) {
   try {
     requireMethod(req, ['POST']);
     requireCoreConfig();
+    checkRateLimit(req, { action: 'telegram_start', max: 6, windowMs: 300000 });
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const botUsername = String(process.env.TELEGRAM_BOT_USERNAME || '').replace(/^@/, '');
     if (!botToken || !/^[A-Za-z0-9_]{5,32}$/.test(botUsername) || !process.env.TELEGRAM_WEBHOOK_SECRET) {

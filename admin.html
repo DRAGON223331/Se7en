@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="theme-color" content="#070809">
   <title>Se7en Store — لوحة إدارة المتجر</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1319,6 +1321,14 @@
 
   <script>
     (()=>{
+      // Anti-Clickjacking Frame-Buster
+      try {
+        if (window.top !== window.self) {
+          window.top.location = window.self.location;
+        }
+      } catch (e) {
+        document.body.style.display = 'none';
+      }
       // Permanent Protected Site Programmers / Super-Admins
       const DEVELOPER_PHONES = ['01201135473', '01287934967'];
       const DEFAULT_SELLER_PHONE = '01201135473';
@@ -1675,9 +1685,80 @@
         }
       }
 
+      // Brute Force Defense & Lockout Management
+      const LOCKOUT_KEY = 'se7en_admin_lockout';
+      const MAX_LOGIN_ATTEMPTS = 5;
+      const LOCKOUT_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+
+      function getLockoutState() {
+        try {
+          const raw = localStorage.getItem(LOCKOUT_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch(e) {}
+        return { attempts: 0, lockedUntil: 0 };
+      }
+
+      function saveLockoutState(state) {
+        try {
+          localStorage.setItem(LOCKOUT_KEY, JSON.stringify(state));
+        } catch(e) {}
+      }
+
+      let lockoutTimerInterval = null;
+
+      function checkAndEnforceLockout() {
+        const state = getLockoutState();
+        const now = Date.now();
+        const submitBtn = loginForm ? loginForm.querySelector('button[type="submit"]') : null;
+
+        if (state.lockedUntil > now) {
+          const remainingSec = Math.ceil((state.lockedUntil - now) / 1000);
+          const m = Math.floor(remainingSec / 60);
+          const s = remainingSec % 60;
+          const timeStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+          if (loginPhone) loginPhone.disabled = true;
+          if (loginPin) loginPin.disabled = true;
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+            submitBtn.style.cursor = 'not-allowed';
+          }
+          if (loginStatus) {
+            loginStatus.style.color = '#ef4444';
+            loginStatus.innerHTML = `🛡️ <strong>تم قفل الدخول مؤقتاً لحماية المتجر من محاولات التخمين.</strong><br>تبقى <b>${timeStr}</b> دقيقة لإعادة المحاولة.`;
+          }
+
+          if (!lockoutTimerInterval) {
+            lockoutTimerInterval = setInterval(() => {
+              checkAndEnforceLockout();
+            }, 1000);
+          }
+          return true;
+        } else {
+          if (lockoutTimerInterval) {
+            clearInterval(lockoutTimerInterval);
+            lockoutTimerInterval = null;
+          }
+          if (loginPhone) loginPhone.disabled = false;
+          if (loginPin) loginPin.disabled = false;
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
+          }
+          if (state.lockedUntil > 0) {
+            saveLockoutState({ attempts: 0, lockedUntil: 0 });
+            if (loginStatus) loginStatus.textContent = '';
+          }
+          return false;
+        }
+      }
+
       function showLogin() {
         loginWrapper.style.display = 'flex';
         adminApp.style.display = 'none';
+        checkAndEnforceLockout();
       }
 
       function showAdmin() {
@@ -1721,30 +1802,85 @@
       }
 
       // Login handler
-      loginForm.addEventListener('submit', e => {
+      loginForm.addEventListener('submit', async e => {
         e.preventDefault();
+        if (checkAndEnforceLockout()) return;
+
         const enteredPhone = cleanPhone(loginPhone.value);
         const enteredPin = loginPin.value.trim();
         const validPin = getStoredPin();
 
+        // 600ms artificial latency to defeat automated brute-force scripts
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.7';
+        }
+        await new Promise(r => setTimeout(r, 600));
+        if (submitBtn && !checkAndEnforceLockout()) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+        }
+
         const adminUsers = getStoredAdminUsers();
         const matchedUser = adminUsers.find(u => cleanPhone(u.phone) === enteredPhone);
 
-        if (!matchedUser) {
-          loginStatus.textContent = '❌ غير مصرح: هذا الرقم غير مسجل كمالك أو شريك في المتجر.';
-          return;
+        const lockout = getLockoutState();
+
+        if (!matchedUser || enteredPin !== validPin) {
+          lockout.attempts = (lockout.attempts || 0) + 1;
+          const remaining = MAX_LOGIN_ATTEMPTS - lockout.attempts;
+
+          if (remaining <= 0) {
+            lockout.lockedUntil = Date.now() + LOCKOUT_DURATION_MS;
+            saveLockoutState(lockout);
+            checkAndEnforceLockout();
+            return;
+          } else {
+            saveLockoutState(lockout);
+            loginStatus.style.color = '#ef4444';
+            loginStatus.textContent = `❌ بيانات الدخول غير صحيحة. تحذير أمني: تبقى لك (${remaining}) محاولات قبل قفل الحساب مؤقتاً!`;
+            return;
+          }
         }
 
-        if (enteredPin !== validPin) {
-          loginStatus.textContent = '❌ رمز المرور (PIN) غير صحيح. يرجى المحاولة مرة أخرى.';
-          return;
-        }
+        // Login Success: Reset lockout attempts
+        saveLockoutState({ attempts: 0, lockedUntil: 0 });
 
-        loginStatus.textContent = `✅ أهلاً بك يا ${matchedUser.name}! جاري فتح اللوحة...`;
+        loginStatus.style.color = '#4ade80';
+        loginStatus.textContent = `✅ تم التحقق بنجاح! أهلاً بك يا ${matchedUser.name}...`;
         sessionStorage.setItem('se7en_admin_auth', 'true');
         sessionStorage.setItem('se7en_admin_user', JSON.stringify(matchedUser));
+        sessionStorage.setItem('se7en_admin_last_activity', String(Date.now()));
         setTimeout(showAdmin, 400);
       });
+
+      // Session Inactivity Auto-Logout (30 minutes)
+      function recordAdminActivity() {
+        if (sessionStorage.getItem('se7en_admin_auth') === 'true') {
+          sessionStorage.setItem('se7en_admin_last_activity', String(Date.now()));
+        }
+      }
+      window.addEventListener('mousemove', recordAdminActivity, { passive: true });
+      window.addEventListener('keydown', recordAdminActivity, { passive: true });
+      window.addEventListener('click', recordAdminActivity, { passive: true });
+      window.addEventListener('touchstart', recordAdminActivity, { passive: true });
+
+      setInterval(() => {
+        if (sessionStorage.getItem('se7en_admin_auth') === 'true') {
+          const last = Number(sessionStorage.getItem('se7en_admin_last_activity') || 0);
+          const maxIdle = 30 * 60 * 1000; // 30 minutes
+          if (Date.now() - last > maxIdle) {
+            sessionStorage.removeItem('se7en_admin_auth');
+            sessionStorage.removeItem('se7en_admin_user');
+            showLogin();
+            if (loginStatus) {
+              loginStatus.style.color = '#f59e0b';
+              loginStatus.textContent = 'ℹ️ تم تسجيل الخروج تلقائياً لانتهاء وقت الجلسة وحماية الأمان.';
+            }
+          }
+        }
+      }, 30000);
 
       logoutBtn.addEventListener('click', () => {
         sessionStorage.removeItem('se7en_admin_auth');

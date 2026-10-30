@@ -1,4 +1,4 @@
-import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, readSession, sendError, HttpError } from '../lib/server.js';
+import { bodyJson, dbRequest, queryPath, json, requireMethod, requireCoreConfig, readSession, sendError, HttpError, checkRateLimit } from '../lib/server.js';
 
 async function getOwnedConversation(phone, conversationId) {
   const params = { select: 'id,customer_phone,customer_name,assigned_agent,status,created_at,last_message_at', customer_phone: `eq.${phone}`, limit: '1' };
@@ -16,6 +16,7 @@ async function getMessages(conversationId) {
 }
 
 export default async function handler(req, res) {
+  checkRateLimit(req, { action: 'chat_user', max: 40, windowMs: 60000 });
   try {
     requireMethod(req, ['GET', 'POST']);
     requireCoreConfig();
