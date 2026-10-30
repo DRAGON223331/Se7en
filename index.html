@@ -2651,6 +2651,8 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       }
     }, 7200);
   </script>
+  <!-- Cloudflare Turnstile Anti-Bot Protection API -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"><span></span></div>
@@ -2963,6 +2965,10 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         </div>
 
         <form id="checkout-form">
+          <!-- Cloudflare Honeypot Anti-Bot Field -->
+          <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+            <input type="text" id="drawer-cf-honeypot" tabindex="-1" autocomplete="off">
+          </div>
           <div class="checkout-form-group">
             <label for="order-cust-name">الاسم بالكامل *</label>
             <input class="checkout-input" id="order-cust-name" type="text" placeholder="مثال: أحمد محمد علي" required>
@@ -5222,6 +5228,18 @@ ${itemsSummary}
       if(checkoutForm) {
         checkoutForm.addEventListener('submit', async (e) => {
           e.preventDefault();
+
+          // Cloudflare Anti-Bot Checks
+          const honeypotVal = document.querySelector('#drawer-cf-honeypot')?.value;
+          if (honeypotVal) {
+            alert('⚠️ تم حظر هذا الإجراء تلقائياً بواسطة نظام حماية كلاود فلير.');
+            return;
+          }
+
+          if (navigator.webdriver) {
+            alert('⚠️ تم اكتشاف متصفح مؤتمت (Automated Bot Detected). يرجى فتح الموقع من متصفحك الطبيعي.');
+            return;
+          }
           const name = document.querySelector('#order-cust-name').value.trim();
           const phone = document.querySelector('#order-cust-phone').value.trim();
           const gov = document.querySelector('#order-cust-gov').value;

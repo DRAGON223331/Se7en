@@ -766,6 +766,8 @@
       display: none;
     }
   </style>
+  <!-- Cloudflare Turnstile Anti-Bot Protection API -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -1036,6 +1038,20 @@
               <div style="font-weight: 900; color: #34d399; font-size: 15px; margin-bottom: 8px;">💵 الدفع نقدًا عند الاستلام (COD)</div>
               <p style="margin: 0;">سيتم تجهيز وشحن طلبك إلى عنوانك المسجل، ويمكنك معاينة المنتجات وفحص المقاسات والخامة بحضور مندوب الشحن ثم الدفع نقدًا يدًا بيد.</p>
             </div>
+          </div>
+
+          <!-- Cloudflare Honeypot Anti-Bot Field (Invisible to Humans) -->
+          <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+            <label for="cf-honeypot">Anti-Bot Field</label>
+            <input type="text" id="cf-honeypot" name="cf_honeypot_field" tabindex="-1" autocomplete="off">
+          </div>
+
+          <!-- Cloudflare Turnstile Verification Widget -->
+          <div id="cf-turnstile-box" style="margin: 18px 0 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 12px; padding: 14px;">
+            <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+              <span>🛡️ فحص الأمان من كلاود فلير (Cloudflare Bot Protection)</span>
+            </div>
+            <div class="cf-turnstile" id="checkout-turnstile" data-sitekey="2x00000000000000000000AB" data-theme="dark"></div>
           </div>
 
           <!-- Submit Button -->
@@ -1568,6 +1584,20 @@
     // ==============================================================
     async function handleCheckoutFormSubmit(e) {
       e.preventDefault();
+
+      // CLOUDFLARE ANTI-BOT CHECKS
+      const honeypotVal = document.getElementById('cf-honeypot')?.value;
+      if (honeypotVal) {
+        console.warn('Bot blocked via Honeypot');
+        alert('⚠️ تم حظر هذا الإجراء تلقائياً بواسطة نظام حماية المتجر من الروبوتات.');
+        return;
+      }
+
+      if (navigator.webdriver) {
+        console.warn('Bot blocked via navigator.webdriver');
+        alert('⚠️ تم اكتشاف متصفح روبوت مؤتمت (Automated Browser). يرجى فتح المتجر من متصفحك الطبيعي.');
+        return;
+      }
 
       const name = (document.getElementById('cust-name').value || '').trim();
       const phone = (document.getElementById('cust-phone').value || '').trim();

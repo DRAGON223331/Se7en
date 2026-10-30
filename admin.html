@@ -1213,6 +1213,8 @@
     }
 
 </style>
+  <!-- Cloudflare Turnstile Anti-Bot Protection API -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -1242,6 +1244,17 @@
           <label class="form-label" for="login-pin">رمز الدخول السري (PIN)</label>
           <input class="form-control" id="login-pin" type="password" placeholder="أدخل رمز المرور السري (PIN)" required dir="ltr">
         </div>
+        <!-- Cloudflare Honeypot Anti-Bot Field -->
+        <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+          <input type="text" id="admin-cf-honeypot" tabindex="-1" autocomplete="off">
+        </div>
+
+        <!-- Cloudflare Turnstile Anti-Bot Widget -->
+        <div id="admin-turnstile-wrap" style="margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 10px; color: var(--muted); margin-bottom: 6px;">🛡️ فحص الأمان ومنع الروبوتات من كلاود فلير</div>
+          <div class="cf-turnstile" id="admin-turnstile" data-sitekey="2x00000000000000000000AB" data-theme="dark"></div>
+        </div>
+
         <button class="btn btn-primary btn-block" type="submit" id="login-btn">تسجيل الدخول إلى لوحة الإدارة ↗</button>
         <div class="login-status" id="login-status"></div>
       </form>
@@ -1763,6 +1776,50 @@
             <button class="btn btn-primary" type="submit" style="margin-top: 10px;">حفظ وتطبيق الإعدادات فوراً 💾</button>
             <span id="settings-status" style="margin-right: 14px; font-size: 11px; font-weight: 800; color: #4ade80;"></span>
           </form>
+
+          <!-- CLOUDFLARE SECURITY & BOT PROTECTION SECTION -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin-top: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 26px;">🛡️</span>
+                <div>
+                  <h3 style="margin: 0; font-size: 16px; font-weight: 950; color: #fff;">حماية كلاود فلير ومكافحة الروبوتات (Cloudflare Bot Protection)</h3>
+                  <p style="margin: 4px 0 0; font-size: 11px; color: var(--muted);">حماية المتجر وصفحة الدفع ولوحة التحكم تلقائياً من برامج الزحف والروبوتات وطلبات السبام الوهمية.</p>
+                </div>
+              </div>
+              <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800;">
+                🟢 الحماية نشطة (Cloudflare Active)
+              </span>
+            </div>
+
+            <!-- Features Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 18px;">
+              <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 8px; padding: 12px;">
+                <div style="font-size: 12px; font-weight: 900; color: #60a5fa; margin-bottom: 4px;">🧩 Cloudflare Turnstile</div>
+                <div style="font-size: 11px; color: #cbd5e1;">كابتشا ذكية غير مرئية تفحص الزائر في ثانية بدون صور معقدة أو تعطيل للعميل.</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 8px; padding: 12px;">
+                <div style="font-size: 12px; font-weight: 900; color: #34d399; margin-bottom: 4px;">🪤 مصيدة الروبوتات (Honeypot)</div>
+                <div style="font-size: 11px; color: #cbd5e1;">حقول خفية غير مرئية للبشر تسقط فيها برامج السبام وتُحظر فوراً قبل إرسال تيليجرام.</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 8px; padding: 12px;">
+                <div style="font-size: 12px; font-weight: 900; color: #facc15; margin-bottom: 4px;">🚫 كشف برامج الأتمتة</div>
+                <div style="font-size: 11px; color: #cbd5e1;">حظر فوري لمتصفحات Headless وأدوات Selenium وPuppeteer المستخدمة في الهجمات.</div>
+              </div>
+            </div>
+
+            <!-- Step by step Cloudflare Guide -->
+            <div style="background: #090c13; border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; padding: 16px;">
+              <h4 style="margin: 0 0 10px; font-size: 13px; font-weight: 900; color: #93c5fd;">⚡ خطوات تفعيل كلاود فلير الكامل على الدومين (Bot Fight Mode & DDoS):</h4>
+              <ol style="margin: 0; padding-right: 20px; font-size: 12px; color: #cbd5e1; line-height: 1.8;">
+                <li>أنشئ حساباً مجانياً على موقع <a href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer" style="color: #60a5fa; text-decoration: underline;">cloudflare.com</a> واضغط <strong>Add a Site</strong> واكتب اسم دومين متجرك.</li>
+                <li>اختر الخطة المجانية (Free Plan) وسيمنحك كلاود فلير <strong>Nameservers</strong> مجانية لتغييرها في موقع الدومين (مثل GoDaddy أو Namecheap).</li>
+                <li>تأكد من تفعيل السحابة البرتقالية <strong>(Proxied ☁️)</strong> لجميع سجلات الـ DNS.</li>
+                <li>ادخل في كلاود فلير على <strong>Security ➔ Bots</strong> وفعّل خيار <strong>Bot Fight Mode</strong> (مجاني بنقرة زر ويصد ملايين الروبوتات تلقائياً).</li>
+                <li>في حال تعرض الموقع لهجوم أو محاولات إغراق، يمكنك تفعيل زر <strong>Under Attack Mode</strong> من شاشة كلاود فلير الرئيسية لحماية فورية.</li>
+              </ol>
+            </div>
+          </div>
 
           <!-- PAYMENT CARD MANAGEMENT & 7-DAY COOLDOWN SECURITY SECTION -->
           <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin-top: 24px;">
@@ -2477,6 +2534,20 @@
       loginForm.addEventListener('submit', async e => {
         e.preventDefault();
         if (checkAndEnforceLockout()) return;
+
+        // Cloudflare Anti-Bot Checks
+        const honeypotVal = document.querySelector('#admin-cf-honeypot')?.value;
+        if (honeypotVal) {
+          loginStatus.style.color = '#ef4444';
+          loginStatus.textContent = '❌ تم حظر المحاولة تلقائياً بواسطة نظام حماية كلاود فلير.';
+          return;
+        }
+
+        if (navigator.webdriver) {
+          loginStatus.style.color = '#ef4444';
+          loginStatus.textContent = '❌ تم اكتشاف متصفح مؤتمت (Automated Bot Detected).';
+          return;
+        }
 
         const enteredPhone = cleanPhone(loginPhone.value);
         const enteredPin = loginPin.value.trim();
