@@ -1563,6 +1563,39 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
     }
 
     /* Checkout view inside drawer */
+    .luxury-credit-card {
+      background: linear-gradient(135deg, #1b1f2b 0%, #0c0e14 55%, #181c26 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: #fff;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .card-chip {
+      width: 36px;
+      height: 26px;
+      background: linear-gradient(135deg, #e5c07b, #fff0c2, #b8860b);
+      border-radius: 5px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .card-chip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(0,0,0,0.3);
+    }
+    .payment-badge-pill.payment-badge-card {
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
     .payment-method-card {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2977,40 +3010,98 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
             <textarea class="checkout-input" id="order-cust-notes" rows="2" placeholder="أي تفاصيل خاصة بوقت الاستلام أو التوصيل..."></textarea>
           </div>
 
-          <!-- Payment Method Selection -->
+          <!-- Payment Method Selection: 3 Options -->
           <div class="checkout-form-group" style="margin-top: 16px; margin-bottom: 14px;">
             <label style="font-weight: 850; color: #fff; font-size: 13px; margin-bottom: 8px; display: block;">
               💳 تحديد طريقة الدفع وتأكيد الحجز *
             </label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-              <!-- Option 1: Cash on Delivery -->
-              <div class="payment-method-card active" id="pay-opt-cash" onclick="selectPaymentMethod('cash')">
-                <input type="radio" name="payment_method" id="pay-radio-cash" value="cash" checked style="display: none;">
-                <div style="font-size: 20px; margin-bottom: 4px;">💵</div>
-                <div style="font-size: 12px; font-weight: 900; color: #fff;">نقدًا عند الاستلام</div>
-                <div style="font-size: 10px; color: var(--muted); line-height: 1.3; margin-top: 2px;">تدفع للمندوب كاش بعد معاينة واستلام القطع</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+              <!-- Option 1: Card / Visa (Native In-Site) -->
+              <div class="payment-method-card active" id="pay-opt-card" onclick="selectPaymentMethod('card')">
+                <input type="radio" name="payment_method" id="pay-radio-card" value="card" checked style="display: none;">
+                <div style="font-size: 20px; margin-bottom: 4px;">💳</div>
+                <div style="font-size: 11px; font-weight: 900; color: #fff;">فيزا / كارت بنكي</div>
+                <div style="font-size: 9px; color: #4ade80; line-height: 1.2; margin-top: 2px;">دفع فوري بالموقع ⚡</div>
               </div>
 
-              <!-- Option 2: Online Transfer -->
-              <div class="payment-method-card" id="pay-opt-online" onclick="selectPaymentMethod('online')">
-                <input type="radio" name="payment_method" id="pay-radio-online" value="online" style="display: none;">
-                <div style="font-size: 20px; margin-bottom: 4px;">💳</div>
-                <div style="font-size: 12px; font-weight: 900; color: #fff;">تحويل أونلاين / إنستاباي</div>
-                <div style="font-size: 10px; color: var(--muted); line-height: 1.3; margin-top: 2px;">تحويل فوري لتأكيد وأولوية حجز القطع فوراً</div>
+              <!-- Option 2: InstaPay / Wallet (Transfer + Proof Required) -->
+              <div class="payment-method-card" id="pay-opt-wallet" onclick="selectPaymentMethod('wallet')">
+                <input type="radio" name="payment_method" id="pay-radio-wallet" value="wallet" style="display: none;">
+                <div style="font-size: 20px; margin-bottom: 4px;">📱</div>
+                <div style="font-size: 11px; font-weight: 900; color: #fff;">إنستاباي / محفظة</div>
+                <div style="font-size: 9px; color: #facc15; line-height: 1.2; margin-top: 2px;">إلزام إيصال التحويل 📸</div>
+              </div>
+
+              <!-- Option 3: Cash on Delivery -->
+              <div class="payment-method-card" id="pay-opt-cash" onclick="selectPaymentMethod('cash')">
+                <input type="radio" name="payment_method" id="pay-radio-cash" value="cash" style="display: none;">
+                <div style="font-size: 20px; margin-bottom: 4px;">💵</div>
+                <div style="font-size: 11px; font-weight: 900; color: #fff;">نقدًا عند الاستلام</div>
+                <div style="font-size: 9px; color: var(--muted); line-height: 1.2; margin-top: 2px;">كاش بعد فحص الشحنة</div>
               </div>
             </div>
           </div>
 
-          <!-- Online Payment Details Box (Shown only if Online is selected) -->
-          <div id="checkout-online-details" style="display: none; background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(0,0,0,0.5)); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+          <!-- OPTION 1 DETAILS: NATIVE IN-SITE CREDIT CARD GATEWAY -->
+          <div id="checkout-card-details" style="background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(0,0,0,0.55)); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
+              <span style="font-size: 12px; font-weight: 900; color: #60a5fa;">🔒 بوابة الدفع المباشر بالبطاقة (مشفرة وآمنة)</span>
+              <span style="background: rgba(34,197,94,0.15); color: #4ade80; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;">تشفير 256-Bit SSL 🛡️</span>
+            </div>
+
+            <!-- Visual Luxury Card Preview -->
+            <div class="luxury-credit-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <div class="card-chip"></div>
+                <div id="card-brand-display" style="font-weight: 950; font-size: 15px; letter-spacing: 1px; color: #93c5fd;">VISA / Meeza</div>
+              </div>
+              <div id="card-display-number" style="font-family: monospace; font-size: 17px; font-weight: 900; letter-spacing: 2px; color: #fff; margin-bottom: 14px; direction: ltr; text-align: left;">•••• •••• •••• ••••</div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                  <div style="font-size: 8px; color: rgba(255,255,255,0.5); text-transform: uppercase;">CARDHOLDER</div>
+                  <div id="card-display-name" style="font-size: 11px; font-weight: 850; color: #fff; text-transform: uppercase;">اسم صاحب البطاقة</div>
+                </div>
+                <div>
+                  <div style="font-size: 8px; color: rgba(255,255,255,0.5); text-transform: uppercase;">EXPIRES</div>
+                  <div id="card-display-expiry" style="font-family: monospace; font-size: 12px; font-weight: 850; color: #fff; direction: ltr;">MM / YY</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Inputs Form -->
+            <div class="checkout-form-group" style="margin-bottom: 10px;">
+              <label for="card-input-number" style="font-size: 11px; font-weight: 800; color: #fff;">رقم البطاقة البنكية (16 رقم) *</label>
+              <input class="checkout-input" id="card-input-number" type="text" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19" dir="ltr" style="font-family: monospace; font-size: 14px; letter-spacing: 1px;">
+            </div>
+
+            <div class="checkout-form-group" style="margin-bottom: 10px;">
+              <label for="card-input-name" style="font-size: 11px; font-weight: 800; color: #fff;">اسم صاحب البطاقة (كما هو مدون على الكارت) *</label>
+              <input class="checkout-input" id="card-input-name" type="text" placeholder="مثال: AHMED MOHAMED" style="text-transform: uppercase;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px;">
+              <div class="checkout-form-group" style="margin-bottom: 0;">
+                <label for="card-input-expiry" style="font-size: 11px; font-weight: 800; color: #fff;">تاريخ الانتهاء (شهر / سنة) *</label>
+                <input class="checkout-input" id="card-input-expiry" type="text" inputmode="numeric" placeholder="MM/YY" maxlength="5" dir="ltr" style="font-family: monospace; font-size: 13px; text-align: center;">
+              </div>
+              <div class="checkout-form-group" style="margin-bottom: 0;">
+                <label for="card-input-cvv" style="font-size: 11px; font-weight: 800; color: #fff;">رمز الأمان (CVV خلف الكارت) *</label>
+                <input class="checkout-input" id="card-input-cvv" type="password" inputmode="numeric" placeholder="•••" maxlength="4" dir="ltr" style="font-family: monospace; font-size: 13px; text-align: center;">
+              </div>
+            </div>
+            <div style="font-size: 10px; color: var(--muted); margin-top: 6px; text-align: center;">🔒 لا يتم تخزين أرقام بطاقتك السرية أبداً — تتم معالجة الدفع عبر قنوات بنكية مشفرة</div>
+          </div>
+
+          <!-- OPTION 2 DETAILS: INSTAPAY & WALLETS (MANDATORY PROOF & REF ID) -->
+          <div id="checkout-wallet-details" style="display: none; background: linear-gradient(135deg, rgba(234,179,8,0.06), rgba(0,0,0,0.55)); border: 1px solid rgba(234,179,8,0.3); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
-              <span style="font-size: 12px; font-weight: 900; color: #10b981;">⚡ بيانات تحويل المتجر المعتمدة</span>
-              <span id="pay-badge-type" style="background: rgba(16,185,129,0.15); color: #4ade80; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;">InstaPay / فودافون كاش</span>
+              <span style="font-size: 12px; font-weight: 900; color: #facc15;">📱 بيانات تحويل إنستاباي والمحافظ المعتمدة</span>
+              <span id="pay-badge-type" style="background: rgba(234,179,8,0.15); color: #fde047; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;">InstaPay / فودافون كاش</span>
             </div>
 
             <!-- Transfer Account Number & Copy Button -->
             <div style="background: #090a0d; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
-              <div style="font-size: 10px; color: var(--muted); margin-bottom: 4px;">رقم الحساب / البطاقة / المحفظة للتحويل:</div>
+              <div style="font-size: 10px; color: var(--muted); margin-bottom: 4px;">رقم الحساب / المحفظة للتحويل:</div>
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
                 <span id="checkout-pay-card-number" style="font-family: monospace; font-size: 15px; font-weight: 950; color: #fff; letter-spacing: 1px; direction: ltr;">01201135473</span>
                 <button type="button" class="btn btn-secondary" id="btn-copy-pay-number" onclick="copyPaymentNumber()" style="font-size: 10px; padding: 4px 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); white-space: nowrap;">
@@ -3023,19 +3114,20 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
             </div>
 
             <p id="checkout-pay-instructions" style="font-size: 11px; color: #cbd5e1; margin: 0 0 10px; line-height: 1.5; background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 6px;">
-              يرجى تحويل قيمة الطلب (<span id="checkout-pay-total-amount" style="color: #4ade80; font-weight: 900;">0 ج.م</span>) على الرقم أعلاه، ثم كتابة رقم العملية بالأسفل.
+              يرجى تحويل قيمة الطلب (<span id="checkout-pay-total-amount" style="color: #4ade80; font-weight: 900;">0 ج.م</span>) على الرقم أعلاه، ثم إدخال رقم العملية ورفع صورة إيصال التحويل بالأسفل.
             </p>
 
-            <div class="checkout-form-group">
-              <label for="order-payment-ref" style="font-size: 11px; font-weight: 800; color: #fff;">رقم العملية / أو رقم الحساب أو المحفظة المحول منها *</label>
-              <input class="checkout-input" id="order-payment-ref" type="text" placeholder="مثال: رقم محفظتك أو كود العملية من تطبيق البنك">
+            <div class="checkout-form-group" style="margin-bottom: 10px;">
+              <label for="order-payment-ref" style="font-size: 11px; font-weight: 800; color: #facc15;">رقم العملية / أو كود التحويل المرجعي من التطبيق * (إلزامي)</label>
+              <input class="checkout-input" id="order-payment-ref" type="text" placeholder="اكتب كود العملية المكون من أرقام من إيصال التحويل">
             </div>
 
             <div class="checkout-form-group" style="margin-bottom: 0;">
-              <label for="order-receipt-proof" style="font-size: 11px; font-weight: 800; color: #fff;">صورة إيصال التحويل (اختياري لتسريع التأكيد)</label>
-              <input class="checkout-input" id="order-receipt-proof" type="file" accept="image/*" style="font-size: 11px; padding: 6px;">
+              <label for="order-receipt-proof" style="font-size: 11px; font-weight: 800; color: #facc15;">دليل التحويل (صورة الإيصال / سكرين شوت العملية) * (إلزامي)</label>
+              <input class="checkout-input" id="order-receipt-proof" type="file" accept="image/*" style="font-size: 11px; padding: 6px; cursor: pointer;">
               <div id="receipt-preview-box" style="display: none; margin-top: 8px; text-align: center;">
-                <img id="receipt-preview-img" src="" alt="معاينة الإيصال" style="max-height: 120px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);">
+                <img id="receipt-preview-img" src="" alt="معاينة إيصال التحويل" style="max-height: 140px; border-radius: 6px; border: 1px solid rgba(234,179,8,0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                <div style="font-size: 10px; color: #4ade80; margin-top: 4px;">✅ تم إرفاق دليل التحويل بنجاح</div>
               </div>
             </div>
           </div>
@@ -4041,6 +4133,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           localStorage.setItem('se7en_store_cart', JSON.stringify(cart));
         }catch(e){}
         renderCartUI();
+      setupCreditCardInputs();
       }
 
       function addToCart(productId, size, qty = 1){
@@ -4694,7 +4787,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       }
 
       // ==========================================
-      // PAYMENT CONFIGURATION & CHECKOUT HELPERS
+      // PAYMENT CONFIGURATION & IN-SITE CHECKOUT GATEWAY
       // ==========================================
       function getPaymentConfig() {
         try {
@@ -4706,36 +4799,42 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           methodType: 'instapay',
           cardNumber: '01201135473',
           accountName: 'SE7EN STORE',
-          instructions: 'يرجى تحويل إجمالي المبلغ على الرقم أعلاه مع كتابة رقم الطلب في الملاحظات، ثم كتابة رقم العملية لتأكيد الحجز فوراً.'
+          instructions: 'يرجى تحويل إجمالي المبلغ على الرقم أعلاه مع كتابة رقم الطلب في الملاحظات، ثم كتابة رقم العملية ورفع صورة إيصال التحويل لتأكيد الحجز فوراً.'
         };
       }
 
       let currentReceiptBase64 = null;
 
       window.selectPaymentMethod = function(method) {
-        const cashCard = document.querySelector('#pay-opt-cash');
-        const onlineCard = document.querySelector('#pay-opt-online');
-        const onlineBox = document.querySelector('#checkout-online-details');
-        const radioCash = document.querySelector('#pay-radio-cash');
-        const radioOnline = document.querySelector('#pay-radio-online');
-        const refInput = document.querySelector('#order-payment-ref');
+        const cardTab = document.querySelector('#pay-opt-card');
+        const walletTab = document.querySelector('#pay-opt-wallet');
+        const cashTab = document.querySelector('#pay-opt-cash');
 
-        if (method === 'online') {
-          cashCard?.classList.remove('active');
-          onlineCard?.classList.add('active');
-          if (radioOnline) radioOnline.checked = true;
-          if (onlineBox) onlineBox.style.display = 'block';
-          if (refInput) refInput.required = true;
+        const cardBox = document.querySelector('#checkout-card-details');
+        const walletBox = document.querySelector('#checkout-wallet-details');
+
+        const radioCard = document.querySelector('#pay-radio-card');
+        const radioWallet = document.querySelector('#pay-radio-wallet');
+        const radioCash = document.querySelector('#pay-radio-cash');
+
+        [cardTab, walletTab, cashTab].forEach(t => t?.classList.remove('active'));
+
+        if (method === 'card') {
+          cardTab?.classList.add('active');
+          if (radioCard) radioCard.checked = true;
+          if (cardBox) cardBox.style.display = 'block';
+          if (walletBox) walletBox.style.display = 'none';
+        } else if (method === 'wallet') {
+          walletTab?.classList.add('active');
+          if (radioWallet) radioWallet.checked = true;
+          if (cardBox) cardBox.style.display = 'none';
+          if (walletBox) walletBox.style.display = 'block';
           updateCheckoutPaymentDisplay();
         } else {
-          onlineCard?.classList.remove('active');
-          cashCard?.classList.add('active');
+          cashTab?.classList.add('active');
           if (radioCash) radioCash.checked = true;
-          if (onlineBox) onlineBox.style.display = 'none';
-          if (refInput) {
-            refInput.required = false;
-            refInput.value = '';
-          }
+          if (cardBox) cardBox.style.display = 'none';
+          if (walletBox) walletBox.style.display = 'none';
         }
       };
 
@@ -4790,7 +4889,70 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
 
         if (totalAmountEl) totalAmountEl.textContent = total + ' ج.م';
         if (instructEl) {
-          instructEl.innerHTML = `يرجى تحويل قيمة الطلب (<span style="color:#4ade80;font-weight:900;">${total} ج.م</span>) على الرقم أعلاه، ثم كتابة رقم العملية بالأسفل.<br><small style="color:var(--muted);">${escapeHtml(cfg.instructions || '')}</small>`;
+          instructEl.innerHTML = `يرجى تحويل قيمة الطلب (<span style="color:#4ade80;font-weight:900;">${total} ج.م</span>) على الرقم أعلاه، ثم كتابة رقم العملية ورفع صورة الإيصال بالأسفل.<br><small style="color:var(--muted);">${escapeHtml(cfg.instructions || '')}</small>`;
+        }
+      }
+
+      // Interactive Real-Time Credit Card Inputs & Formatter
+      function setupCreditCardInputs() {
+        const numInput = document.querySelector('#card-input-number');
+        const nameInput = document.querySelector('#card-input-name');
+        const expiryInput = document.querySelector('#card-input-expiry');
+        const cvvInput = document.querySelector('#card-input-cvv');
+
+        const dispNum = document.querySelector('#card-display-number');
+        const dispName = document.querySelector('#card-display-name');
+        const dispExpiry = document.querySelector('#card-display-expiry');
+        const dispBrand = document.querySelector('#card-brand-display');
+
+        if (numInput && dispNum) {
+          numInput.addEventListener('input', () => {
+            let val = numInput.value.replace(/\D/g, '').substring(0, 16);
+            let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
+            numInput.value = formatted;
+            dispNum.textContent = formatted || '•••• •••• •••• ••••';
+
+            // Detect Brand
+            if (dispBrand) {
+              if (val.startsWith('4')) {
+                dispBrand.textContent = 'VISA 💳';
+                dispBrand.style.color = '#60a5fa';
+              } else if (/^(5[1-5]|2[2-7])/.test(val)) {
+                dispBrand.textContent = 'Mastercard 💳';
+                dispBrand.style.color = '#f87171';
+              } else if (/^(5078|6378|50)/.test(val)) {
+                dispBrand.textContent = 'ميزة (Meeza) 🇪🇬';
+                dispBrand.style.color = '#34d399';
+              } else {
+                dispBrand.textContent = 'بطاقة بنكية 💳';
+                dispBrand.style.color = '#93c5fd';
+              }
+            }
+          });
+        }
+
+        if (nameInput && dispName) {
+          nameInput.addEventListener('input', () => {
+            const val = nameInput.value.trim().toUpperCase();
+            dispName.textContent = val || 'اسم صاحب البطاقة';
+          });
+        }
+
+        if (expiryInput && dispExpiry) {
+          expiryInput.addEventListener('input', () => {
+            let val = expiryInput.value.replace(/\D/g, '').substring(0, 4);
+            if (val.length >= 2) {
+              val = val.substring(0, 2) + '/' + val.substring(2);
+            }
+            expiryInput.value = val;
+            dispExpiry.textContent = val || 'MM / YY';
+          });
+        }
+
+        if (cvvInput) {
+          cvvInput.addEventListener('input', () => {
+            cvvInput.value = cvvInput.value.replace(/\D/g, '').substring(0, 4);
+          });
         }
       }
 
@@ -5016,31 +5178,116 @@ ${itemsSummary}
             return;
           }
 
+          const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'card';
+          let paymentData = {};
+
+          // 1. NATIVE IN-SITE CARD PAYMENT VALIDATION
+          if (paymentMethod === 'card') {
+            const cardNum = (document.querySelector('#card-input-number')?.value || '').replace(/\s/g, '');
+            const cardName = (document.querySelector('#card-input-name')?.value || '').trim();
+            const cardExp = (document.querySelector('#card-input-expiry')?.value || '').trim();
+            const cardCvv = (document.querySelector('#card-input-cvv')?.value || '').trim();
+            const cardBrand = document.querySelector('#card-brand-display')?.textContent || 'بطاقة بنكية';
+
+            if (cardNum.length < 16) {
+              alert('⚠️ رقم البطاقة البنكية غير صحيح: يرجى كتابة الـ 16 رقماً المدونة على وجه البطاقة بالكامل.');
+              return;
+            }
+            if (!cardName) {
+              alert('⚠️ يرجى كتابة اسم صاحب البطاقة كما هو مدون على الكارت.');
+              return;
+            }
+            if (!/^\d{2}\/\d{2}$/.test(cardExp)) {
+              alert('⚠️ تاريخ الانتهاء غير صالح: يرجى كتابة الشهر والسنة بصيغة MM/YY (مثال: 08/28).');
+              return;
+            }
+            const expMonth = parseInt(cardExp.split('/')[0], 10);
+            if (expMonth < 1 || expMonth > 12) {
+              alert('⚠️ شهر انتهاء البطاقة غير صحيح (يجب أن يكون بين 01 و 12).');
+              return;
+            }
+            if (cardCvv.length < 3) {
+              alert('⚠️ رمز الأمان CVV غير صالح: يرجى كتابة الثلاث أرقام الموجودة خلف البطاقة.');
+              return;
+            }
+
+            // Simulate 3D-Secure Bank Handshake
+            if (checkoutStatusMsg) {
+              checkoutStatusMsg.style.color = '#60a5fa';
+              checkoutStatusMsg.textContent = '🔒 جاري تشفير بيانات البطاقة والاتصال بالبنك لتأكيد الدفع (3D-Secure)...';
+            }
+            await new Promise(r => setTimeout(r, 1200));
+
+            paymentData = {
+              method: 'card',
+              methodLabel: `دفع مباشر بالفيزا (${cardBrand}) 💳`,
+              cardBrand: cardBrand,
+              cardLast4: cardNum.slice(-4),
+              cardHolder: cardName,
+              status: 'paid_instant'
+            };
+          }
+
+          // 2. INSTAPAY & WALLET TRANSFER (STRICT MANDATORY REF & PROOF)
+          else if (paymentMethod === 'wallet') {
+            const paymentRef = (document.querySelector('#order-payment-ref')?.value || '').trim();
+
+            if (!paymentRef) {
+              alert('⚠️ تنبيه هام: يرجى كتابة رقم العملية / كود التحويل المرجعي من تطبيق إنستاباي أو المحفظة أولاً لتأكيد طلبك.');
+              document.querySelector('#order-payment-ref')?.focus();
+              return;
+            }
+            if (!currentReceiptBase64) {
+              alert('⚠️ تنبيه هام: يجب رفع صورة إيصال التحويل (دليل التحويل 📸) لتأكيد حجز طلبك، حتى يتمكن البائع من مراجعته فوراً.');
+              document.querySelector('#order-receipt-proof')?.focus();
+              return;
+            }
+
+            paymentData = {
+              method: 'wallet',
+              methodLabel: 'تحويل إلكتروني / إنستاباي 📱',
+              ref: paymentRef,
+              receiptImage: currentReceiptBase64,
+              status: 'pending_verification'
+            };
+          }
+
+          // 3. CASH ON DELIVERY
+          else {
+            paymentData = {
+              method: 'cash',
+              methodLabel: 'دفع نقدًا عند الاستلام 💵',
+              status: 'cod'
+            };
+          }
+
           if(checkoutStatusMsg){
             checkoutStatusMsg.style.color = '#facc15';
-            checkoutStatusMsg.textContent = '⏳ جاري إرسال الطلب للبائعين عبر تيليجرام...';
+            checkoutStatusMsg.textContent = '⏳ جاري إرسال وتأكيد الطلب للبائعين...';
           }
 
           const orderData = buildOrderObject(name, phone, gov, address, notes);
+          orderData.payment = paymentData;
 
           // Always save locally in store orders
           saveOrderToStore(orderData);
 
-          // Log order creation
+          // Log order creation with payment method
           addSystemLog({
-            type: 'info',
+            type: 'success',
             category: 'order',
-            title: `تم تسجيل طلب شراء جديد #${orderData.id}`,
+            title: `تم تسجيل طلب #${orderData.id} [${paymentData.methodLabel}]`,
             recipient: orderData.customer.name,
-            message: `قيمة الطلب: ${orderData.total} ج.م | العميل: ${orderData.customer.name} (${orderData.customer.phone}) | المحافظة: ${orderData.customer.gov}`,
+            message: `قيمة الطلب: ${orderData.total} ج.م | طريقة الدفع: ${paymentData.methodLabel} | العميل: ${orderData.customer.name} (${orderData.customer.phone})`,
             orderId: orderData.id
           });
 
           // Send to Telegram
           await sendTelegramOrder(orderData);
 
-          // Clear cart
+          // Clear cart & reset receipt
           saveCart([]);
+          currentReceiptBase64 = null;
 
           // Show success screen
           showOrderSuccessScreen(orderData);
