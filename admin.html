@@ -1408,9 +1408,19 @@
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="tg-chat-id">معرف المحادثة أو القناة / الجروب (Chat ID) *</label>
-                <input class="form-control" id="tg-chat-id" type="text" placeholder="مثال: 123456789 أو -1001234567890" dir="ltr">
-                <small style="color: var(--muted); font-size: 10px; margin-top: 4px; display: block;">معرف شات حسابك أو الجروب الخاص بالبائعين الذي يستقبل الطلبات (يمكنك معرفته من @userinfobot).</small>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                  <label class="form-label" for="tg-chat-id" style="margin: 0;">معرفات المحادثات أو الجروبات (Chat IDs) — يدعم إرسال لكذا شخص أو جروب (افصل بفواصل) *</label>
+                  <button class="btn btn-secondary" type="button" id="btn-auto-detect-chat-id" style="font-size: 11px; padding: 4px 10px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.4); color: #60a5fa; border-radius: 6px; cursor: pointer;">
+                    🔍 استخراج الـ Chat ID تلقائياً
+                  </button>
+                </div>
+                <input class="form-control" id="tg-chat-id" type="text" placeholder="مثال: 123456789, 987654321, -100123456789" dir="ltr">
+                <div id="tg-phone-warning" style="display: none; margin-top: 6px; padding: 8px 12px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 6px; font-size: 11px; color: #fca5a5; line-height: 1.5;">
+                  ⚠️ <strong>تنبيه: لقد كتبت رقم هاتف!</strong> بوت تيليجرام لا يقبل أرقام التليفونات في حقل Chat ID، بل يتطلب الـ ID الرقمي لحسابك أو لجروب المحل. اضغط على زر <strong>"استخراج الـ Chat ID تلقائياً"</strong> لجلب الـ ID بضغطة واحدة، أو يمكنك استقبال الطلبات عبر أرقام التليفونات بالواتساب مباشرة!
+                </div>
+                <small style="color: var(--muted); font-size: 10px; margin-top: 4px; display: block;">
+                  يمكنك كتابة معرف حسابك، أو كذا معرف مفصولين بفواصل لإرسال الطلب لكذا شخص في نفس الوقت (<code>12345678, 98765432</code>)، أو معرف جروب تيليجرام به كل البائعين.
+                </small>
               </div>
 
               <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
@@ -3055,50 +3065,140 @@
         });
       }
 
+      // Auto-detect Telegram Chat IDs from incoming updates
+      const btnAutoDetectChatId = document.querySelector('#btn-auto-detect-chat-id');
+      const inputChatId = document.querySelector('#tg-chat-id');
+      const phoneWarning = document.querySelector('#tg-phone-warning');
+
+      if (inputChatId && phoneWarning) {
+        inputChatId.addEventListener('input', () => {
+          const val = inputChatId.value.trim();
+          const isPhone = /^(\+?20|01)[0-9]{8,10}/.test(val.replace(/[\s-]/g, ''));
+          phoneWarning.style.display = isPhone ? 'block' : 'none';
+        });
+      }
+
+      if (btnAutoDetectChatId) {
+        btnAutoDetectChatId.addEventListener('click', async () => {
+          const token = document.querySelector('#tg-bot-token').value.trim();
+          if (!token) {
+            alert('يرجى وضع رمز الـ Bot Token أولاً.');
+            return;
+          }
+          if (tgStatusMsg) {
+            tgStatusMsg.style.color = '#facc15';
+            tgStatusMsg.textContent = '⏳ جاري فحص الرسائل مع البوت على تيليجرام لاستخراج الـ Chat ID...';
+          }
+          try {
+            const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
+            const data = await res.json();
+            if (!data.ok) {
+              throw new Error(data.description || 'فشل الاتصال بالبوت');
+            }
+            const updates = data.result || [];
+            const foundChats = new Map();
+            updates.forEach(u => {
+              const msg = u.message || u.channel_post || u.my_chat_member;
+              if (msg && msg.chat) {
+                const cid = String(msg.chat.id);
+                const name = msg.chat.title || msg.chat.first_name || (msg.chat.username ? '@' + msg.chat.username : cid);
+                foundChats.set(cid, name);
+              }
+            });
+
+            if (foundChats.size > 0) {
+              const chatIdsArray = Array.from(foundChats.keys());
+              if (inputChatId) {
+                inputChatId.value = chatIdsArray.join(', ');
+                if (phoneWarning) phoneWarning.style.display = 'none';
+              }
+              const namesList = Array.from(foundChats.entries()).map(([cid, name]) => `${name} (${cid})`).join('، ');
+              if (tgStatusMsg) {
+                tgStatusMsg.style.color = '#4ade80';
+                tgStatusMsg.textContent = `✅ تم استخراج ${foundChats.size} شات بنجاح: [${namesList}] وتم وضعهم في الحقل! اضغط "حفظ إعدادات تيليجرام" الآن.`;
+              }
+            } else {
+              if (tgStatusMsg) {
+                tgStatusMsg.style.color = '#60a5fa';
+                tgStatusMsg.textContent = 'ℹ️ لم نجد رسائل بعد! افتح البوت على تيليجرام واضغط Start أو أرسل له أي كلمة، ثم اضغط هنا مرة أخرى.';
+              }
+              alert('خطوة بسيطة جداً لاستخراج الـ ID:\n1. افتح تطبيق تيليجرام.\n2. ابحث عن اسم البوت بتاعك واضغط Start أو أرسل له أي رسالة (أو أضفه لجروب المحل).\n3. ارجع هنا واضغط "استخراج الـ Chat ID تلقائياً" وسيتم ربطه فوراً!');
+            }
+          } catch (err) {
+            if (tgStatusMsg) {
+              tgStatusMsg.style.color = '#f87171';
+              tgStatusMsg.textContent = `❌ تعذر الاستخراج: ${err.message}. تأكد من صحة رمز الـ Bot Token.`;
+            }
+          }
+        });
+      }
+
       if (btnTestTg) {
         btnTestTg.addEventListener('click', async () => {
           const token = document.querySelector('#tg-bot-token').value.trim();
-          const chatId = document.querySelector('#tg-chat-id').value.trim();
+          const rawChatId = document.querySelector('#tg-chat-id').value.trim();
 
-          if (!token || !chatId) {
+          if (!token || !rawChatId) {
             alert('يرجى كتابة رمز الـ Bot Token ومعرف الـ Chat ID أولاً.');
+            return;
+          }
+
+          // Check if user entered a phone number
+          const isPhone = /^(\+?20|01)[0-9]{8,10}/.test(rawChatId.replace(/[\s-]/g, ''));
+          if (isPhone) {
+            alert('⚠️ تنبيه: لقد كتبت رقم هاتف!\n\nبوت تيليجرام لا يقبل أرقام التليفونات في حقل Chat ID، بل يتطلب الـ ID الرقمي لحسابك أو لجروب المحل.\n\nالحل:\nاضغط زر "استخراج الـ Chat ID تلقائياً" لجلب المعرف بضغطة واحدة، أو يمكنك استقبال الطلبات على أرقام التليفونات عبر واتساب مباشرة.');
+            return;
+          }
+
+          const chatIds = rawChatId.split(/[,،\s]+/).filter(Boolean);
+          if (chatIds.length === 0) {
+            alert('يرجى كتابة معرف Chat ID واحد على الأقل.');
             return;
           }
 
           if (tgStatusMsg) {
             tgStatusMsg.style.color = '#facc15';
-            tgStatusMsg.textContent = '⏳ جاري إرسال إشعار التجربة إلى تيليجرام...';
+            tgStatusMsg.textContent = `⏳ جاري إرسال إشعار التجربة إلى (${chatIds.length}) شات على تيليجرام...`;
           }
 
           const testMsg = `🚀 <b>تجربة ربط بوت Se7en Store بنجاح!</b>\n━━━━━━━━━━━━━━━━━━━━\nهذا إشعار تجريبي يؤكد أن البوت متصل ومستعد لإرسال بيانات طلبات العملاء فوراً إلى البائعين ⚡`;
 
-          try {
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
-            const res = await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: chatId,
-                text: testMsg,
-                parse_mode: 'HTML'
-              })
-            });
-            const data = await res.json();
-            if (data.ok) {
-              if (tgStatusMsg) {
-                tgStatusMsg.style.color = '#4ade80';
-                tgStatusMsg.textContent = '✅ وصل الإشعار لتيليجرام بنجاح! راجع هاتفك الآن.';
+          let successCount = 0;
+          let failMessages = [];
+
+          for (const cid of chatIds) {
+            try {
+              const url = `https://api.telegram.org/bot${token}/sendMessage`;
+              const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  chat_id: cid,
+                  text: testMsg,
+                  parse_mode: 'HTML'
+                })
+              });
+              const data = await res.json();
+              if (data.ok) {
+                successCount++;
+              } else {
+                failMessages.push(`${cid}: ${data.description || 'chat not found'}`);
               }
-            } else {
-              if (tgStatusMsg) {
-                tgStatusMsg.style.color = '#f87171';
-                tgStatusMsg.textContent = `❌ فشل الإرسال من تيليجرام: ${data.description || 'تأكد من التوكن والـ Chat ID'}`;
-              }
+            } catch (err) {
+              failMessages.push(`${cid}: ${err.message}`);
             }
-          } catch(err) {
-            if (tgStatusMsg) {
+          }
+
+          if (tgStatusMsg) {
+            if (successCount === chatIds.length) {
+              tgStatusMsg.style.color = '#4ade80';
+              tgStatusMsg.textContent = `✅ وصل الإشعار لـ (${successCount}) شات على تيليجرام بنجاح! راجع هاتفك الآن.`;
+            } else if (successCount > 0) {
+              tgStatusMsg.style.color = '#facc15';
+              tgStatusMsg.textContent = `⚠️ تم الإرسال لـ (${successCount}) شات بنجاح، وفشل لـ: ${failMessages.join(' | ')}`;
+            } else {
               tgStatusMsg.style.color = '#f87171';
-              tgStatusMsg.textContent = `❌ تعذر الاتصال بخوادم تيليجرام: ${err.message || 'تحقق من الإنترنت'}`;
+              tgStatusMsg.textContent = `❌ فشل الإرسال من تيليجرام: ${failMessages.join(' | ')}. تأكد أن كل شخص قد ضغط Start في البوت أولاً!`;
             }
           }
         });

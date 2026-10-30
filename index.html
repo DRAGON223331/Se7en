@@ -2948,7 +2948,11 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           <div id="success-order-total" style="font-size: 13px; font-weight: 800; color: #4ade80;">إجمالي الطلب: 0 ج.م</div>
         </div>
 
-        <a class="btn-order-wa-direct" id="btn-success-wa-follow" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+        <div style="margin-top: 14px; margin-bottom: 8px;">
+          <div style="font-size: 11px; font-weight: 850; color: #fff; margin-bottom: 8px; text-align: center;">📲 إرسال تفاصيل الطلب للبائعين عبر واتساب:</div>
+          <div id="success-wa-sellers-container"></div>
+        </div>
+        <a class="btn-order-wa-direct" id="btn-success-wa-follow" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: none;">
           <span>💬 فتح محادثة مع البائع عبر واتساب</span>
         </a>
         <button class="btn btn-secondary" id="btn-continue-shopping" type="button" style="width: 100%; margin-top: 10px; padding: 11px; font-size: 12px;">
@@ -4442,18 +4446,23 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           if(!cfg.botToken || !cfg.chatId) return { ok: false, reason: 'missing_credentials' };
 
           const textMsg = formatTelegramOrderMessage(orderData);
-          const url = `https://api.telegram.org/bot${cfg.botToken}/sendMessage`;
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: cfg.chatId,
-              text: textMsg,
-              parse_mode: 'HTML'
-            })
-          });
-          const data = await res.json();
-          return { ok: data.ok, data };
+          const chatIds = String(cfg.chatId).split(/[,،\s]+/).filter(Boolean);
+          if(chatIds.length === 0) return { ok: false, reason: 'no_chat_ids' };
+
+          const results = await Promise.allSettled(chatIds.map(cid => {
+            return fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: cid,
+                text: textMsg,
+                parse_mode: 'HTML'
+              })
+            }).then(r => r.json());
+          }));
+
+          const anyOk = results.some(r => r.status === 'fulfilled' && r.value && r.value.ok);
+          return { ok: anyOk, results };
         }catch(err){
           return { ok: false, error: err.message };
         }
@@ -4513,15 +4522,61 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         if(orderIdEl) orderIdEl.textContent = '#' + orderData.id;
         if(orderTotalEl) orderTotalEl.textContent = `إجمالي الطلب: ${orderData.total} ج.م`;
 
-        // Direct follow up WhatsApp to seller
-        const sellerPhone = cleanPhone(currentSettings.whatsapp || '01201135473');
+        // Multi-Seller WhatsApp Dispatch (Send order to multiple seller phone numbers)
         const itemsSummary = orderData.items.map(it => `• ${it.name} (${it.size !== 'one-size' ? 'مقاس ' + it.size : 'شنطة'}) × ${it.qty}`).join('\n');
         const followMsg = `أهلاً Se7en، أنا العميل (${orderData.customer.name}) أرسلت طلباً برقم (#${orderData.id}) بقيمة ${orderData.total} ج.م:
 ${itemsSummary}
-العنوان: ${orderData.customer.gov} - ${orderData.customer.address}`;
+العنوان: ${orderData.customer.gov} - ${orderData.customer.address}
+الهاتف للتواصل: ${orderData.customer.phone}`;
 
-        if(waFollowBtn) {
-          waFollowBtn.href = `https://wa.me/20${sellerPhone}?text=${encodeURIComponent(followMsg)}`;
+        // Collect all distinct seller phone numbers
+        const sellerList = [];
+        const seenPhones = new Set();
+
+        function registerSellerPhone(phone, title) {
+          if (!phone) return;
+          const clean = cleanPhone(String(phone));
+          if (clean && clean.length >= 10 && !seenPhones.has(clean)) {
+            seenPhones.add(clean);
+            sellerList.push({ phone: clean, title: title || `بائع Se7en (${clean})` });
+          }
+        }
+
+        // 1. Registered super-admin / developer phones
+        registerSellerPhone('01201135473', 'البائع 1: 01201135473');
+        registerSellerPhone('01287934967', 'البائع 2: 01287934967');
+
+        // 2. Default store whatsapp
+        if (currentSettings.whatsapp) {
+          registerSellerPhone(currentSettings.whatsapp, `واتساب المتجر: ${currentSettings.whatsapp}`);
+        }
+
+        // 3. Stored admin partners
+        try {
+          const rawUsers = localStorage.getItem('se7en_admin_users');
+          if (rawUsers) {
+            const users = JSON.parse(rawUsers);
+            if (Array.isArray(users)) {
+              users.forEach(u => {
+                if (u.phone) {
+                  registerSellerPhone(u.phone, u.name ? `البائع (${u.name}): ${u.phone}` : `البائع: ${u.phone}`);
+                }
+              });
+            }
+          }
+        } catch(e) {}
+
+        const sellersContainer = document.querySelector('#success-wa-sellers-container');
+        if (sellersContainer) {
+          sellersContainer.innerHTML = sellerList.map(s => `
+            <a class="btn-order-wa-direct" href="https://wa.me/20${s.phone}?text=${encodeURIComponent(followMsg)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;background:linear-gradient(135deg,#128c7e,#25d366);color:#fff;border-radius:8px;font-size:12px;font-weight:900;margin-bottom:6px;">
+              <span>💬 إرسال الطلب عبر واتساب: ${escapeHtml(s.title)}</span>
+            </a>
+          `).join('');
+        }
+
+        if (waFollowBtn) {
+          waFollowBtn.style.display = 'none'; // Replaced by multi-seller container
         }
       }
 
