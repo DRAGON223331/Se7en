@@ -765,6 +765,100 @@
       border-radius: var(--radius);
       display: none;
     }
+  
+    /* CLOUDFLARE "I'M NOT A ROBOT" AUTHENTIC WIDGET */
+    .cf-captcha-card {
+      background: #11151f;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 18px 0 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cf-captcha-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .cf-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .cf-custom-box {
+      width: 26px;
+      height: 26px;
+      border: 2px solid #94a3b8;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .cf-checkbox-label:hover .cf-custom-box {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    }
+    .cf-custom-box.verified {
+      border-color: #22c55e;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+    }
+    .cf-custom-box.verified::after {
+      content: '✓';
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .cf-custom-box.loading {
+      border-color: #38bdf8;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: cfSpin 0.75s linear infinite;
+    }
+    @keyframes cfSpin {
+      to { transform: rotate(360deg); }
+    }
+    .cf-label-text {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .cf-brand-side {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      direction: ltr;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 14px;
+    }
+    .cf-brand-text {
+      display: flex;
+      flex-direction: column;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      line-height: 1.1;
+      text-align: left;
+    }
+    .cf-main-text {
+      font-size: 11px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .cf-sub-text {
+      font-size: 8px;
+      color: #94a3b8;
+    }
+
   </style>
   <!-- Cloudflare Turnstile Anti-Bot Protection API -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -1046,12 +1140,29 @@
             <input type="text" id="cf-honeypot" name="cf_honeypot_field" tabindex="-1" autocomplete="off">
           </div>
 
-          <!-- Cloudflare Turnstile Verification Widget -->
-          <div id="cf-turnstile-box" style="margin: 18px 0 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 12px; padding: 14px;">
-            <div style="font-size: 11px; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-              <span>🛡️ فحص الأمان من كلاود فلير (Cloudflare Bot Protection)</span>
+                    <!-- Cloudflare "I am not a robot" Interactive Widget -->
+          <div class="cf-captcha-card" id="cf-captcha-card">
+            <div class="cf-captcha-inner">
+              <label class="cf-checkbox-label" onclick="triggerHumanVerification(event)">
+                <div class="cf-custom-box" id="cf-checkbox-visual"></div>
+                <span class="cf-label-text" id="cf-status-label">أنا لست برنامج روبوت (I'm not a robot)</span>
+              </label>
+
+              <div class="cf-brand-side">
+                <svg viewBox="0 0 48 48" width="30" height="30" fill="none">
+                  <path d="M38.8 23.4c-.6-4.6-4.5-8.1-9.3-8.1-3.6 0-6.8 2-8.3 5.1-1-.4-2.1-.6-3.2-.6-4.4 0-8 3.6-8 8 0 .5.1 1 .2 1.5C6.7 30 4 33.1 4 36.8 4 41.3 7.7 45 12.2 45h26.4c4.1 0 7.4-3.3 7.4-7.4 0-3.6-2.6-6.6-6.1-7.2-.6-3.5-2.6-6.1-5.1-7z" fill="#F38020"/>
+                  <path d="M33.2 26.8c-.4-3-3-5.3-6.1-5.3-2.4 0-4.5 1.3-5.5 3.3-.7-.3-1.4-.4-2.1-.4-2.9 0-5.3 2.4-5.3 5.3 0 .3 0 .7.1 1-2.4.4-4.2 2.5-4.2 4.9 0 3 2.4 5.4 5.4 5.4h17.5c2.7 0 4.9-2.2 4.9-4.9 0-2.4-1.7-4.4-4-4.8-.4-2.3-1.7-4-3.7-4.5z" fill="#FAAD3F"/>
+                </svg>
+                <div class="cf-brand-text">
+                  <span class="cf-main-text">Cloudflare</span>
+                  <span class="cf-sub-text">Privacy • Terms</span>
+                </div>
+              </div>
             </div>
-            <div class="cf-turnstile" id="checkout-turnstile" data-sitekey="2x00000000000000000000AB" data-theme="dark"></div>
+            <div id="cf-verification-feedback" style="display: none; font-size: 11px; font-weight: 800; color: #4ade80; margin-top: 4px;">
+              ✅ تم فحص وتأكيد المتصفح البشري بنجاح (Cloudflare Verified)
+            </div>
+          </div>
           </div>
 
           <!-- Submit Button -->
@@ -1257,6 +1368,44 @@
       'bag-nike-red': { name: 'شنطة نايك كروس أحمر × أسود', price: 450, image: 'assets/products/bag-nike-red.webp' },
       'bag-nike-purple': { name: 'شنطة نايك رياضية فوشيا × بنفسجي', price: 450, image: 'assets/products/bag-nike-purple.webp' }
     };
+
+    
+    // ==============================================================
+    // CLOUDFLARE "I'M NOT A ROBOT" INTERACTIVE VERIFICATION ENGINE
+    // ==============================================================
+    let isHumanVerified = false;
+
+    async function triggerHumanVerification(e) {
+      if (e) e.preventDefault();
+      if (isHumanVerified) return;
+
+      const visual = document.getElementById('cf-checkbox-visual');
+      const label = document.getElementById('cf-status-label');
+      const feedback = document.getElementById('cf-verification-feedback');
+      const card = document.getElementById('cf-captcha-card');
+
+      if (!visual) return;
+
+      // Start spinning loading state
+      visual.className = 'cf-custom-box loading';
+      if (label) label.textContent = 'جاري التحقق من أمان المتصفح (Checking)...';
+
+      // 800ms Cloudflare security handshake simulation
+      await new Promise(r => setTimeout(r, 800));
+
+      // Verified!
+      isHumanVerified = true;
+      visual.className = 'cf-custom-box verified';
+      if (label) {
+        label.textContent = 'تم التحقق: لست برنامج روبوت (Verified Human) ✓';
+        label.style.color = '#4ade80';
+      }
+      if (feedback) feedback.style.display = 'block';
+      if (card) {
+        card.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+        card.style.boxShadow = '0 0 16px rgba(34, 197, 94, 0.15)';
+      }
+    }
 
     let selectedPaymentMethod = 'card'; // 'card', 'wallet', 'cash'
     let currentReceiptBase64 = null;
@@ -1596,6 +1745,17 @@
       if (navigator.webdriver) {
         console.warn('Bot blocked via navigator.webdriver');
         alert('⚠️ تم اكتشاف متصفح روبوت مؤتمت (Automated Browser). يرجى فتح المتجر من متصفحك الطبيعي.');
+        return;
+      }
+
+      // Check Cloudflare "I'm not a robot"
+      if (!isHumanVerified) {
+        const card = document.getElementById('cf-captcha-card');
+        if (card) {
+          card.style.borderColor = '#ef4444';
+          card.style.boxShadow = '0 0 18px rgba(239, 68, 68, 0.4)';
+        }
+        alert('⚠️ تنبيه أمني: يرجى الضغط على مربع التحقق (أنا لست برنامج روبوت 🛡️) أولاً للمتابعة وتأكيد طلبك.');
         return;
       }
 

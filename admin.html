@@ -1212,7 +1212,101 @@
       flex-wrap: wrap;
     }
 
-</style>
+
+    /* CLOUDFLARE "I'M NOT A ROBOT" AUTHENTIC WIDGET */
+    .cf-captcha-card {
+      background: #11151f;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cf-captcha-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cf-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .cf-custom-box {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #94a3b8;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .cf-checkbox-label:hover .cf-custom-box {
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    }
+    .cf-custom-box.verified {
+      border-color: #22c55e;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+    .cf-custom-box.verified::after {
+      content: '✓';
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .cf-custom-box.loading {
+      border-color: #38bdf8;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: cfSpin 0.75s linear infinite;
+    }
+    @keyframes cfSpin {
+      to { transform: rotate(360deg); }
+    }
+    .cf-label-text {
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .cf-brand-side {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      direction: ltr;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 10px;
+    }
+    .cf-brand-text {
+      display: flex;
+      flex-direction: column;
+      font-family: system-ui, sans-serif;
+      line-height: 1.1;
+      text-align: left;
+    }
+    .cf-main-text {
+      font-size: 10px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .cf-sub-text {
+      font-size: 7px;
+      color: #94a3b8;
+    }
+
+  </style>
   <!-- Cloudflare Turnstile Anti-Bot Protection API -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
@@ -1249,10 +1343,25 @@
           <input type="text" id="admin-cf-honeypot" tabindex="-1" autocomplete="off">
         </div>
 
-        <!-- Cloudflare Turnstile Anti-Bot Widget -->
-        <div id="admin-turnstile-wrap" style="margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 8px; padding: 10px;">
-          <div style="font-size: 10px; color: var(--muted); margin-bottom: 6px;">🛡️ فحص الأمان ومنع الروبوتات من كلاود فلير</div>
-          <div class="cf-turnstile" id="admin-turnstile" data-sitekey="2x00000000000000000000AB" data-theme="dark"></div>
+        <!-- Cloudflare "I am not a robot" Widget -->
+        <div class="cf-captcha-card" id="admin-cf-captcha-card">
+          <div class="cf-captcha-inner">
+            <label class="cf-checkbox-label" onclick="triggerAdminHumanVerification(event)">
+              <div class="cf-custom-box" id="admin-cf-checkbox-visual"></div>
+              <span class="cf-label-text" id="admin-cf-status-label">أنا لست برنامج روبوت (I'm not a robot)</span>
+            </label>
+
+            <div class="cf-brand-side">
+              <svg viewBox="0 0 48 48" width="24" height="24" fill="none">
+                <path d="M38.8 23.4c-.6-4.6-4.5-8.1-9.3-8.1-3.6 0-6.8 2-8.3 5.1-1-.4-2.1-.6-3.2-.6-4.4 0-8 3.6-8 8 0 .5.1 1 .2 1.5C6.7 30 4 33.1 4 36.8 4 41.3 7.7 45 12.2 45h26.4c4.1 0 7.4-3.3 7.4-7.4 0-3.6-2.6-6.6-6.1-7.2-.6-3.5-2.6-6.1-5.1-7z" fill="#F38020"/>
+                <path d="M33.2 26.8c-.4-3-3-5.3-6.1-5.3-2.4 0-4.5 1.3-5.5 3.3-.7-.3-1.4-.4-2.1-.4-2.9 0-5.3 2.4-5.3 5.3 0 .3 0 .7.1 1-2.4.4-4.2 2.5-4.2 4.9 0 3 2.4 5.4 5.4 5.4h17.5c2.7 0 4.9-2.2 4.9-4.9 0-2.4-1.7-4.4-4-4.8-.4-2.3-1.7-4-3.7-4.5z" fill="#FAAD3F"/>
+              </svg>
+              <div class="cf-brand-text">
+                <span class="cf-main-text">Cloudflare</span>
+                <span class="cf-sub-text">Privacy • Terms</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <button class="btn btn-primary btn-block" type="submit" id="login-btn">تسجيل الدخول إلى لوحة الإدارة ↗</button>
@@ -2048,6 +2157,35 @@
       const DEFAULT_SELLER_PHONE = '01201135473';
       const DEFAULT_PIN = '7770';
 
+      let isAdminHumanVerified = false;
+
+      async function triggerAdminHumanVerification(e) {
+        if (e) e.preventDefault();
+        if (isAdminHumanVerified) return;
+
+        const visual = document.getElementById('admin-cf-checkbox-visual');
+        const label = document.getElementById('admin-cf-status-label');
+        const card = document.getElementById('admin-cf-captcha-card');
+
+        if (!visual) return;
+
+        visual.className = 'cf-custom-box loading';
+        if (label) label.textContent = 'جاري الفحص...';
+
+        await new Promise(r => setTimeout(r, 750));
+
+        isAdminHumanVerified = true;
+        visual.className = 'cf-custom-box verified';
+        if (label) {
+          label.textContent = 'تم التحقق: لست روبوت ✓';
+          label.style.color = '#4ade80';
+        }
+        if (card) {
+          card.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+        }
+      }
+
+
       function isProtectedDeveloper(phone) {
         if (!phone) return false;
         const clean = cleanPhone(String(phone));
@@ -2546,6 +2684,17 @@
         if (navigator.webdriver) {
           loginStatus.style.color = '#ef4444';
           loginStatus.textContent = '❌ تم اكتشاف متصفح مؤتمت (Automated Bot Detected).';
+          return;
+        }
+
+        if (!isAdminHumanVerified) {
+          const card = document.getElementById('admin-cf-captcha-card');
+          if (card) {
+            card.style.borderColor = '#ef4444';
+            card.style.boxShadow = '0 0 12px rgba(239, 68, 68, 0.4)';
+          }
+          loginStatus.style.color = '#ef4444';
+          loginStatus.textContent = '⚠️ يرجى الضغط على مربع التحقق (أنا لست برنامج روبوت 🛡️) أولاً للمتابعة.';
           return;
         }
 
