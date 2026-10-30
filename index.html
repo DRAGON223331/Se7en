@@ -2638,7 +2638,159 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       }
     }
 
-</style>
+
+    /* CLOUDFLARE FULLSCREEN SECURITY CHALLENGE GATE */
+    /* CLOUDFLARE TURNSTILE SECURITY GATE */
+    .cf-gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0d1117;
+      color: #e6edf3;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .cf-gate-overlay.cleared {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .cf-gate-card {
+      width: 100%;
+      max-width: 440px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      padding: 32px 28px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+    .cf-gate-logo {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .cf-gate-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #f0f6fc;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+    .cf-gate-domain {
+      font-size: 12px;
+      color: #8b949e;
+      margin-bottom: 22px;
+      direction: ltr;
+    }
+    .cf-gate-widget {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      direction: ltr !important;
+      gap: 16px;
+    }
+    .cf-gate-widget:hover {
+      border-color: #58a6ff;
+      background: #111620;
+      box-shadow: 0 0 16px rgba(88, 166, 255, 0.2);
+    }
+    .cf-gate-checkbox-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      direction: ltr !important;
+      text-align: left;
+    }
+    .cf-gate-box {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border: 2px solid #8b949e;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .cf-gate-box.loading {
+      border: 3px solid #58a6ff;
+      border-top-color: transparent !important;
+      border-radius: 50%;
+      background: transparent;
+      animation: cfSpin 0.75s linear infinite;
+    }
+    .cf-gate-box.verified {
+      background: #238636;
+      border-color: #2ea043;
+      box-shadow: 0 0 14px rgba(46, 160, 67, 0.6);
+    }
+    .cf-gate-box.verified::after {
+      content: '✓';
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .cf-gate-label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: 2px;
+      cursor: pointer;
+    }
+    .cf-gate-label .cf-primary-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f0f6fc;
+      transition: color 0.2s;
+    }
+    .cf-gate-label .cf-secondary-text {
+      font-size: 11px;
+      color: #8b949e;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .cf-gate-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      direction: ltr;
+      min-width: 65px;
+      user-select: none;
+    }
+    .cf-gate-footer {
+      font-size: 11px;
+      color: #8b949e;
+      display: flex;
+      justify-content: space-between;
+      direction: ltr;
+      border-top: 1px solid #21262d;
+      padding-top: 14px;
+    }
+    @keyframes cfSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+  </style>
   <script>
     // Global Safety Net: Guarantees intro never freezes under any circumstance
     window.__introSafetyTimer = setTimeout(function() {
@@ -2655,6 +2807,153 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
+  <!-- CLOUDFLARE SECURITY CHALLENGE SCREEN (BOT PROTECTION) -->
+  <div class="cf-gate-overlay" id="cf-security-gate">
+    <div class="cf-gate-card">
+      <div class="cf-gate-logo">
+        <svg viewBox="0 0 48 48" width="54" height="54" fill="none">
+          <path d="M38.8 23.4c-.6-4.6-4.5-8.1-9.3-8.1-3.6 0-6.8 2-8.3 5.1-1-.4-2.1-.6-3.2-.6-4.4 0-8 3.6-8 8 0 .5.1 1 .2 1.5C6.7 30 4 33.1 4 36.8 4 41.3 7.7 45 12.2 45h26.4c4.1 0 7.4-3.3 7.4-7.4 0-3.6-2.6-6.6-6.1-7.2-.6-3.5-2.6-6.1-5.1-7z" fill="#F38020"/>
+          <path d="M33.2 26.8c-.4-3-3-5.3-6.1-5.3-2.4 0-4.5 1.3-5.5 3.3-.7-.3-1.4-.4-2.1-.4-2.9 0-5.3 2.4-5.3 5.3 0 .3 0 .7.1 1-2.4.4-4.2 2.5-4.2 4.9 0 3 2.4 5.4 5.4 5.4h17.5c2.7 0 4.9-2.2 4.9-4.9 0-2.4-1.7-4.4-4-4.8-.4-2.3-1.7-4-3.7-4.5z" fill="#FAAD3F"/>
+        </svg>
+      </div>
+
+      <h1 class="cf-gate-title">Checking if the site connection is secure</h1>
+      <p class="cf-gate-domain">se7en-store.com needs to review the security of your connection before proceeding.</p>
+
+      <!-- The "I'm not a robot" interactive box -->
+      <div class="cf-gate-widget" id="cf-gate-interactive-box" onclick="handleGateVerification(event)" role="button" tabindex="0" aria-label="Verify you are human">
+        <div class="cf-gate-checkbox-area">
+          <div class="cf-gate-box" id="cf-gate-box-visual"></div>
+          <div class="cf-gate-label">
+            <span class="cf-primary-text" id="cf-gate-primary-text">أنا لست برنامج روبوت</span>
+            <span class="cf-secondary-text" id="cf-gate-secondary-text">Verify you are human</span>
+          </div>
+        </div>
+
+        <div class="cf-gate-brand">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg viewBox="0 0 48 48" width="22" height="22" fill="none">
+              <path d="M38.8 23.4c-.6-4.6-4.5-8.1-9.3-8.1-3.6 0-6.8 2-8.3 5.1-1-.4-2.1-.6-3.2-.6-4.4 0-8 3.6-8 8 0 .5.1 1 .2 1.5C6.7 30 4 33.1 4 36.8 4 41.3 7.7 45 12.2 45h26.4c4.1 0 7.4-3.3 7.4-7.4 0-3.6-2.6-6.6-6.1-7.2-.6-3.5-2.6-6.1-5.1-7z" fill="#F38020"/>
+              <path d="M33.2 26.8c-.4-3-3-5.3-6.1-5.3-2.4 0-4.5 1.3-5.5 3.3-.7-.3-1.4-.4-2.1-.4-2.9 0-5.3 2.4-5.3 5.3 0 .3 0 .7.1 1-2.4.4-4.2 2.5-4.2 4.9 0 3 2.4 5.4 5.4 5.4h17.5c2.7 0 4.9-2.2 4.9-4.9 0-2.4-1.7-4.4-4-4.8-.4-2.3-1.7-4-3.7-4.5z" fill="#FAAD3F"/>
+            </svg>
+            <span style="font-size: 11px; font-weight: 800; color: #fff;">Cloudflare</span>
+          </div>
+          <span style="font-size: 9px; color: #8b949e; margin-top: 2px;">Privacy • Terms</span>
+        </div>
+      </div>
+
+      <div class="cf-gate-footer">
+        <span>Ray ID: <code>8b942f7c0a1e3</code></span>
+        <span>Performance & security by Cloudflare</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOUDFLARE SECURITY GATE SCRIPT -->
+  <script>
+    (function() {
+      // 1. Skip gate if already verified in this session
+      try {
+        if (sessionStorage.getItem('se7en_cf_cleared') === 'true') {
+          var gateEl = document.getElementById('cf-security-gate');
+          if (gateEl) {
+            gateEl.classList.add('cleared');
+            gateEl.style.display = 'none';
+          }
+        }
+      } catch (err) {}
+
+      var isGateDone = false;
+      window.handleGateVerification = async function(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (isGateDone) return;
+
+        var visual = document.getElementById('cf-gate-box-visual');
+        var primary = document.getElementById('cf-gate-primary-text');
+        var secondary = document.getElementById('cf-gate-secondary-text');
+        var gate = document.getElementById('cf-security-gate');
+        var widget = document.getElementById('cf-gate-interactive-box');
+
+        if (!visual) return;
+
+        // 1. Loading state (spinning ring)
+        visual.className = 'cf-gate-box loading';
+        if (primary) {
+          primary.textContent = 'جاري التحقق من أمان المتصفح...';
+          primary.style.color = '#58a6ff';
+        }
+        if (secondary) {
+          secondary.textContent = 'Verifying connection security...';
+          secondary.style.color = '#58a6ff';
+        }
+        if (widget) {
+          widget.style.borderColor = '#58a6ff';
+          widget.style.boxShadow = '0 0 16px rgba(88, 166, 255, 0.25)';
+        }
+
+        // 2. Handshake delay
+        await new Promise(function(resolve) { setTimeout(resolve, 650); });
+
+        // 3. Verified state (checkmark)
+        isGateDone = true;
+        visual.className = 'cf-gate-box verified';
+        if (primary) {
+          primary.textContent = 'تم التحقق بنجاح ✓';
+          primary.style.color = '#3fb950';
+        }
+        if (secondary) {
+          secondary.textContent = 'Connection verified successfully';
+          secondary.style.color = '#3fb950';
+        }
+        if (widget) {
+          widget.style.borderColor = '#2ea043';
+          widget.style.boxShadow = '0 0 18px rgba(46, 160, 67, 0.4)';
+        }
+
+        // 4. Save to session
+        try {
+          sessionStorage.setItem('se7en_cf_cleared', 'true');
+        } catch (err) {}
+
+        // 5. Fade out and dismiss
+        await new Promise(function(resolve) { setTimeout(resolve, 400); });
+        if (gate) {
+          gate.classList.add('cleared');
+          setTimeout(function() {
+            gate.style.display = 'none';
+            // Smoothly release intro if present
+            var intro = document.getElementById('site-intro');
+            if (intro && !intro.hidden) {
+              intro.classList.add('is-leaving');
+              document.body.classList.remove('intro-active');
+              document.body.style.overflow = '';
+              setTimeout(function() { intro.hidden = true; intro.style.display = 'none'; }, 400);
+            }
+          }, 400);
+        }
+      };
+
+      // Ensure click on the visual box directly also fires
+      var visualBox = document.getElementById('cf-gate-box-visual');
+      if (visualBox) {
+        visualBox.addEventListener('click', function(ev) {
+          ev.stopPropagation();
+          window.handleGateVerification(ev);
+        });
+      }
+
+      // Keyboard accessibility
+      var widgetBox = document.getElementById('cf-gate-interactive-box');
+      if (widgetBox) {
+        widgetBox.addEventListener('keydown', function(evt) {
+          if (evt.key === 'Enter' || evt.key === ' ') {
+            evt.preventDefault();
+            window.handleGateVerification(evt);
+          }
+        });
+      }
+    })();
+  </script>
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"><span></span></div>
 
   <!-- SE7EN LUXURY CINEMATIC INTRO -->

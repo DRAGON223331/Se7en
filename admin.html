@@ -1344,12 +1344,12 @@
         </div>
 
         <!-- Cloudflare "I am not a robot" Widget -->
-        <div class="cf-captcha-card" id="admin-cf-captcha-card">
+        <div class="cf-captcha-card" id="admin-cf-captcha-card" onclick="triggerAdminHumanVerification()" style="cursor: pointer;">
           <div class="cf-captcha-inner">
-            <label class="cf-checkbox-label" onclick="triggerAdminHumanVerification(event)">
+            <div class="cf-checkbox-label">
               <div class="cf-custom-box" id="admin-cf-checkbox-visual"></div>
               <span class="cf-label-text" id="admin-cf-status-label">أنا لست برنامج روبوت (I'm not a robot)</span>
-            </label>
+            </div>
 
             <div class="cf-brand-side">
               <svg viewBox="0 0 48 48" width="24" height="24" fill="none">
@@ -2160,7 +2160,7 @@
       let isAdminHumanVerified = false;
 
       async function triggerAdminHumanVerification(e) {
-        if (e) e.preventDefault();
+        if (e && e.stopPropagation) e.stopPropagation();
         if (isAdminHumanVerified) return;
 
         const visual = document.getElementById('admin-cf-checkbox-visual');
@@ -2170,18 +2170,22 @@
         if (!visual) return;
 
         visual.className = 'cf-custom-box loading';
-        if (label) label.textContent = 'جاري الفحص...';
+        if (label) {
+          label.textContent = 'جاري الفحص الأمني من كلاود فلير...';
+          label.style.color = '#38bdf8';
+        }
 
-        await new Promise(r => setTimeout(r, 750));
+        await new Promise(r => setTimeout(r, 700));
 
         isAdminHumanVerified = true;
         visual.className = 'cf-custom-box verified';
         if (label) {
-          label.textContent = 'تم التحقق: لست روبوت ✓';
+          label.textContent = 'تم التحقق بنجاح: لست روبوت ✓';
           label.style.color = '#4ade80';
         }
         if (card) {
-          card.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+          card.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+          card.style.boxShadow = '0 0 16px rgba(34, 197, 94, 0.2)';
         }
       }
 

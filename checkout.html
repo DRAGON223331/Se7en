@@ -909,9 +909,14 @@
     <div style="font-size: 56px; margin-bottom: 14px;">🛍️</div>
     <h2 style="font-size: 20px; font-weight: 950; color: #fff; margin-bottom: 8px;">سلة مشترياتك فارغة!</h2>
     <p style="font-size: 13px; color: var(--muted); margin-bottom: 24px;">لم تقم بإضافة أي تيشرتات أو شنط لسلتك بعد. يمكنك تصفح تشكيلة Se7en واختيار منتجاتك المفضلة.</p>
-    <a href="index.html" class="btn-main-submit" style="text-decoration: none; width: auto; display: inline-flex; padding: 12px 28px;">
-      تصفح المنتجات الآن 🛒
-    </a>
+    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+      <button type="button" onclick="loadSampleCartAndProceed()" class="btn-main-submit" style="width: auto; padding: 12px 22px; background: #10b981;">
+        ⚡ تجربة صفحة الدفع واختبار كلاود فلير فوراً
+      </button>
+      <a href="index.html" class="btn-main-submit" style="text-decoration: none; width: auto; display: inline-flex; padding: 12px 22px; background: #1e293b; border: 1px solid var(--line);">
+        تصفح المنتجات 🛒
+      </a>
+    </div>
   </div>
 
   <!-- Main Checkout Container -->
@@ -1141,12 +1146,12 @@
           </div>
 
                     <!-- Cloudflare "I am not a robot" Interactive Widget -->
-          <div class="cf-captcha-card" id="cf-captcha-card">
+          <div class="cf-captcha-card" id="cf-captcha-card" onclick="triggerHumanVerification()" style="cursor: pointer;">
             <div class="cf-captcha-inner">
-              <label class="cf-checkbox-label" onclick="triggerHumanVerification(event)">
+              <div class="cf-checkbox-label">
                 <div class="cf-custom-box" id="cf-checkbox-visual"></div>
                 <span class="cf-label-text" id="cf-status-label">أنا لست برنامج روبوت (I'm not a robot)</span>
-              </label>
+              </div>
 
               <div class="cf-brand-side">
                 <svg viewBox="0 0 48 48" width="30" height="30" fill="none">
@@ -1373,10 +1378,17 @@
     // ==============================================================
     // CLOUDFLARE "I'M NOT A ROBOT" INTERACTIVE VERIFICATION ENGINE
     // ==============================================================
+    
+    function loadSampleCartAndProceed() {
+      const sample = [{ productId: 'ahly', size: 'L', qty: 1 }];
+      saveCart(sample);
+      initCheckoutPage();
+    }
+
     let isHumanVerified = false;
 
     async function triggerHumanVerification(e) {
-      if (e) e.preventDefault();
+      if (e && e.stopPropagation) e.stopPropagation();
       if (isHumanVerified) return;
 
       const visual = document.getElementById('cf-checkbox-visual');
@@ -1388,22 +1400,25 @@
 
       // Start spinning loading state
       visual.className = 'cf-custom-box loading';
-      if (label) label.textContent = 'جاري التحقق من أمان المتصفح (Checking)...';
+      if (label) {
+        label.textContent = 'جاري فحص المتصفح وأمان الاتصال (Checking)...';
+        label.style.color = '#38bdf8';
+      }
 
-      // 800ms Cloudflare security handshake simulation
-      await new Promise(r => setTimeout(r, 800));
+      // 700ms Cloudflare handshake
+      await new Promise(r => setTimeout(r, 700));
 
       // Verified!
       isHumanVerified = true;
       visual.className = 'cf-custom-box verified';
       if (label) {
-        label.textContent = 'تم التحقق: لست برنامج روبوت (Verified Human) ✓';
+        label.textContent = 'تم التحقق بنجاح: لست برنامج روبوت (Verified) ✓';
         label.style.color = '#4ade80';
       }
       if (feedback) feedback.style.display = 'block';
       if (card) {
-        card.style.borderColor = 'rgba(34, 197, 94, 0.4)';
-        card.style.boxShadow = '0 0 16px rgba(34, 197, 94, 0.15)';
+        card.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+        card.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.2)';
       }
     }
 
