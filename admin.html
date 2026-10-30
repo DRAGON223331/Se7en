@@ -1326,10 +1326,14 @@
           <h2 class="section-title">المنتجات المعروضة (<span id="products-count-badge">16</span>)</h2>
           <div class="filter-actions">
             <input class="search-input" id="search-products" type="text" placeholder="🔍 بحث بالاسم أو الفريق...">
-            <select class="search-input" id="filter-category" style="min-width: 130px;">
+            <select class="search-input" id="filter-category" style="min-width: 140px;">
               <option value="all">كل التصنيفات</option>
-              <option value="shirt">التيشيرتات فقط</option>
-              <option value="bag">الشنط فقط</option>
+              <option value="shirt">👕 التيشيرتات</option>
+              <option value="bag">🎒 الشنط</option>
+              <option value="shoes">👟 كوتشيات الاستارز</option>
+              <option value="socks">🧦 الشرابات</option>
+              <option value="medals">🏅 الميداليات</option>
+              <option value="gear">⚽ الأدوات الرياضية</option>
             </select>
             <button class="btn btn-primary" type="button" id="btn-open-add">+ إضافة منتج</button>
           </div>
@@ -1877,8 +1881,12 @@
           <div class="form-group">
             <label class="form-label" for="prod-category">التصنيف *</label>
             <select class="form-control" id="prod-category">
-              <option value="shirt">تيشيرت كروي / رياضي</option>
-              <option value="bag">شنطة جيم / رياضية</option>
+              <option value="shirt">👕 تيشيرت كروي / رياضي</option>
+              <option value="bag">🎒 شنطة جيم / رياضية</option>
+              <option value="shoes">👟 كوتشي استارز / أحذية رياضية</option>
+              <option value="socks">🧦 شرابات رياضية</option>
+              <option value="medals">🏅 ميداليات وسلاسل مفاتيح</option>
+              <option value="gear">⚽ أدوات ومعدات رياضية</option>
             </select>
           </div>
           <div class="form-group">
@@ -2033,6 +2041,17 @@
             };
           } else {
             ['M', 'L', 'XL', '2XL'].forEach(sz => {
+              if (!p.sizes[sz]) p.sizes[sz] = { available: true };
+              if (p.sizes[sz].available === undefined) p.sizes[sz].available = true;
+            });
+          }
+        } else if (p.category === 'shoes') {
+          const shoeSizes = ['40', '41', '42', '43', '44', '45'];
+          if (!p.sizes || typeof p.sizes !== 'object') {
+            p.sizes = {};
+            shoeSizes.forEach(sz => { p.sizes[sz] = { available: true }; });
+          } else {
+            shoeSizes.forEach(sz => {
               if (!p.sizes[sz]) p.sizes[sz] = { available: true };
               if (p.sizes[sz].available === undefined) p.sizes[sz].available = true;
             });
@@ -2639,13 +2658,37 @@
           const isAvail = p.available !== false;
           const isShirt = p.category === 'shirt';
 
-          // Size buttons strip for shirts
+          // Category Display Label
+          const catLabels = {
+            shirt: '👕 تيشيرت',
+            bag: '🎒 شنطة جيم',
+            shoes: '👟 كوتشي استارز',
+            socks: '🧦 شرابات',
+            medals: '🏅 ميداليات',
+            gear: '⚽ أدوات رياضية'
+          };
+          const catDisplay = catLabels[p.category] || 'منتج رياضي';
+
+          // Size buttons strip for shirts and shoes
           let sizesStripHtml = '';
-          if (isShirt) {
+          if (p.category === 'shirt') {
             const sizesList = ['M', 'L', 'XL', '2XL'];
             sizesStripHtml = `
               <div class="sizes-quick-strip">
                 <span style="font-size:9px;color:var(--muted);margin-left:4px;">المقاسات:</span>
+                ${sizesList.map(sz => {
+                  const szAvail = p.sizes && p.sizes[sz] && p.sizes[sz].available !== false;
+                  return `<button type="button" class="size-mini-btn ${szAvail ? 'avail' : 'out'}" data-prod-id="${id}" data-toggle-size="${sz}" title="اضغط لتبديل توفر مقاس ${sz}">
+                    ${sz} ${szAvail ? '🟢' : '🔴'}
+                  </button>`;
+                }).join('')}
+              </div>
+            `;
+          } else if (p.category === 'shoes') {
+            const sizesList = ['40', '41', '42', '43', '44', '45'];
+            sizesStripHtml = `
+              <div class="sizes-quick-strip">
+                <span style="font-size:9px;color:var(--muted);margin-left:4px;">مقاسات الاستارز:</span>
                 ${sizesList.map(sz => {
                   const szAvail = p.sizes && p.sizes[sz] && p.sizes[sz].available !== false;
                   return `<button type="button" class="size-mini-btn ${szAvail ? 'avail' : 'out'}" data-prod-id="${id}" data-toggle-size="${sz}" title="اضغط لتبديل توفر مقاس ${sz}">
@@ -2660,7 +2703,7 @@
           card.className = 'product-admin-card';
           card.innerHTML = `
             <div class="product-thumb-wrap">
-              <span class="product-category-tag">${p.category === 'bag' ? 'شنطة جيم' : 'تيشيرت'}</span>
+              <span class="product-category-tag">${catDisplay}</span>
               ${isTwoSided ? '<span class="product-sides-badge">وش وضهر ✦</span>' : ''}
               <span class="product-stock-pill ${isAvail ? 'in-stock' : 'out-of-stock'}">
                 ${isAvail ? 'متوفر 🟢' : 'نفد 🔴'}
@@ -2719,8 +2762,14 @@
       function toggleProductSizeAvailability(id, size) {
         const products = getStoredProducts();
         const p = products[id];
-        if (!p || p.category !== 'shirt') return;
-        if (!p.sizes) p.sizes = { 'M': { available: true }, 'L': { available: true }, 'XL': { available: true }, '2XL': { available: true } };
+        if (!p || (p.category !== 'shirt' && p.category !== 'shoes')) return;
+        if (!p.sizes) {
+          if (p.category === 'shirt') {
+            p.sizes = { 'M': { available: true }, 'L': { available: true }, 'XL': { available: true }, '2XL': { available: true } };
+          } else {
+            p.sizes = { '40': { available: true }, '41': { available: true }, '42': { available: true }, '43': { available: true }, '44': { available: true }, '45': { available: true } };
+          }
+        }
         if (!p.sizes[size]) p.sizes[size] = { available: true };
         p.sizes[size].available = !(p.sizes[size].available !== false);
         saveStoredProducts(products);
@@ -2752,7 +2801,41 @@
       const prevBack = document.querySelector('#preview-back-image');
 
       // Size chips state for modal
-      const modalSizesState = { 'M': true, 'L': true, 'XL': true, '2XL': true };
+      const modalSizesState = { 'M': true, 'L': true, 'XL': true, '2XL': true, '40': true, '41': true, '42': true, '43': true, '44': true, '45': true };
+
+      function renderModalSizeChips(cat) {
+        const container = document.querySelector('#sizes-admin-chips');
+        const sizesBox = document.querySelector('#prod-sizes-box');
+        const twosidedWrap = document.querySelector('#twosided-toggle-wrap');
+        const label = sizesBox ? sizesBox.querySelector('label') : null;
+        if (!container || !sizesBox) return;
+
+        if (cat === 'shirt') {
+          sizesBox.style.display = 'block';
+          if (twosidedWrap) twosidedWrap.style.display = 'flex';
+          if (label) label.textContent = 'توفر مقاسات التيشيرت (M / L / XL / 2XL)';
+          const sizes = ['M', 'L', 'XL', '2XL'];
+          container.innerHTML = sizes.map(sz => {
+            const avail = modalSizesState[sz] !== false;
+            return `<button type="button" class="size-admin-chip ${avail ? 'in-stock' : 'out-of-stock'}" data-size="${sz}">${sz} <span class="chip-status">${avail ? 'متاح 🟢' : 'نفد 🔴'}</span></button>`;
+          }).join('');
+        } else if (cat === 'shoes') {
+          sizesBox.style.display = 'block';
+          if (twosidedWrap) twosidedWrap.style.display = 'none';
+          if (label) label.textContent = 'توفر مقاسات كوتشي الاستارز (40 إلى 45)';
+          const sizes = ['40', '41', '42', '43', '44', '45'];
+          container.innerHTML = sizes.map(sz => {
+            const avail = modalSizesState[sz] !== false;
+            return `<button type="button" class="size-admin-chip ${avail ? 'in-stock' : 'out-of-stock'}" data-size="${sz}">${sz} <span class="chip-status">${avail ? 'متاح 🟢' : 'نفد 🔴'}</span></button>`;
+          }).join('');
+        } else {
+          // bag, socks, medals, gear
+          sizesBox.style.display = 'none';
+          if (twosidedWrap) twosidedWrap.style.display = 'none';
+        }
+
+        setupModalSizeChipsEvents();
+      }
 
       function updateModalSizeChipsUI() {
         const chips = document.querySelectorAll('#sizes-admin-chips .size-admin-chip');
@@ -2777,10 +2860,7 @@
       }
 
       function updateCategorySizesVisibility(cat) {
-        const sizesBox = document.querySelector('#prod-sizes-box');
-        if (sizesBox) {
-          sizesBox.style.display = (cat === 'bag') ? 'none' : 'block';
-        }
+        renderModalSizeChips(cat);
       }
 
       function openProductModal(id = null) {
@@ -2805,7 +2885,8 @@
           }
 
           // Populate sizes state
-          ['M', 'L', 'XL', '2XL'].forEach(sz => {
+          const allPossibleSizes = ['M', 'L', 'XL', '2XL', '40', '41', '42', '43', '44', '45'];
+          allPossibleSizes.forEach(sz => {
             modalSizesState[sz] = Boolean(p.sizes && p.sizes[sz] && p.sizes[sz].available !== false);
           });
           updateModalSizeChipsUI();
@@ -2830,7 +2911,7 @@
           editIdInput.value = '';
           prodPrice.value = '250';
           if (prodAvailableSelect) prodAvailableSelect.value = 'true';
-          ['M', 'L', 'XL', '2XL'].forEach(sz => { modalSizesState[sz] = true; });
+          ['M', 'L', 'XL', '2XL', '40', '41', '42', '43', '44', '45'].forEach(sz => { modalSizesState[sz] = true; });
           updateModalSizeChipsUI();
           updateCategorySizesVisibility('shirt');
           prodTwoSided.checked = false;
@@ -2949,6 +3030,15 @@
             'L': { available: modalSizesState['L'] !== false },
             'XL': { available: modalSizesState['XL'] !== false },
             '2XL': { available: modalSizesState['2XL'] !== false }
+          };
+        } else if (prodCategory.value === 'shoes') {
+          productData.sizes = {
+            '40': { available: modalSizesState['40'] !== false },
+            '41': { available: modalSizesState['41'] !== false },
+            '42': { available: modalSizesState['42'] !== false },
+            '43': { available: modalSizesState['43'] !== false },
+            '44': { available: modalSizesState['44'] !== false },
+            '45': { available: modalSizesState['45'] !== false }
           };
         } else {
           productData.sizes = null;

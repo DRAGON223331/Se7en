@@ -2736,6 +2736,10 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           <button class="filter-chip" type="button" data-filter="realmadrid" aria-pressed="false">ريال مدريد <b>1</b></button>
           <button class="filter-chip" type="button" data-filter="superhero" aria-pressed="false">سوبر هيرو <b>3</b></button>
           <button class="filter-chip" type="button" data-filter="bags" aria-pressed="false">الشنط <b>2</b></button>
+          <button class="filter-chip" type="button" data-filter="shoes" aria-pressed="false">👟 كوتشيات استارز <b>0</b></button>
+          <button class="filter-chip" type="button" data-filter="socks" aria-pressed="false">🧦 شرابات <b>0</b></button>
+          <button class="filter-chip" type="button" data-filter="medals" aria-pressed="false">🏅 ميداليات <b>0</b></button>
+          <button class="filter-chip" type="button" data-filter="gear" aria-pressed="false">⚽ أدوات رياضية <b>0</b></button>
         </div>
       </div>
       <p class="filter-empty" id="filter-empty" hidden>مفيش تصميمات في الاختيار ده حاليًا.</p>
@@ -3444,6 +3448,17 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
               if(p.sizes[sz].available === undefined) p.sizes[sz].available = true;
             });
           }
+        } else if(p.category === 'shoes'){
+          const shoeSizes = ['40', '41', '42', '43', '44', '45'];
+          if(!p.sizes || typeof p.sizes !== 'object'){
+            p.sizes = {};
+            shoeSizes.forEach(sz => { p.sizes[sz] = { available: true }; });
+          } else {
+            shoeSizes.forEach(sz => {
+              if(!p.sizes[sz]) p.sizes[sz] = { available: true };
+              if(p.sizes[sz].available === undefined) p.sizes[sz].available = true;
+            });
+          }
         }
         return p;
       }
@@ -3505,6 +3520,10 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         if(f === 'realmadrid') return text.includes('real') || text.includes('ريال');
         if(f === 'superhero') return text.includes('spider') || text.includes('batman') || text.includes('عنكبوت') || text.includes('باتمان') || text.includes('أبطال') || text.includes('سوبر');
         if(f === 'bags') return (p.category === 'bag') || text.includes('bag') || text.includes('شنط') || text.includes('شنطة');
+        if(f === 'shoes') return (p.category === 'shoes') || text.includes('كوتشي') || text.includes('استارز') || text.includes('حذاء') || text.includes('shoes') || text.includes('cleat');
+        if(f === 'socks') return (p.category === 'socks') || text.includes('شراب') || text.includes('شرابات') || text.includes('جراب') || text.includes('socks');
+        if(f === 'medals') return (p.category === 'medals') || text.includes('ميدالية') || text.includes('ميداليات') || text.includes('سلسلة') || text.includes('medal');
+        if(f === 'gear') return (p.category === 'gear') || text.includes('أدوات') || text.includes('معدات') || text.includes('شنكار') || text.includes('كرة') || text.includes('قفاز') || text.includes('gear');
         return text.includes(f);
       }
 
@@ -3625,24 +3644,26 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           return;
         }
 
-        if(p.category === 'bag'){
+        if(p.category !== 'shirt' && p.category !== 'shoes'){
           if(statusEl){
             statusEl.className = 'modal-stock-status available';
             if(iconEl) iconEl.textContent = '✅';
-            if(textEl) textEl.textContent = 'الشنطة متوفرة في المعرض وجاهزة للتسليم الفوري';
+            const catName = (p.category === 'bag' ? 'الشنطة' : p.category === 'socks' ? 'الشراب' : p.category === 'medals' ? 'الميدالية' : 'المنتج');
+            if(textEl) textEl.textContent = `${catName} متوفر في المعرض وجاهز للتسليم الفوري`;
           }
           if(addBtn){
             addBtn.disabled = false;
             addBtn.innerHTML = '<span>أضف إلى السلة 🛒</span>';
           }
         } else {
-          // Shirt size stock check
+          // Shirt & Shoes size stock check
           const isSizeAvail = Boolean(p.sizes && p.sizes[sz] && p.sizes[sz].available !== false);
+          const typeStr = (p.category === 'shoes' ? 'مقاس كوتشي الاستارز' : 'المقاس');
           if(isSizeAvail){
             if(statusEl){
               statusEl.className = 'modal-stock-status available';
               if(iconEl) iconEl.textContent = '✅';
-              if(textEl) textEl.textContent = `المقاس (${sz}) متاح وجاهز للتسليم الفوري`;
+              if(textEl) textEl.textContent = `${typeStr} (${sz}) متاح وجاهز للتسليم الفوري`;
             }
             if(addBtn){
               addBtn.disabled = false;
@@ -3652,7 +3673,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
             if(statusEl){
               statusEl.className = 'modal-stock-status out-of-stock';
               if(iconEl) iconEl.textContent = '❌';
-              if(textEl) textEl.textContent = `المقاس (${sz}) غير متوفر حالياً (نفد)`;
+              if(textEl) textEl.textContent = `${typeStr} (${sz}) غير متوفر حالياً (نفد)`;
             }
             if(addBtn){
               addBtn.disabled = true;
@@ -3714,28 +3735,47 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
 
         // Setup Sizes
         const sizesBox = document.querySelector('#modal-sizes-box');
-        if(p.category === 'bag'){
-          if(sizesBox) sizesBox.style.display = 'none';
-          selectedModalSize = 'one-size';
-        } else {
-          if(sizesBox) sizesBox.style.display = 'block';
-          const isOverallAvail = (p.available !== false);
-          const chips = document.querySelectorAll('#modal-size-chips .size-chip');
-          let firstAvailable = null;
+        const chipsContainer = document.querySelector('#modal-size-chips');
+        const sizeBoxLabel = sizesBox ? sizesBox.querySelector('.modal-sizes-title') : null;
 
+        if (p.category === 'shirt' || p.category === 'shoes') {
+          if (sizesBox) sizesBox.style.display = 'block';
+          const isShoes = (p.category === 'shoes');
+          if (sizeBoxLabel) sizeBoxLabel.textContent = isShoes ? 'مقاس كوتشي الاستارز:' : 'المقاس:';
+
+          const availableSizesList = isShoes ? ['40', '41', '42', '43', '44', '45'] : ['M', 'L', 'XL', '2XL'];
+          const isOverallAvail = (p.available !== false);
+
+          if (chipsContainer) {
+            chipsContainer.innerHTML = availableSizesList.map(sz => {
+              const szAvail = isOverallAvail && Boolean(p.sizes && p.sizes[sz] && p.sizes[sz].available !== false);
+              return `<button type="button" class="size-chip ${szAvail ? '' : 'out-of-stock'}" data-size="${sz}" title="${szAvail ? 'مقاس ' + sz + ' (متاح)' : 'مقاس ' + sz + ' (نفد)'}">${sz}</button>`;
+            }).join('');
+          }
+
+          let firstAvailable = null;
+          const chips = document.querySelectorAll('#modal-size-chips .size-chip');
           chips.forEach(chip => {
             const sz = chip.dataset.size;
             const szAvail = isOverallAvail && Boolean(p.sizes && p.sizes[sz] && p.sizes[sz].available !== false);
-            chip.classList.toggle('out-of-stock', !szAvail);
-            chip.title = szAvail ? `مقاس ${sz} (متاح)` : `مقاس ${sz} (نفد)`;
-            if(szAvail && !firstAvailable) firstAvailable = sz;
+            if (szAvail && !firstAvailable) firstAvailable = sz;
+
+            chip.onclick = () => {
+              selectedModalSize = sz;
+              chips.forEach(c => c.classList.toggle('active', c.dataset.size === sz));
+              updateModalStockFeedback(p, sz);
+              updateModalOrderUI(id);
+            };
           });
 
-          // Select first available size or default to M
-          selectedModalSize = firstAvailable || 'M';
+          selectedModalSize = firstAvailable || availableSizesList[0];
           chips.forEach(chip => {
             chip.classList.toggle('active', chip.dataset.size === selectedModalSize);
           });
+        } else {
+          // bag, socks, medals, gear -> one-size
+          if (sizesBox) sizesBox.style.display = 'none';
+          selectedModalSize = 'one-size';
         }
 
         updateModalOrderUI(id);
@@ -3825,9 +3865,16 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
                 const isAvail = (p.available !== false) && (!p.sizes || (p.sizes[sz] && p.sizes[sz].available !== false));
                 return `<span class="card-size-dot ${isAvail ? 'in-stock' : 'out-stock'}">${sz}</span>`;
               }).join('') + `</div>`;
+          } else if (p.category === 'shoes') {
+            const sizes = ['40', '41', '42', '43', '44', '45'];
+            sizesPreviewHtml = `<div class="card-sizes-preview"><span style="font-size:9px;color:var(--muted);margin-left:4px;">مقاسات الاستارز:</span>` +
+              sizes.map(sz => {
+                const isAvail = (p.available !== false) && (!p.sizes || (p.sizes[sz] && p.sizes[sz].available !== false));
+                return `<span class="card-size-dot ${isAvail ? 'in-stock' : 'out-stock'}">${sz}</span>`;
+              }).join('') + `</div>`;
           }
 
-          return `<article class="product-card reveal" data-team="${escapeHtml(teamAttr)}" data-id="${escapeHtml(id)}" style="--delay:${delay}ms"><div class="product-visual"><div class="card-quick-actions"><button class="card-action-btn btn-wishlist-toggle ${isWishlisted(id) ? 'active' : ''}" data-id="${escapeHtml(id)}" type="button" title="أضف للمفضلة" aria-label="أضف للمفضلة"><svg viewBox="0 0 24 24" fill="${isWishlisted(id) ? '#ef4444' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button><button class="card-action-btn btn-share-item" data-id="${escapeHtml(id)}" type="button" title="مشاركة المنتج" aria-label="مشاركة المنتج"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button></div><span class="product-index">${num} / S7</span><span class="product-tag">${escapeHtml(tag)}</span>${hasSides ? '<span class="product-badge-twosided">وش وضهر ✦</span>' : ''}<img class="product-image" src="${escapeHtml(displayImg)}" alt="${escapeHtml(p.alt||p.name)}" loading="lazy" decoding="async"><div class="product-bottomline"><span>${escapeHtml(bottomline1)}</span><span>${escapeHtml(bottomline2)}</span></div></div><div class="product-info"><div><p class="product-type">${p.category === 'bag' ? 'إكسسوار وشنط' : (hasSides ? 'موديل كروي وش وضهر' : 'ستايل كروي')}</p><h3 class="product-name">${escapeHtml(p.name)}</h3><p class="product-description">${escapeHtml(p.desc||'')}</p><p class="product-price">${displayPrice} جنيه</p>${sizesPreviewHtml}</div><span class="product-number">${num}</span></div><button class="view-btn" type="button" data-product="${escapeHtml(id)}"><span>${escapeHtml(viewText)}</span><span>↗</span></button></article>`;
+          return `<article class="product-card reveal" data-team="${escapeHtml(teamAttr)}" data-id="${escapeHtml(id)}" style="--delay:${delay}ms"><div class="product-visual"><div class="card-quick-actions"><button class="card-action-btn btn-wishlist-toggle ${isWishlisted(id) ? 'active' : ''}" data-id="${escapeHtml(id)}" type="button" title="أضف للمفضلة" aria-label="أضف للمفضلة"><svg viewBox="0 0 24 24" fill="${isWishlisted(id) ? '#ef4444' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button><button class="card-action-btn btn-share-item" data-id="${escapeHtml(id)}" type="button" title="مشاركة المنتج" aria-label="مشاركة المنتج"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button></div><span class="product-index">${num} / S7</span><span class="product-tag">${escapeHtml(tag)}</span>${hasSides ? '<span class="product-badge-twosided">وش وضهر ✦</span>' : ''}<img class="product-image" src="${escapeHtml(displayImg)}" alt="${escapeHtml(p.alt||p.name)}" loading="lazy" decoding="async"><div class="product-bottomline"><span>${escapeHtml(bottomline1)}</span><span>${escapeHtml(bottomline2)}</span></div></div><div class="product-info"><div><p class="product-type">${p.category === 'bag' ? 'إكسسوار وشنط 🎒' : p.category === 'shoes' ? 'كوتشي استارز أصلي 👟' : p.category === 'socks' ? 'شرابات رياضية 🧦' : p.category === 'medals' ? 'ميداليات وسلاسل 🏅' : p.category === 'gear' ? 'أدوات ومعدات رياضية ⚽' : (hasSides ? 'موديل كروي وش وضهر' : 'ستايل كروي')}</p><h3 class="product-name">${escapeHtml(p.name)}</h3><p class="product-description">${escapeHtml(p.desc||'')}</p><p class="product-price">${displayPrice} جنيه</p>${sizesPreviewHtml}</div><span class="product-number">${num}</span></div><button class="view-btn" type="button" data-product="${escapeHtml(id)}"><span>${escapeHtml(viewText)}</span><span>↗</span></button></article>`;
         }).join('');
 
         // Bind clicks on each card, quick actions, and buttons
