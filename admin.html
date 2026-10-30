@@ -1233,7 +1233,7 @@
         <div>منطقة آمنة — تسجيل الدخول مخصص لإدارة المتجر والمالك فقط</div>
       </div>
 
-      <form id="login-form">
+      <form id="login-form" onsubmit="return false;">
         <div class="form-group">
           <label class="form-label" for="login-phone">رقم الهاتف المسجل</label>
           <input class="form-control" id="login-phone" type="tel" placeholder="أدخل رقم الهاتف المسجل" required dir="ltr">
@@ -2371,7 +2371,11 @@
           }
         } catch(e){}
 
-        renderAll();
+        try {
+          renderAll();
+        } catch(err) {
+          console.error('Error during renderAll():', err);
+        }
       }
 
       function escapeHtml(str) {
@@ -3927,10 +3931,10 @@ ${namesList}
                 tgStatusMsg.style.color = '#60a5fa';
                 tgStatusMsg.textContent = 'ℹ️ لم نجد رسائل بعد! افتح البوت على تيليجرام واضغط Start أو أرسل له أي كلمة، ثم اضغط هنا مرة أخرى.';
               }
-              alert('خطوة بسيطة جداً لاستخراج الـ ID:
+              alert(`خطوة بسيطة جداً لاستخراج الـ ID:
 1. افتح تطبيق تيليجرام.
 2. ابحث عن اسم البوت واضغط Start أو أرسل له أي رسالة (أو أضفه لجروب المحل).
-3. ارجع هنا واضغط "استخراج الـ Chat ID تلقائياً" وسيتم ربطه فوراً!');
+3. ارجع هنا واضغط "استخراج الـ Chat ID تلقائياً" وسيتم ربطه فوراً!`);
             }
           } catch (err) {
             if (tgStatusMsg) {
@@ -4567,6 +4571,13 @@ ${namesList}
       <button class="btn btn-primary" onclick="window.print()" type="button" style="padding: 10px 24px; font-size: 13px; font-weight: 800; background: #10b981; color: #000;">🖨️ تأكيد وطباعة البوليصة الآن</button>
       <button class="btn btn-secondary" onclick="closeShippingSlipModal()" type="button" style="padding: 10px 20px; font-size: 13px; background: #333; color: #fff;">إغلاق ✕</button>
     </div>
+  </div>
+
+  <!-- Floating Live Logs Widget (Visible on every page/tab) -->
+  <div class="floating-logs-widget" id="floating-logs-widget" title="انقر لعرض سجل الإشعارات والعمليات">
+    <div class="status-pulse-dot" id="widget-status-dot"></div>
+    <span id="widget-status-text">سجل الإشعارات: جاري الفحص...</span>
+    <span style="background: rgba(255,255,255,0.1); padding: 2px 7px; border-radius: 999px; font-size: 9px; font-family: monospace;">Logs ↗</span>
   </div>
 
 </body>
