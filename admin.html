@@ -3871,6 +3871,14 @@
         });
       }
 
+      // Auto-detect Telegram Chat IDs with Admin Approval Security
+      window.closeTgDetectModal = function() {
+        const modal = document.querySelector('#tg-detect-modal');
+        if (modal) modal.style.display = 'none';
+      };
+
+      let pendingDetectedChats = [];
+
       if (btnAutoDetectChatId) {
         btnAutoDetectChatId.addEventListener('click', async () => {
           const token = document.querySelector('#tg-bot-token').value.trim();
@@ -3894,38 +3902,45 @@
               const msg = u.message || u.channel_post || u.my_chat_member;
               if (msg && msg.chat) {
                 const cid = String(msg.chat.id);
+                const isGroup = msg.chat.type === 'group' || msg.chat.type === 'supergroup' || msg.chat.type === 'channel';
                 const name = msg.chat.title || msg.chat.first_name || (msg.chat.username ? '@' + msg.chat.username : cid);
-                foundChats.set(cid, name);
+                foundChats.set(cid, { name, cid, isGroup });
               }
             });
 
             if (foundChats.size > 0) {
               const cfg = getTelegramConfig();
-              if (!Array.isArray(cfg.recipients)) cfg.recipients = [];
+              const existingRecipients = Array.isArray(cfg.recipients) ? cfg.recipients : [];
+              pendingDetectedChats = Array.from(foundChats.values());
 
-              foundChats.forEach((name, cid) => {
-                if (!cfg.recipients.some(r => r.chatId === cid)) {
-                  cfg.recipients.push({
-                    id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-                    name: name,
-                    chatId: cid
-                  });
-                }
-              });
+              const listEl = document.querySelector('#tg-detected-chats-list');
+              if (listEl) {
+                listEl.innerHTML = pendingDetectedChats.map((c, i) => {
+                  const alreadyAdded = existingRecipients.some(r => r.chatId === c.cid);
+                  return `
+                    <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; margin-bottom: 8px; cursor: ${alreadyAdded ? 'default' : 'pointer'};">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" class="detect-chat-chk" data-cid="${c.cid}" data-name="${escapeHtml(c.name)}" ${alreadyAdded ? 'disabled' : 'checked'} style="width: 16px; height: 16px; accent-color: #10b981;">
+                        <div>
+                          <strong style="color: #fff; font-size: 13px;">${c.isGroup ? '👥' : '👤'} ${escapeHtml(c.name)}</strong>
+                          <span style="font-size: 10px; color: var(--muted); display: block; font-family: monospace; direction: ltr;">ID: ${escapeHtml(c.cid)}</span>
+                        </div>
+                      </div>
+                      <span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; ${alreadyAdded ? 'background: rgba(34,197,94,0.15); color: #4ade80;' : 'background: rgba(59,130,246,0.15); color: #93c5fd;'}">
+                        ${alreadyAdded ? 'مضاف مسبقاً ✓' : (c.isGroup ? 'جروب محادثة' : 'حساب شخصي')}
+                      </span>
+                    </label>
+                  `;
+                }).join('');
+              }
 
-              saveTelegramConfig(cfg);
-              loadTelegramUI();
+              const modal = document.querySelector('#tg-detect-modal');
+              if (modal) modal.style.display = 'flex';
 
-              const namesList = Array.from(foundChats.entries()).map(([cid, name]) => `${name} (${cid})`).join('، ');
               if (tgStatusMsg) {
                 tgStatusMsg.style.color = '#4ade80';
-                tgStatusMsg.textContent = `✅ تم استخراج ${foundChats.size} شات بنجاح وإضافتهم لقائمة البائعين: [${namesList}]! اضغط "حفظ إعدادات تيليجرام".`;
+                tgStatusMsg.textContent = `✅ تم العثور على (${foundChats.size}) حساب. اختر المعتمدين في النافذة الظاهرة أمامك!`;
               }
-              alert(`✅ تم استخراج ${foundChats.size} شات بنجاح وإضافتهم لقائمة البائعين:
-
-${namesList}
-
-تم تحديث القائمة تلقائياً!`);
             } else {
               if (tgStatusMsg) {
                 tgStatusMsg.style.color = '#60a5fa';
@@ -3942,6 +3957,49 @@ ${namesList}
               tgStatusMsg.textContent = `❌ تعذر الاستخراج: ${err.message}. تأكد من صحة رمز الـ Bot Token.`;
             }
           }
+        });
+      }
+
+      // Wire confirm add detected button
+      const btnConfirmDetected = document.querySelector('#btn-confirm-add-detected');
+      if (btnConfirmDetected) {
+        btnConfirmDetected.addEventListener('click', () => {
+          const checkboxes = document.querySelectorAll('.detect-chat-chk:checked:not(:disabled)');
+          if (checkboxes.length === 0) {
+            alert('يرجى تحديد بائع واحد على الأقل للموافقة عليه.');
+            return;
+          }
+
+          const cfg = getTelegramConfig();
+          if (!Array.isArray(cfg.recipients)) cfg.recipients = [];
+
+          let addedCount = 0;
+          checkboxes.forEach(chk => {
+            const cid = chk.dataset.cid;
+            const name = chk.dataset.name;
+            if (!cfg.recipients.some(r => r.chatId === cid)) {
+              cfg.recipients.push({
+                id: 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                name: name,
+                chatId: cid
+              });
+              addedCount++;
+            }
+          });
+
+          saveTelegramConfig(cfg);
+          loadTelegramUI();
+          closeTgDetectModal();
+
+          addSystemLog({
+            type: 'success',
+            category: 'telegram',
+            title: `اعتماد (${addedCount}) بائعين جدد`,
+            recipient: `${addedCount} شات`,
+            message: `تم اعتماد وإضافة ${addedCount} بائع/جروب لقائمة الإشعارات بعد مراجعتهم من لوحة الإدارة`
+          });
+
+          alert(`✅ تم اعتماد وإضافة (${addedCount}) بائع بنجاح! سيصلهم إشعار أي طلب شراء جديد.`);
         });
       }
 
@@ -4578,6 +4636,30 @@ ${namesList}
     <div class="status-pulse-dot" id="widget-status-dot"></div>
     <span id="widget-status-text">سجل الإشعارات: جاري الفحص...</span>
     <span style="background: rgba(255,255,255,0.1); padding: 2px 7px; border-radius: 999px; font-size: 9px; font-family: monospace;">Logs ↗</span>
+  </div>
+
+  <!-- Modal: Approve Detected Telegram Chats -->
+  <div id="tg-detect-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: var(--panel); border: 1px solid var(--line); border-radius: var(--card-radius); max-width: 520px; width: 100%; padding: 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 900; color: #fff;">🛡️ مراجعة واعتماد البائعين (حماية بيانات العملاء)</h3>
+        <button type="button" onclick="closeTgDetectModal()" style="background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <p style="margin: 0 0 16px; font-size: 11px; color: var(--muted); line-height: 1.5;">
+        تم العثور على الحسابات التالية التي تواصلت مع البوت. لمنع وصول الطلبات لأي شخص غريب، <strong>حدد فقط البائعين أو الجروبات التابعة للمحل</strong> وتجاهل أي حساب غير معروف:
+      </p>
+
+      <div id="tg-detected-chats-list" style="max-height: 260px; overflow-y: auto; margin-bottom: 16px;">
+        <!-- Dynamic items -->
+      </div>
+
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button class="btn btn-secondary" type="button" onclick="closeTgDetectModal()" style="font-size: 12px; padding: 7px 14px;">إلغاء ✕</button>
+        <button class="btn btn-primary" type="button" id="btn-confirm-add-detected" style="font-size: 12px; padding: 7px 18px; background: #10b981; color: #000; font-weight: 800;">
+          ✅ اعتماد وإضافة المحددين فقط
+        </button>
+      </div>
+    </div>
   </div>
 
 </body>
