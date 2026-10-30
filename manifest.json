@@ -1,0 +1,28 @@
+{
+  "name": "SE7EN Store | متجر سيفن للملابس الرياضية",
+  "short_name": "SE7EN",
+  "description": "معرض Se7en للملابس الرياضية المستوحاة من ثقافة كرة القدم وخارج الملعب في الإسكندرية.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070809",
+  "theme_color": "#070809",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='28' fill='%2308090b'/%3E%3Ctext x='35' y='132' font-size='110' font-weight='900' font-family='Arial, sans-serif' fill='%23ffffff'%3ES%3C/text%3E%3Ctext x='105' y='132' font-size='110' font-weight='900' font-family='Arial, sans-serif' fill='%2310b981'%3E7%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='72' fill='%2308090b'/%3E%3Ctext x='95' y='355' font-size='290' font-weight='900' font-family='Arial, sans-serif' fill='%23ffffff'%3ES%3C/text%3E%3Ctext x='280' y='355' font-size='290' font-weight='900' font-family='Arial, sans-serif' fill='%2310b981'%3E7%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "lifestyle", "sports"]
+}
+

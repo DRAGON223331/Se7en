@@ -3,7 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#050505">
+  <meta name="theme-color" content="#070809">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SE7EN">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='28' fill='%2308090b'/%3E%3Ctext x='35' y='132' font-size='110' font-weight='900' font-family='Arial, sans-serif' fill='%23ffffff'%3ES%3C/text%3E%3Ctext x='105' y='132' font-size='110' font-weight='900' font-family='Arial, sans-serif' fill='%2310b981'%3E7%3C/text%3E%3C/svg%3E">
   <meta name="description" content="Se7en — معرض ملابس رياضية مستوحاة من ثقافة كرة القدم. اكتشف التصميمات وتواصل معنا على إنستجرام أو زورنا في شارع النصر، الإسكندرية.">
   <meta property="og:title" content="Se7en | ستايل خارج الملعب">
   <meta property="og:description" content="اكتشف تصميمات Se7en الرياضية وتابعنا على إنستجرام.">
@@ -2155,6 +2161,308 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       border-color: #22c55e;
     }
 
+
+    /* ==========================================================
+       MOBILE APP DOCK, GESTURES, GRID SWITCHER & HAPTICS
+       ========================================================== */
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 72px !important;
+      }
+      .mobile-bottom-dock {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: rgba(9, 10, 13, 0.94);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 4px 6px;
+        padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+        z-index: 2100;
+        direction: rtl;
+      }
+      .dock-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        background: transparent;
+        border: none;
+        color: var(--muted, #9aa0a6);
+        font-family: inherit;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 4px 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        -webkit-tap-highlight-color: transparent;
+        flex: 1;
+        position: relative;
+      }
+      .dock-item svg {
+        width: 19px;
+        height: 19px;
+        transition: transform 0.2s, stroke 0.2s;
+      }
+      .dock-item:active svg {
+        transform: scale(0.85);
+      }
+      .dock-item.active {
+        color: #ffffff;
+      }
+      .dock-item.active svg {
+        stroke: var(--accent-glow, #10b981);
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+      }
+      .dock-badge {
+        position: absolute;
+        top: -4px;
+        left: -8px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 900;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid #090a0d;
+        line-height: 1;
+      }
+      .dock-badge.cart-badge {
+        background: #10b981;
+        color: #000;
+      }
+    }
+    @media (min-width: 769px) {
+      .mobile-bottom-dock {
+        display: none !important;
+      }
+    }
+
+    /* Floating Back to Top Button */
+    .back-to-top-btn {
+      position: fixed;
+      bottom: 74px;
+      left: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(14, 16, 20, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(15px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .back-to-top-btn.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .back-to-top-btn:active {
+      transform: scale(0.9);
+    }
+    .back-to-top-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+    @media (min-width: 769px) {
+      .back-to-top-btn {
+        bottom: 24px;
+        left: 24px;
+      }
+    }
+
+    /* Mobile Catalog Toolbar (Grid Switcher: 1 vs 2 cols) */
+    .mobile-catalog-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 4px;
+    }
+    .mobile-items-counter {
+      font-size: 11px;
+      font-weight: 850;
+      color: var(--muted);
+    }
+    .view-mode-toggle {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .view-mode-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .view-mode-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+    .view-mode-btn.active {
+      background: #ffffff;
+      color: #000;
+    }
+
+    /* 2-Columns Grid styling on Mobile */
+    @media (max-width: 680px) {
+      .product-grid.grid-2-col {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .product-grid.grid-2-col .product-card {
+        padding: 9px !important;
+      }
+      .product-grid.grid-2-col .product-visual {
+        min-height: 160px !important;
+      }
+      .product-grid.grid-2-col .product-image {
+        max-height: 140px !important;
+      }
+      .product-grid.grid-2-col .product-name {
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+      .product-grid.grid-2-col .product-price {
+        font-size: 12px !important;
+        margin: 3px 0 !important;
+      }
+      .product-grid.grid-2-col .product-description,
+      .product-grid.grid-2-col .product-number,
+      .product-grid.grid-2-col .product-bottomline {
+        display: none !important;
+      }
+      .product-grid.grid-2-col .card-sizes-preview {
+        display: none !important;
+      }
+      .product-grid.grid-2-col .view-btn {
+        padding: 6px 8px !important;
+        font-size: 10px !important;
+      }
+      .product-grid.grid-2-col .card-action-btn {
+        width: 28px !important;
+        height: 28px !important;
+      }
+      .product-grid.grid-2-col .card-action-btn svg {
+        width: 12px !important;
+        height: 12px !important;
+      }
+
+      /* 1-Column Grid styling on Mobile */
+      .product-grid.grid-1-col {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+    }
+
+    /* Sticky Modal Cart Actions on Mobile */
+    @media (max-width: 768px) {
+      .modal-content {
+        padding-bottom: 0 !important;
+        max-height: 88vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+      }
+      .modal-content > .modal-image-wrap,
+      .modal-content > .modal-info {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      .modal-cart-actions {
+        position: sticky !important;
+        bottom: 0 !important;
+        z-index: 30 !important;
+        background: rgba(12, 14, 18, 0.96) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        padding: 12px 16px !important;
+        margin: 12px -20px 0 -20px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8) !important;
+      }
+    }
+
+    /* PWA Install Floating Banner */
+    .pwa-install-banner {
+      position: fixed;
+      bottom: 72px;
+      left: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, rgba(20, 24, 30, 0.96), rgba(10, 12, 15, 0.98));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.15);
+      border-radius: 12px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 2050;
+      transform: translateY(140%);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      direction: rtl;
+    }
+    .pwa-install-banner.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* iOS Input zoom fix & Drawer containment */
+    @media (max-width: 768px) {
+      input[type="text"],
+      input[type="tel"],
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+      .cart-drawer,
+      .wishlist-drawer {
+        overscroll-behavior: contain !important;
+      }
+    }
+
 </style>
   <script>
     // Global Safety Net: Guarantees intro never freezes under any circumstance
@@ -2256,7 +2564,21 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         </div>
       </div>
       <p class="filter-empty" id="filter-empty" hidden>مفيش تصميمات في الاختيار ده حاليًا.</p>
-      <div class="product-grid" id="product-grid">
+      <!-- Mobile View Mode & Fast Toolbar -->
+      <div class="mobile-catalog-toolbar">
+        <span class="mobile-items-counter" id="mobile-items-counter">١٦ تصميم متاح 🔥</span>
+        <div class="view-mode-toggle" id="view-mode-toggle" role="group" aria-label="طريقة عرض المنتجات">
+          <button class="view-mode-btn" id="btn-view-1col" type="button" title="عرض كارت كبير (عمود واحد)" aria-label="عرض عمود واحد">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+            <span>كبير</span>
+          </button>
+          <button class="view-mode-btn active" id="btn-view-2col" type="button" title="عرض مزدوج (عمودين)" aria-label="عرض عمودين">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="18" rx="1.5"/><rect x="13" y="3" width="8" height="18" rx="1.5"/></svg>
+            <span>عمودين ▦</span>
+          </button>
+        </div>
+      </div>
+      <div class="product-grid grid-2-col" id="product-grid">
         <article class="product-card reveal" data-team="barcelona" style="--delay:0ms"><div class="product-visual"><span class="product-index">01 / S7</span><span class="product-tag">برشلونة</span><img class="product-image" src="assets/products/barcelona-contrast.webp" alt="تيشرت برشلونة الرمادي الفاتح بأكمام سوداء" loading="lazy" decoding="async"><div class="product-bottomline"><span>رمادي × أسود</span><span>SE7EN</span></div></div><div class="product-info"><div><p class="product-type">ستايل كروي</p><h3 class="product-name">تيشرت برشلونة</h3><p class="product-description">تصميم رياضي رمادي وأسود بطابع برشلوني</p><p class="product-price">250 جنيه</p></div><span class="product-number">01</span></div><button class="view-btn" type="button" data-product="barcelona"><span>عرض الصورة والتفاصيل</span><span>↗</span></button></article>
         <article class="product-card reveal" data-team="ahly" style="--delay:70ms"><div class="product-visual"><span class="product-index">02 / S7</span><span class="product-tag">الأهلي</span><img class="product-image" src="assets/products/al-ahly-pharaonic.webp" alt="تيشرت الأهلي الأسود بتفاصيل ذهبية وفرعونية" loading="lazy" decoding="async"><div class="product-bottomline"><span>أسود × ذهبي</span><span>ABOU TRIKA 22</span></div></div><div class="product-info"><div><p class="product-type">تفاصيل فرعونية</p><h3 class="product-name">تيشرت الأهلي الفرعوني</h3><p class="product-description">تصميم أسود بلمسات ذهبية وحمراء ورسومات بطابع فرعوني</p><p class="product-price">250 جنيه</p></div><span class="product-number">02</span></div><button class="view-btn" type="button" data-product="ahly"><span>عرض الصورة والتفاصيل</span><span>↗</span></button></article>
         <article class="product-card reveal" data-team="zamalek" style="--delay:140ms"><div class="product-visual"><span class="product-index">03 / S7</span><span class="product-tag">الزمالك</span><img class="product-image" src="assets/products/nile-developments.webp" alt="تيشرت الزمالك الأسود بخطوط خضراء فوسفورية" loading="lazy" decoding="async"><div class="product-bottomline"><span>أسود × فوسفوري</span><span>NILE</span></div></div><div class="product-info"><div><p class="product-type">ستايل رياضي</p><h3 class="product-name">تيشرت الزمالك الأسود</h3><p class="product-description">تصميم أسود بخطوط خضراء فوسفورية وتفاصيل رياضية لافتة</p><p class="product-price">250 جنيه</p></div><span class="product-number">03</span></div><button class="view-btn" type="button" data-product="nile"><span>عرض الصورة والتفاصيل</span><span>↗</span></button></article>
@@ -2469,7 +2791,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
 
           <div class="checkout-form-group">
             <label for="order-cust-phone">رقم الهاتف (للتواصل والواتساب) *</label>
-            <input class="checkout-input" id="order-cust-phone" type="tel" placeholder="01xxxxxxxxx" required dir="ltr">
+            <input class="checkout-input" id="order-cust-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" required dir="ltr">
           </div>
 
           <div class="checkout-form-group">
@@ -2817,10 +3139,12 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
           button.setAttribute('aria-pressed', String(active));
         });
         if(productCount) productCount.textContent = String(visible).padStart(2,'0');
+        const mobCounter = document.querySelector('#mobile-items-counter');
+        if(mobCounter) mobCounter.textContent = `${visible} تصميم متاح 🔥`;
         if(filterEmpty) filterEmpty.hidden = visible !== 0;
       }
 
-      filterButtons.forEach(button=>button.addEventListener('click',()=>applyFilter(button.dataset.filter)));
+      filterButtons.forEach(button=>button.addEventListener('click',()=>{ triggerHaptic('light'); applyFilter(button.dataset.filter); }));
 
       // Modal Elements
       const modal = document.querySelector('#product-modal');
@@ -3509,6 +3833,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         const p = products[id];
         const pName = p ? p.name : 'المنتج';
 
+        triggerHaptic(exists ? 'light' : 'medium');
         if(exists){
           list = list.filter(item => item !== id);
           saveWishlist(list);
@@ -3596,6 +3921,11 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         }
         if(drawerCount){
           drawerCount.textContent = list.length;
+        }
+        const dockWishCount = document.querySelector('#dock-wishlist-count');
+        if(dockWishCount){
+          dockWishCount.textContent = list.length;
+          dockWishCount.style.display = list.length > 0 ? 'inline-flex' : 'none';
         }
 
         if(!listContainer) return;
@@ -3783,6 +4113,11 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         if(floatCount) floatCount.textContent = totalItems;
         if(drawerCount) drawerCount.textContent = totalItems;
         if(footerCount) footerCount.textContent = totalItems;
+        const dockCartCount = document.querySelector('#dock-cart-count');
+        if(dockCartCount){
+          dockCartCount.textContent = totalItems;
+          dockCartCount.style.display = totalItems > 0 ? 'inline-flex' : 'none';
+        }
 
         // Calculate grand total
         let grandTotal = 0;
@@ -3900,6 +4235,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       const modalChips = document.querySelectorAll('#modal-size-chips .size-chip');
       modalChips.forEach(chip => {
         chip.onclick = () => {
+          triggerHaptic('light');
           const sz = chip.dataset.size;
           selectedModalSize = sz;
           modalChips.forEach(c => c.classList.toggle('active', c.dataset.size === sz));
@@ -3935,6 +4271,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       const modalAddToCartBtn = document.querySelector('#modal-add-to-cart-btn');
       if(modalAddToCartBtn) {
         modalAddToCartBtn.onclick = () => {
+          triggerHaptic('success');
           const p = products[currentProductId];
           if(!p) return;
           const sz = (p.category === 'shirt') ? selectedModalSize : 'one-size';
@@ -4290,6 +4627,201 @@ ${itemsSummary}
       // Initial Wishlist UI render
       renderWishlistUI();
 
+      
+      /* ==========================================================
+         MOBILE HAPTICS, GESTURES, DOCK & PWA LOGIC
+         ========================================================== */
+
+      function triggerHaptic(type = 'light') {
+        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+          try {
+            if (type === 'light') navigator.vibrate(12);
+            else if (type === 'medium') navigator.vibrate(24);
+            else if (type === 'success') navigator.vibrate([15, 30, 20]);
+          } catch (e) {}
+        }
+      }
+
+      // Grid Switcher (1 col vs 2 col on mobile)
+      const btnView1Col = document.querySelector('#btn-view-1col');
+      const btnView2Col = document.querySelector('#btn-view-2col');
+      const productGridEl = document.querySelector('#product-grid');
+
+      function setGridView(mode) {
+        if (!productGridEl) return;
+        if (mode === '1col') {
+          productGridEl.classList.add('grid-1-col');
+          productGridEl.classList.remove('grid-2-col');
+          if (btnView1Col) btnView1Col.classList.add('active');
+          if (btnView2Col) btnView2Col.classList.remove('active');
+        } else {
+          productGridEl.classList.add('grid-2-col');
+          productGridEl.classList.remove('grid-1-col');
+          if (btnView2Col) btnView2Col.classList.add('active');
+          if (btnView1Col) btnView1Col.classList.remove('active');
+        }
+        try {
+          localStorage.setItem('se7en_mobile_grid', mode);
+        } catch (e) {}
+      }
+
+      if (btnView1Col) {
+        btnView1Col.onclick = () => {
+          triggerHaptic('light');
+          setGridView('1col');
+        };
+      }
+      if (btnView2Col) {
+        btnView2Col.onclick = () => {
+          triggerHaptic('light');
+          setGridView('2col');
+        };
+      }
+
+      // Touch Swipe Gestures for Product Modal & Drawers
+      let touchStartX = 0;
+      let touchStartY = 0;
+      const modalContentEl = document.querySelector('.modal-content');
+
+      if (modalContentEl) {
+        modalContentEl.addEventListener('touchstart', (e) => {
+          if (e.touches.length === 1) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+          }
+        }, { passive: true });
+
+        modalContentEl.addEventListener('touchend', (e) => {
+          if (e.changedTouches.length === 1) {
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+
+            // Horizontal Swipe (Left / Right)
+            if (Math.abs(deltaX) > 48 && Math.abs(deltaX) > 1.4 * Math.abs(deltaY)) {
+              triggerHaptic('light');
+              const p = products[currentProductId];
+              const hasSides = Boolean(p && p.backImage && p.frontImage);
+
+              if (hasSides) {
+                // Toggle front / back
+                setModalSide(currentModalSide === 'front' ? 'back' : 'front');
+              } else {
+                // Step to next/previous product
+                stepModal(deltaX < 0 ? 1 : -1);
+              }
+            }
+            // Vertical Swipe Down to Dismiss (if near top of modal)
+            else if (deltaY > 80 && Math.abs(deltaX) < 40 && modalContentEl.scrollTop <= 5) {
+              triggerHaptic('light');
+              closeModal();
+            }
+          }
+        }, { passive: true });
+      }
+
+      // Mobile Bottom Dock Handlers
+      const dockHome = document.querySelector('#dock-btn-home');
+      const dockCatalog = document.querySelector('#dock-btn-catalog');
+      const dockWishlist = document.querySelector('#dock-btn-wishlist');
+      const dockCart = document.querySelector('#dock-btn-cart');
+      const dockTracker = document.querySelector('#dock-btn-tracker');
+
+      if (dockHome) {
+        dockHome.onclick = () => {
+          triggerHaptic('light');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+      }
+      if (dockCatalog) {
+        dockCatalog.onclick = () => {
+          triggerHaptic('light');
+          const grid = document.querySelector('#collection') || document.querySelector('#product-grid');
+          if (grid) grid.scrollIntoView({ behavior: 'smooth' });
+        };
+      }
+      if (dockWishlist) {
+        dockWishlist.onclick = () => {
+          triggerHaptic('light');
+          openWishlistDrawer();
+        };
+      }
+      if (dockCart) {
+        dockCart.onclick = () => {
+          triggerHaptic('light');
+          openCartDrawer();
+        };
+      }
+      if (dockTracker) {
+        dockTracker.onclick = () => {
+          triggerHaptic('light');
+          openTrackerModal();
+        };
+      }
+
+      // Floating Back to Top Button Handler
+      const backToTopBtn = document.querySelector('#back-to-top-btn');
+      if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 350) {
+            backToTopBtn.classList.add('visible');
+          } else {
+            backToTopBtn.classList.remove('visible');
+          }
+        }, { passive: true });
+
+        backToTopBtn.onclick = () => {
+          triggerHaptic('light');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+      }
+
+      // PWA Install Prompt Logic
+      let deferredPwaPrompt = null;
+      const pwaBanner = document.querySelector('#pwa-install-banner');
+      const pwaInstallBtn = document.querySelector('#pwa-install-btn');
+      const pwaCloseBtn = document.querySelector('#pwa-close-btn');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPwaPrompt = e;
+        if (window.innerWidth <= 768) {
+          setTimeout(() => {
+            if (pwaBanner && !sessionStorage.getItem('pwa_dismissed')) {
+              pwaBanner.classList.add('show');
+            }
+          }, 3200);
+        }
+      });
+
+      if (pwaInstallBtn) {
+        pwaInstallBtn.onclick = async () => {
+          triggerHaptic('medium');
+          if (deferredPwaPrompt) {
+            deferredPwaPrompt.prompt();
+            const { outcome } = await deferredPwaPrompt.userChoice;
+            deferredPwaPrompt = null;
+          }
+          if (pwaBanner) pwaBanner.classList.remove('show');
+        };
+      }
+
+      if (pwaCloseBtn) {
+        pwaCloseBtn.onclick = () => {
+          triggerHaptic('light');
+          if (pwaBanner) pwaBanner.classList.remove('show');
+          sessionStorage.setItem('pwa_dismissed', '1');
+        };
+      }
+
+      // Initialize Grid View
+      try {
+        const savedGrid = localStorage.getItem('se7en_mobile_grid') || '2col';
+        setGridView(savedGrid);
+      } catch (e) {}
+
+
       document.querySelector('#year').textContent=new Date().getFullYear();
     })();
   </script>
@@ -4325,7 +4857,7 @@ ${itemsSummary}
       </div>
       <form id="order-tracker-form">
         <div style="display: flex; gap: 8px;">
-          <input class="form-control" id="tracker-input" type="text" placeholder="اكتب رقم الهاتف (01xxxxxxxxx) أو رقم الطلب" required style="flex: 1; font-size: 12px;">
+          <input class="form-control" id="tracker-input" type="text" inputmode="tel" placeholder="اكتب رقم الهاتف (01xxxxxxxxx) أو رقم الطلب" required style="flex: 1; font-size: 14px;">
           <button class="btn btn-primary" type="submit" style="white-space: nowrap; font-size: 12px; padding: 0 16px;">بحث 🔍</button>
         </div>
       </form>
@@ -4338,6 +4870,56 @@ ${itemsSummary}
     <span id="toast-icon">✨</span>
     <span id="toast-msg">تمت العملية بنجاح!</span>
   </div>
+
+  <!-- Floating Back to Top Button -->
+  <button class="back-to-top-btn" id="back-to-top-btn" type="button" aria-label="الرجوع لأعلى الصفحة" title="للأعلى">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- PWA Install Floating Banner -->
+  <div class="pwa-install-banner" id="pwa-install-banner" role="banner">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:24px;">📲</span>
+      <div>
+        <div style="font-size:12px;font-weight:900;color:#fff;">تثبيت تطبيق SE7EN</div>
+        <div style="font-size:10px;color:var(--muted);">تصفح أسرع وأخف بدون شريط المتصفح</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button class="btn btn-primary" id="pwa-install-btn" type="button" style="padding:6px 12px;font-size:11px;font-weight:900;">تثبيت ⚡</button>
+      <button class="btn btn-secondary" id="pwa-close-btn" type="button" style="padding:6px 8px;font-size:11px;">✕</button>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom App Dock -->
+  <nav class="mobile-bottom-dock" id="mobile-bottom-dock" aria-label="شريط التنقل السريع">
+    <button class="dock-item active" id="dock-btn-home" type="button" aria-label="الرئيسية">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>الرئيسية</span>
+    </button>
+    <button class="dock-item" id="dock-btn-catalog" type="button" aria-label="الكتالوج">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>الكتالوج</span>
+    </button>
+    <button class="dock-item" id="dock-btn-wishlist" type="button" aria-label="المفضلة">
+      <div style="position:relative;display:inline-block;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="dock-badge" id="dock-wishlist-count" style="display:none;">0</span>
+      </div>
+      <span>المفضلة</span>
+    </button>
+    <button class="dock-item" id="dock-btn-cart" type="button" aria-label="السلة">
+      <div style="position:relative;display:inline-block;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="dock-badge cart-badge" id="dock-cart-count" style="display:none;">0</span>
+      </div>
+      <span>السلة</span>
+    </button>
+    <button class="dock-item" id="dock-btn-tracker" type="button" aria-label="تتبع الطلب">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>تتبع طلبك</span>
+    </button>
+  </nav>
 
 </body>
 </html>
