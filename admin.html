@@ -3673,7 +3673,11 @@
                   <span class="order-id-badge">#${escapeHtml(order.id || 'ORDER')}</span>
                   <span class="order-status-badge status-${status}">${statusLabels[status] || status}</span>
                   ${tgStatusBadgeHtml}
-                  ${order.payment?.method === 'online' ? '<span style="background:rgba(16,185,129,0.15);color:#4ade80;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">💳 تحويل إلكتروني</span>' : '<span style="background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3);padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">💵 نقدًا عند الاستلام</span>'}
+                  ${order.payment?.method === 'card' ?
+                    `<span style="background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.35);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:800;">💳 فيزا / كارت بنكي (${escapeHtml(order.payment?.cardBrand || 'Visa')})</span>` :
+                  (order.payment?.method === 'wallet' || order.payment?.method === 'online') ?
+                    `<span style="background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.35);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:800;">📱 تحويل إنستاباي / محفظة</span>` :
+                    `<span style="background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3);padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">💵 نقدًا عند الاستلام</span>`}
                   <span style="font-size: 11px; color: var(--muted);">${dateStr}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -3712,10 +3716,19 @@
                     <span>${escapeHtml(cust.notes)}</span>
                   </div>
                 ` : ''}
-                ${(order.payment?.method === 'online' || order.payment?.ref || order.payment?.receiptImage) ? `
+                ${order.payment?.method === 'card' ? `
+                  <div style="grid-column: 1 / -1; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); padding: 9px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <strong style="color: #60a5fa;">💳 تم الدفع بالفيزا / كارت بنكي:</strong>
+                      <span style="color: #fff; margin-right: 6px;">البطاقة: <code style="color:#93c5fd;">${escapeHtml(order.payment?.cardBrand || 'كارت')} •••• ${escapeHtml(order.payment?.cardLast4 || '****')}</code></span>
+                      <span style="color: #9ca3af; margin-right: 8px; font-size: 11px;">| رقم عملية البنك: <code style="color:#4ade80;">${escapeHtml(order.payment?.bankTxnId || 'TXN-OK')}</code></span>
+                    </div>
+                    <span style="background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;">✅ تم سحب المبلغ بنجاح</span>
+                  </div>
+                ` : (order.payment?.method === 'wallet' || order.payment?.method === 'online' || order.payment?.ref || order.payment?.receiptImage) ? `
                   <div style="grid-column: 1 / -1; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                     <div>
-                      <strong style="color: #4ade80;">💳 تحويل أونلاين:</strong>
+                      <strong style="color: #4ade80;">📱 تحويل أونلاين (إنستاباي/محفظة):</strong>
                       <span style="color: #fff; margin-right: 6px;">كود/رقم العملية: <code style="color:#93c5fd;font-size:12px;">${escapeHtml(order.payment?.ref || 'قيد المراجعة')}</code></span>
                     </div>
                     ${order.payment?.receiptImage ? `

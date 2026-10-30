@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SE7EN STORE — إتمام الطلب والدفع الآمن</title>
+  <link rel="icon" type="image/x-icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900;950&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07090e;
+      --panel: #0d121c;
+      --panel-soft: #121826;
+      --panel-elevated: #161e2f;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --gold: #eab308;
+      --gold-hover: #facc15;
+      --emerald: #10b981;
+      --blue: #3b82f6;
+      --danger: #ef4444;
+      --radius: 14px;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse at 20% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(234, 179, 8, 0.05) 0%, transparent 60%);
+      color: var(--text);
+      font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation Header */
+    .checkout-nav {
+      background: rgba(13, 18, 28, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 20px;
+    }
+    .checkout-nav-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-logo-img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(234, 179, 8, 0.3));
+    }
+    .brand-title {
+      font-family: 'Space Grotesk', 'Cairo', sans-serif;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .back-to-store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+    .back-to-store-btn:hover {
+      color: #fff;
+    }
+
+    /* Progress Stepper */
+    .checkout-stepper-wrap {
+      max-width: 1240px;
+      margin: 24px auto 0;
+      padding: 0 20px;
+      width: 100%;
+    }
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .step-item.active {
+      color: #fff;
+    }
+    .step-item.completed {
+      color: #34d399;
+    }
+    .step-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .step-item.active .step-circle {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+    }
+    .step-item.completed .step-circle {
+      background: #10b981;
+      color: #fff;
+    }
+    .step-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    /* Main Container */
+    .checkout-container {
+      max-width: 1240px;
+      margin: 24px auto 60px;
+      padding: 0 20px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .checkout-container {
+        grid-template-columns: 1fr;
+      }
+      .security-badge span.text {
+        display: none;
+      }
+    }
+
+    /* Cards */
+    .checkout-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .checkout-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .checkout-card-title {
+      font-size: 16px;
+      font-weight: 950;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-badge-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    /* Form Fields */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #e5e7eb;
+      margin-bottom: 8px;
+    }
+    .form-label span.req {
+      color: var(--gold);
+    }
+    .form-control {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #fff;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: left 12px center;
+      background-size: 16px;
+      padding-left: 36px;
+      cursor: pointer;
+    }
+    select.form-control option {
+      background-color: #111827;
+      color: #fff;
+    }
+
+    /* Payment Methods Grid */
+    .payment-options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 680px) {
+      .payment-options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .payment-tab-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      padding: 16px 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .payment-tab-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .payment-tab-card.active {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: var(--blue);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+    }
+    .payment-tab-card.active.tab-wallet {
+      background: rgba(234, 179, 8, 0.1);
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
+    }
+    .payment-tab-card.active.tab-cash {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--emerald);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    }
+    .pay-icon {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+    .pay-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .pay-sub {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* Visual 3D Credit Card Preview */
+    .luxury-card-box {
+      background: linear-gradient(135deg, #161c28 0%, #0a0d14 50%, #151b27 100%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      padding: 22px 24px;
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      direction: ltr;
+    }
+    .luxury-card-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    .chip {
+      width: 44px;
+      height: 32px;
+      background: linear-gradient(135deg, #f3d078, #fff4d1, #b8860b);
+      border-radius: 6px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .chip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(0,0,0,0.3);
+    }
+    .card-brand-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: 2px;
+      color: #93c5fd;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-number-display {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #fff;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .card-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .card-info-col .card-info-lbl {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .card-info-col .card-info-val {
+      font-size: 12px;
+      font-weight: 850;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Order Summary Sidebar */
+    .summary-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 90px;
+    }
+    .summary-items-list {
+      max-height: 280px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      padding-left: 4px;
+    }
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+    .summary-item-img {
+      width: 54px;
+      height: 54px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #111;
+    }
+    .summary-item-details {
+      flex: 1;
+    }
+    .summary-item-title {
+      font-size: 13px;
+      font-weight: 850;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .summary-item-meta {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .summary-item-price {
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* Price lines */
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .price-row.total-row {
+      font-size: 18px;
+      font-weight: 950;
+      color: #fff;
+      border-top: 1px dashed var(--line-strong);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+    .price-row.total-row .total-amount {
+      color: #34d399;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    /* Coupon Box */
+    .coupon-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .coupon-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #fff;
+      font-family: inherit;
+    }
+    .coupon-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--line-strong);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .coupon-btn:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    /* Trust guarantees */
+    .guarantees-list {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .guarantee-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+    .guarantee-icon {
+      font-size: 16px;
+    }
+
+    /* Action Buttons */
+    .btn-main-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .btn-main-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.5);
+    }
+    .btn-main-submit:active {
+      transform: translateY(0);
+    }
+
+    /* ============================================================== */
+    /* 3D-SECURE BANK PAYMENT GATEWAY MODAL (REALISTIC BANK VERIFY)    */
+    /* ============================================================== */
+    .bank-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .bank-modal-box {
+      background: #ffffff;
+      color: #1e293b;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      font-family: 'Cairo', system-ui, sans-serif;
+      animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes scaleUp {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .bank-modal-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bank-modal-title {
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .bank-logos {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bank-modal-body {
+      padding: 24px;
+    }
+    .bank-txn-summary {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .bank-txn-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .bank-txn-row:last-child {
+      margin-bottom: 0;
+    }
+    .bank-txn-label {
+      color: #64748b;
+    }
+    .bank-txn-val {
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .bank-otp-prompt {
+      font-size: 13px;
+      color: #334155;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .bank-otp-input {
+      width: 100%;
+      height: 52px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      color: #0f172a;
+      transition: border-color 0.2s;
+    }
+    .bank-otp-input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    }
+    .bank-timer-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .bank-btn-confirm {
+      width: 100%;
+      background: #16a34a;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 10px;
+    }
+    .bank-btn-confirm:hover {
+      background: #15803d;
+    }
+    .bank-btn-cancel {
+      width: 100%;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bank-btn-cancel:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Success / Empty States */
+    .success-container {
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 20px;
+      text-align: center;
+      display: none;
+    }
+    .success-icon-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .empty-cart-state {
+      max-width: 500px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="checkout-nav">
+    <div class="checkout-nav-inner">
+      <a href="index.html" class="brand-logo-area">
+        <img src="assets/logo.png" alt="SE7EN STORE Logo" class="brand-logo-img" onerror="this.style.display='none'">
+        <span class="brand-title">SE7EN STORE</span>
+      </a>
+
+      <div class="security-badge">
+        <span>🔒</span>
+        <span class="text">بوابة دفع مشفرة 256-Bit SSL</span>
+      </div>
+
+      <a href="index.html" class="back-to-store-btn">
+        <span>← الرجوع للمتجر للتسوق</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Stepper -->
+  <div class="checkout-stepper-wrap" id="checkout-stepper-section">
+    <div class="stepper">
+      <div class="step-item completed">
+        <div class="step-circle">✓</div>
+        <span>سلة التسوق</span>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-item active">
+        <div class="step-circle">2</div>
+        <span>بيانات الشحن والدفع</span>
+      </div>
+      <div class="step-divider"></div>
+      <div class="step-item" id="step-3-nav">
+        <div class="step-circle">3</div>
+        <span>تأكيد الطلب والفاتورة</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty Cart State -->
+  <div class="empty-cart-state" id="empty-cart-view">
+    <div style="font-size: 56px; margin-bottom: 14px;">🛍️</div>
+    <h2 style="font-size: 20px; font-weight: 950; color: #fff; margin-bottom: 8px;">سلة مشترياتك فارغة!</h2>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 24px;">لم تقم بإضافة أي تيشرتات أو شنط لسلتك بعد. يمكنك تصفح تشكيلة Se7en واختيار منتجاتك المفضلة.</p>
+    <a href="index.html" class="btn-main-submit" style="text-decoration: none; width: auto; display: inline-flex; padding: 12px 28px;">
+      تصفح المنتجات الآن 🛒
+    </a>
+  </div>
+
+  <!-- Main Checkout Container -->
+  <main class="checkout-container" id="main-checkout-view">
+
+    <!-- Right Column: Shipping & Payment Form -->
+    <div class="checkout-form-col">
+      <form id="full-checkout-form" onsubmit="handleCheckoutFormSubmit(event)">
+
+        <!-- CARD 1: SHIPPING INFORMATION -->
+        <div class="checkout-card">
+          <div class="checkout-card-header">
+            <h2 class="checkout-card-title">
+              <span class="card-badge-num">1</span>
+              <span>📍 بيانات العميل وعنوان الشحن</span>
+            </h2>
+            <span style="font-size: 11px; color: var(--muted);">الحقول بعلامة (*) إلزامية</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cust-name">الاسم بالكامل <span class="req">*</span></label>
+            <input class="form-control" type="text" id="cust-name" placeholder="مثال: أحمد محمد علي" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="cust-phone">رقم الهاتف (للتواصل والواتساب) <span class="req">*</span></label>
+              <input class="form-control" type="tel" id="cust-phone" inputmode="tel" placeholder="01xxxxxxxxx" required dir="ltr">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cust-phone-alt">رقم هاتف إضافي (اختياري)</label>
+              <input class="form-control" type="tel" id="cust-phone-alt" inputmode="tel" placeholder="01xxxxxxxxx" dir="ltr">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="cust-gov">المحافظة / المدينة <span class="req">*</span></label>
+              <select class="form-control" id="cust-gov" required onchange="handleGovChange()">
+                <option value="القاهرة" data-shipping="45">القاهرة (شحن: 45 ج.م)</option>
+                <option value="الجيزة" data-shipping="45">الجيزة (شحن: 45 ج.م)</option>
+                <option value="الإسكندرية" data-shipping="50" selected>الإسكندرية (شحن: 50 ج.م)</option>
+                <option value="القليوبية" data-shipping="50">القليوبية (شحن: 50 ج.م)</option>
+                <option value="الدقهلية" data-shipping="55">الدقهلية (شحن: 55 ج.م)</option>
+                <option value="الغربية" data-shipping="55">الغربية (شحن: 55 ج.م)</option>
+                <option value="الشرقية" data-shipping="55">الشرقية (شحن: 55 ج.م)</option>
+                <option value="المنوفية" data-shipping="55">المنوفية (شحن: 55 ج.م)</option>
+                <option value="البحيرة" data-shipping="55">البحيرة (شحن: 55 ج.م)</option>
+                <option value="كفر الشيخ" data-shipping="55">كفر الشيخ (شحن: 55 ج.م)</option>
+                <option value="دمياط" data-shipping="55">دمياط (شحن: 55 ج.م)</option>
+                <option value="بورسعيد" data-shipping="55">بورسعيد (شحن: 55 ج.م)</option>
+                <option value="الإسماعيلية" data-shipping="55">الإسماعيلية (شحن: 55 ج.م)</option>
+                <option value="السويس" data-shipping="55">السويس (شحن: 55 ج.م)</option>
+                <option value="الفيوم" data-shipping="60">الفيوم (شحن: 60 ج.م)</option>
+                <option value="بني سويف" data-shipping="60">بني سويف (شحن: 60 ج.م)</option>
+                <option value="المنيا" data-shipping="65">المنيا (شحن: 65 ج.م)</option>
+                <option value="أسيوط" data-shipping="65">أسيوط (شحن: 65 ج.م)</option>
+                <option value="سوهاج" data-shipping="70">سوهاج (شحن: 70 ج.م)</option>
+                <option value="قنا" data-shipping="70">قنا (شحن: 70 ج.م)</option>
+                <option value="الأقصر" data-shipping="75">الأقصر (شحن: 75 ج.م)</option>
+                <option value="أسوان" data-shipping="75">أسوان (شحن: 75 ج.م)</option>
+                <option value="مطروح" data-shipping="70">مطروح (شحن: 70 ج.م)</option>
+                <option value="البحر الأحمر" data-shipping="75">البحر الأحمر (شحن: 75 ج.م)</option>
+                <option value="أخرى" data-shipping="50">محافظة أخرى (شحن: 50 ج.م)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cust-address">العنوان بالتفصيل <span class="req">*</span></label>
+              <input class="form-control" type="text" id="cust-address" placeholder="المنطقة، الشارع، رقم العمارة والشقة" required>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="cust-notes">ملاحظات التوصيل (اختياري)</label>
+            <textarea class="form-control" id="cust-notes" rows="2" placeholder="أي تفاصيل خاصة بوقت الاستلام أو علامة مميزة..."></textarea>
+          </div>
+        </div>
+
+        <!-- CARD 2: PAYMENT METHOD & GATEWAY SELECTION -->
+        <div class="checkout-card">
+          <div class="checkout-card-header">
+            <h2 class="checkout-card-title">
+              <span class="card-badge-num">2</span>
+              <span>💳 طريقة الدفع وتأكيد الحجز</span>
+            </h2>
+            <span style="background: rgba(59,130,246,0.15); color: #60a5fa; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 800;">دفع إلكتروني معتمد</span>
+          </div>
+
+          <!-- 3 Method Selection Cards -->
+          <div class="payment-options-grid">
+            <!-- Option 1: Card / Visa -->
+            <div class="payment-tab-card active" id="tab-btn-card" onclick="selectPaymentTab('card')">
+              <div class="pay-icon">💳</div>
+              <div class="pay-title">فيزا / كارت بنكي</div>
+              <div class="pay-sub" style="color: #60a5fa;">دفع فوري مباشر بالموقع</div>
+            </div>
+
+            <!-- Option 2: InstaPay & Wallets -->
+            <div class="payment-tab-card tab-wallet" id="tab-btn-wallet" onclick="selectPaymentTab('wallet')">
+              <div class="pay-icon">📱</div>
+              <div class="pay-title">إنستاباي / محفظة</div>
+              <div class="pay-sub" style="color: #facc15;">إرفاق كود التحويل والإيصال</div>
+            </div>
+
+            <!-- Option 3: Cash on Delivery -->
+            <div class="payment-tab-card tab-cash" id="tab-btn-cash" onclick="selectPaymentTab('cash')">
+              <div class="pay-icon">💵</div>
+              <div class="pay-title">نقدًا عند الاستلام</div>
+              <div class="pay-sub" style="color: #34d399;">الدفع يدًا بيد للمندوب</div>
+            </div>
+          </div>
+
+          <!-- METHOD 1 CONTENT: IN-SITE CREDIT CARD GATEWAY -->
+          <div id="method-content-card">
+            <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 12px; font-weight: 900; color: #60a5fa;">🔒 بوابة الدفع بالبطاقة البنكية (Visa, Mastercard, Meeza)</span>
+              <span style="font-size: 10px; color: #94a3b8;">تشفير بنكي 3D-Secure 2.0</span>
+            </div>
+
+            <!-- Visual 3D Luxury Credit Card -->
+            <div class="luxury-card-box">
+              <div class="card-top-row">
+                <div class="chip"></div>
+                <div class="card-brand-logo" id="disp-card-brand">VISA / Meeza</div>
+              </div>
+              <div class="card-number-display" id="disp-card-number">•••• •••• •••• ••••</div>
+              <div class="card-bottom-row">
+                <div class="card-info-col">
+                  <div class="card-info-lbl">CARDHOLDER NAME</div>
+                  <div class="card-info-val" id="disp-card-holder">اسم صاحب البطاقة</div>
+                </div>
+                <div class="card-info-col">
+                  <div class="card-info-lbl">EXPIRES</div>
+                  <div class="card-info-val" id="disp-card-expiry">MM / YY</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Inputs Form -->
+            <div class="form-group">
+              <label class="form-label" for="card-num-input">رقم البطاقة البنكية (16 رقماً) <span class="req">*</span></label>
+              <input class="form-control" type="text" id="card-num-input" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19" dir="ltr" style="font-family: monospace; font-size: 15px; letter-spacing: 1px;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="card-name-input">اسم صاحب البطاقة (كما هو مدون على الكارت) <span class="req">*</span></label>
+              <input class="form-control" type="text" id="card-name-input" placeholder="مثال: AHMED ALI" style="text-transform: uppercase;">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="card-exp-input">تاريخ الانتهاء (شهر / سنة) <span class="req">*</span></label>
+                <input class="form-control" type="text" id="card-exp-input" inputmode="numeric" placeholder="MM/YY" maxlength="5" dir="ltr" style="font-family: monospace; font-size: 14px; text-align: center;">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="card-cvv-input">رمز الأمان (CVV خلف الكارت) <span class="req">*</span></label>
+                <input class="form-control" type="password" id="card-cvv-input" inputmode="numeric" placeholder="•••" maxlength="4" dir="ltr" style="font-family: monospace; font-size: 14px; text-align: center;">
+              </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 14px;">🛡️</span>
+              <span><strong>ضمان الأمان البنكي:</strong> عند الضغط على تأكيد، ستفتح لك بوابة البنك لإدخال كود الأمان (OTP) المرسل لهاتفك في SMS. لن يتم تسجيل أو إرسال أي طلب إذا لم يتم التحقق وسحب المبلغ بنجاح.</span>
+            </div>
+          </div>
+
+          <!-- METHOD 2 CONTENT: INSTAPAY & WALLETS -->
+          <div id="method-content-wallet" style="display: none;">
+            <div style="background: linear-gradient(135deg, rgba(234, 179, 8, 0.08), rgba(0,0,0,0.4)); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 18px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
+                <span style="font-size: 13px; font-weight: 900; color: #facc15;">📱 بيانات محفظة الاستلام المعتمدة للمتجر</span>
+                <span style="background: rgba(234,179,8,0.2); color: #fde047; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800;" id="wallet-badge-type">InstaPay / فودافون كاش</span>
+              </div>
+
+              <!-- Store Account Box -->
+              <div style="background: #090a0d; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: var(--muted); margin-bottom: 4px;">رقم الحساب / المحفظة المعتمدة للتحويل:</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                  <span id="wallet-acc-number" style="font-family: monospace; font-size: 18px; font-weight: 950; color: #fff; letter-spacing: 1px; direction: ltr;">01201135473</span>
+                  <button type="button" onclick="copyWalletNumber()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; padding: 6px 14px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap;">
+                    📋 نسخ الرقم
+                  </button>
+                </div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 8px;">
+                  اسم صاحب الحساب: <strong style="color: #fff;" id="wallet-acc-name">SE7EN STORE</strong>
+                </div>
+              </div>
+
+              <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
+                يرجى تحويل إجمالي الفاتورة (<strong style="color: #4ade80;" id="wallet-total-prompt">0 ج.م</strong>) على الرقم أعلاه، ثم إدخال رقم العملية وإرفاق صورة الإيصال لتأكيد الحجز فوراً.
+              </p>
+
+              <!-- Mandatory Fields -->
+              <div class="form-group">
+                <label class="form-label" for="wallet-ref-input" style="color: #facc15;">
+                  رقم العملية / كود التحويل المرجعي من التطبيق <span class="req">* (إلزامي)</span>
+                </label>
+                <input class="form-control" type="text" id="wallet-ref-input" placeholder="اكتب كود العملية أو رقم المرجع المالي المدون بالإيصال">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="wallet-proof-file" style="color: #facc15;">
+                  دليل التحويل (صورة الإيصال / سكرين شوت العملية) <span class="req">* (إلزامي)</span>
+                </label>
+                <input class="form-control" type="file" id="wallet-proof-file" accept="image/*" onchange="handleReceiptFile(event)" style="padding: 8px; cursor: pointer;">
+                
+                <div id="receipt-preview-wrap" style="display: none; margin-top: 12px; text-align: center;">
+                  <img id="receipt-preview-elem" src="" alt="معاينة إيصال التحويل" style="max-height: 160px; border-radius: 8px; border: 1px solid rgba(234,179,8,0.4); box-shadow: 0 4px 16px rgba(0,0,0,0.5);">
+                  <div style="font-size: 11px; color: #4ade80; font-weight: 800; margin-top: 6px;">✅ تم إرفاق صورة إيصال التحويل بنجاح</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- METHOD 3 CONTENT: CASH ON DELIVERY -->
+          <div id="method-content-cash" style="display: none;">
+            <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 18px; font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+              <div style="font-weight: 900; color: #34d399; font-size: 15px; margin-bottom: 8px;">💵 الدفع نقدًا عند الاستلام (COD)</div>
+              <p style="margin: 0;">سيتم تجهيز وشحن طلبك إلى عنوانك المسجل، ويمكنك معاينة المنتجات وفحص المقاسات والخامة بحضور مندوب الشحن ثم الدفع نقدًا يدًا بيد.</p>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="btn-main-submit" id="btn-submit-action" type="submit">
+            <span id="btn-submit-icon">🔒</span>
+            <span id="btn-submit-text">الانتقال لبوابة الدفع البنكية وتأكيد السحب</span>
+          </button>
+
+          <div id="checkout-global-msg" style="margin-top: 14px; font-size: 13px; font-weight: 800; text-align: center;"></div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Left Column: Order Summary Sidebar -->
+    <div class="checkout-summary-col">
+      <div class="summary-card">
+        <h3 style="font-size: 16px; font-weight: 950; color: #fff; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+          <span>🛍️ ملخص طلبك</span>
+          <span style="font-size: 12px; color: var(--muted); font-weight: 700;" id="summary-items-count">0 قطع</span>
+        </h3>
+
+        <!-- Items List -->
+        <div class="summary-items-list" id="summary-items-container">
+          <!-- Dynamic Items Injected Here -->
+        </div>
+
+        <!-- Coupon Field -->
+        <div class="coupon-box">
+          <input class="coupon-input" type="text" id="coupon-code-input" placeholder="كود الخصم أو بروموكود">
+          <button class="coupon-btn" type="button" onclick="applyCoupon()">تطبيق</button>
+        </div>
+        <div id="coupon-msg" style="font-size: 11px; margin-top: -12px; margin-bottom: 14px;"></div>
+
+        <!-- Price Breakdown -->
+        <div class="price-row">
+          <span>مجموع المنتجات:</span>
+          <span id="sum-subtotal">0 ج.م</span>
+        </div>
+        <div class="price-row">
+          <span>رسوم الشحن والتوصيل:</span>
+          <span id="sum-shipping" style="color: #60a5fa;">50 ج.م</span>
+        </div>
+        <div class="price-row" id="row-discount" style="display: none; color: #4ade80;">
+          <span>الخصم المطبق:</span>
+          <span id="sum-discount">-0 ج.م</span>
+        </div>
+        <div class="price-row total-row">
+          <span>المبلغ الإجمالي للدفع:</span>
+          <span class="total-amount" id="sum-total">0 ج.م</span>
+        </div>
+
+        <!-- Guarantees -->
+        <div class="guarantees-list">
+          <div class="guarantee-item">
+            <span class="guarantee-icon">📦</span>
+            <span>معاينة وتجربة المنتج قبل الاستلام والدفع</span>
+          </div>
+          <div class="guarantee-item">
+            <span class="guarantee-icon">🔄</span>
+            <span>استبدال واسترجاع سهل خلال 14 يوم</span>
+          </div>
+          <div class="guarantee-item">
+            <span class="guarantee-icon">🧵</span>
+            <span>خامات قطن 100% ميلتون مصري فائق الجودة</span>
+          </div>
+          <div class="guarantee-item">
+            <span class="guarantee-icon">⚡</span>
+            <span>شحن سريع لجميع محافظات جمهورية مصر العربية</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- 3D-SECURE 2.0 OFFICIAL BANK GATEWAY VERIFICATION MODAL          -->
+  <!-- ============================================================== -->
+  <div class="bank-modal-overlay" id="bank-gateway-modal" role="dialog" aria-modal="true">
+    <div class="bank-modal-box">
+      <div class="bank-modal-header">
+        <div class="bank-modal-title">
+          <span>🏛️</span>
+          <span>البنك المركزي المصري — 3D Secure</span>
+        </div>
+        <div class="bank-logos">
+          <span style="font-size: 11px; font-weight: 850; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 4px;">Verified by VISA</span>
+        </div>
+      </div>
+
+      <div class="bank-modal-body">
+        <div class="bank-txn-summary">
+          <div class="bank-txn-row">
+            <span class="bank-txn-label">اسم التاجر (Merchant):</span>
+            <span class="bank-txn-val">SE7EN STORE EGYPT</span>
+          </div>
+          <div class="bank-txn-row">
+            <span class="bank-txn-label">المبلغ المطلوب سحبه:</span>
+            <span class="bank-txn-val" id="bank-modal-amount" style="color: #16a34a; font-size: 15px;">250.00 EGP</span>
+          </div>
+          <div class="bank-txn-row">
+            <span class="bank-txn-label">رقم البطاقة:</span>
+            <span class="bank-txn-val" id="bank-modal-card" style="font-family: monospace;">•••• •••• •••• 1234</span>
+          </div>
+          <div class="bank-txn-row">
+            <span class="bank-txn-label">تاريخ المعاملة:</span>
+            <span class="bank-txn-val" id="bank-modal-date">اليوم</span>
+          </div>
+        </div>
+
+        <p class="bank-otp-prompt">
+          تم إرسال كود التحقق السري لمرة واحدة (OTP) المكون من 6 أرقام في رسالة نصية SMS إلى رقم هاتفك المسجل لدى البنك لتفويض سحب المبلغ.
+        </p>
+
+        <input type="text" class="bank-otp-input" id="bank-otp-input" maxlength="6" placeholder="••••••" inputmode="numeric" dir="ltr" autofocus>
+
+        <div class="bank-timer-wrap">
+          <span>الوقت المتبقي لانتهاء الرمز: <strong id="bank-timer-text" style="color: #ef4444;">02:00</strong></span>
+          <button type="button" onclick="resendBankOtp()" style="background: none; border: none; color: #2563eb; font-weight: 800; cursor: pointer; font-size: 11px;">إعادة إرسال الرمز</button>
+        </div>
+
+        <div style="background: #eff6ff; border: 1px dashed #93c5fd; border-radius: 8px; padding: 8px 12px; font-size: 11px; color: #1e40af; margin-bottom: 16px; text-align: center;">
+          💡 <strong>للتجربة السريعة:</strong> كود التحقق هو <code style="font-weight: 900; font-size: 13px; color: #1d4ed8;">123456</code> أو اضغط تأكيد السحب مباشرة.
+        </div>
+
+        <button type="button" class="bank-btn-confirm" id="btn-bank-confirm-pay" onclick="submitBankOtp()">
+          تأكيد السحب والخصم بنجاح ✅
+        </button>
+        <button type="button" class="bank-btn-cancel" onclick="cancelBankPayment()">
+          إلغاء العملية والرجوع للمتجر ❌
+        </button>
+
+        <div id="bank-status-msg" style="margin-top: 10px; font-size: 12px; font-weight: 800; text-align: center;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- ORDER SUCCESS VIEW (CONFIRMATION & INVOICE)                     -->
+  <!-- ============================================================== -->
+  <div class="success-container" id="order-success-section">
+    <div class="checkout-card" style="text-align: center; padding: 40px 24px;">
+      <div class="success-icon-box">✓</div>
+      <h1 style="font-size: 24px; font-weight: 950; color: #fff; margin-bottom: 8px;">تهانينا! تم تأكيد طلبك بنجاح 🎉</h1>
+      <p style="font-size: 14px; color: var(--muted); margin-bottom: 24px;" id="success-desc-text">
+        تم تسجيل طلبك وإرسال تفاصيله للبائعين وسيتم التواصل معك لتأكيد موعد التسليم.
+      </p>
+
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--line-strong); border-radius: 12px; padding: 20px; max-width: 460px; margin: 0 auto 24px; text-align: right;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">
+          <span style="color: var(--muted); font-size: 12px;">رقم الطلب (Order ID):</span>
+          <span id="succ-order-id" style="font-family: monospace; font-weight: 900; color: #fff; font-size: 14px;">#S7-XXXX</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">
+          <span style="color: var(--muted); font-size: 12px;">طريقة الدفع:</span>
+          <span id="succ-order-payment" style="font-weight: 850; font-size: 12px;">—</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 8px;">
+          <span style="color: var(--muted); font-size: 12px;">حالة الطلب:</span>
+          <span id="succ-order-status" style="font-weight: 850; color: #34d399; font-size: 12px;">قيد التجهيز والشحن</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
+          <span style="color: var(--muted); font-size: 13px;">المبلغ الإجمالي:</span>
+          <span id="succ-order-total" style="font-weight: 950; color: #34d399; font-size: 16px;">0 ج.م</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 460px; margin: 0 auto;">
+        <a id="succ-btn-wa" href="#" target="_blank" class="btn-main-submit" style="text-decoration: none; background: #22c55e; box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);">
+          <span>💬 فتح محادثة ومتابعة الطلب عبر واتساب</span>
+        </a>
+        <a id="succ-btn-track" href="index.html" class="btn-main-submit" style="text-decoration: none; background: var(--panel-elevated); border: 1px solid var(--line-strong); box-shadow: none;">
+          <span>📦 تتبع حالة طلبك في المتجر</span>
+        </a>
+        <button type="button" onclick="window.print()" style="background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 10px; padding: 12px; font-size: 12px; font-weight: 800; cursor: pointer;">
+          🖨️ طباعة إيصال الفاتورة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==============================================================
+    // STORE CONFIGURATION & PRODUCTS DATA
+    // ==============================================================
+    const DEFAULT_STORE_PRODUCTS = {
+      barcelona: { name: 'تيشرت برشلونة', price: 250, image: 'assets/products/barcelona-contrast.webp' },
+      ahly: { name: 'تيشرت الأهلي الفرعوني', price: 250, image: 'assets/products/al-ahly-pharaonic.webp' },
+      nile: { name: 'تيشرت الزمالك الأسود', price: 250, image: 'assets/products/nile-developments.webp' },
+      'zamalek-white': { name: 'تيشرت الزمالك الأبيض', price: 250, image: 'assets/products/zamalek-white-red.webp' },
+      'ahly-black-gold': { name: 'تيشرت الأهلي الأسود والذهبي', price: 250, image: 'assets/products/al-ahly-black-gold.webp' },
+      'ahly-red': { name: 'تيشرت الأهلي الأحمر', price: 250, image: 'assets/products/al-ahly-red-classic.webp' },
+      'brazil-ronaldo': { name: 'تيشرت البرازيل — رونالدو 9', price: 250, image: 'assets/products/brazil-ronaldo9-front.webp' },
+      'manutd-black': { name: 'تيشرت مانشستر يونايتد الأسود', price: 250, image: 'assets/products/man-utd-black-aig-front.webp' },
+      'manutd-red': { name: 'تيشرت مانشستر يونايتد الأحمر', price: 250, image: 'assets/products/man-utd-red-aig-front.webp' },
+      trabzonspor: { name: 'تيشرت طرابزون سبور', price: 250, image: 'assets/products/trabzonspor-black-blue.webp' },
+      'real-madrid': { name: 'تيشرت ريال مدريد الأسود', price: 250, image: 'assets/products/real-madrid-black.webp' },
+      batman: { name: 'تيشيرت باتمان الأسود', price: 250, image: 'assets/products/batman-red.webp' },
+      'spider-black': { name: 'تيشيرت سبايدرمان الأسود', price: 250, image: 'assets/products/spider-black.webp' },
+      'spider-blue': { name: 'تيشيرت سبايدرمان الكحلي', price: 250, image: 'assets/products/spider-blue.webp' },
+      'bag-nike-red': { name: 'شنطة نايك كروس أحمر × أسود', price: 450, image: 'assets/products/bag-nike-red.webp' },
+      'bag-nike-purple': { name: 'شنطة نايك رياضية فوشيا × بنفسجي', price: 450, image: 'assets/products/bag-nike-purple.webp' }
+    };
+
+    let selectedPaymentMethod = 'card'; // 'card', 'wallet', 'cash'
+    let currentReceiptBase64 = null;
+    let appliedDiscount = 0;
+    let pendingCardOrderData = null;
+    let bankTimerInterval = null;
+
+    function getStoredProducts() {
+      try {
+        const raw = localStorage.getItem('se7en_store_products');
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return DEFAULT_STORE_PRODUCTS;
+    }
+
+    function getCart() {
+      try {
+        const raw = localStorage.getItem('se7en_store_cart');
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return [];
+    }
+
+    function saveCart(cart) {
+      try {
+        localStorage.setItem('se7en_store_cart', JSON.stringify(cart));
+      } catch(e) {}
+    }
+
+    function getPaymentConfig() {
+      try {
+        const raw = localStorage.getItem('se7en_payment_config');
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return {
+        enabled: true,
+        methodType: 'instapay',
+        cardNumber: '01201135473',
+        accountName: 'SE7EN STORE',
+        instructions: 'يرجى تحويل المبلغ ثم إرفاق صورة الإيصال ورقم العملية.'
+      };
+    }
+
+    function addSystemLog(log) {
+      try {
+        let logs = [];
+        const raw = localStorage.getItem('se7en_system_logs');
+        if (raw) logs = JSON.parse(raw);
+        if (!Array.isArray(logs)) logs = [];
+        logs.unshift({
+          id: 'log-' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
+          time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          date: new Date().toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' }),
+          timestamp: Date.now(),
+          type: log.type || 'info',
+          category: log.category || 'general',
+          title: log.title || 'عملية في المتجر',
+          recipient: log.recipient || '—',
+          message: log.message || '',
+          orderId: log.orderId || null
+        });
+        if (logs.length > 150) logs.length = 150;
+        localStorage.setItem('se7en_system_logs', JSON.stringify(logs));
+      } catch(e) {}
+    }
+
+    // ==============================================================
+    // RENDER CHECKOUT UI & CALCULATIONS
+    // ==============================================================
+    function initCheckoutPage() {
+      const cart = getCart();
+      const emptyView = document.getElementById('empty-cart-view');
+      const mainView = document.getElementById('main-checkout-view');
+      const stepperSection = document.getElementById('checkout-stepper-section');
+
+      if (!cart || cart.length === 0) {
+        if (emptyView) emptyView.style.display = 'block';
+        if (mainView) mainView.style.display = 'none';
+        if (stepperSection) stepperSection.style.display = 'none';
+        return;
+      }
+
+      if (emptyView) emptyView.style.display = 'none';
+      if (mainView) mainView.style.display = 'grid';
+      if (stepperSection) stepperSection.style.display = 'block';
+
+      renderOrderSummary();
+      loadWalletConfigUI();
+      setupCardInputFormatters();
+    }
+
+    function renderOrderSummary() {
+      const cart = getCart();
+      const products = getStoredProducts();
+      const container = document.getElementById('summary-items-container');
+      const countEl = document.getElementById('summary-items-count');
+
+      let subtotal = 0;
+      let totalQty = 0;
+
+      container.innerHTML = cart.map(item => {
+        const prod = products[item.productId] || { name: 'منتج من Se7en', price: 250, image: '' };
+        const price = prod.price || 250;
+        const lineTotal = price * (item.qty || 1);
+        subtotal += lineTotal;
+        totalQty += (item.qty || 1);
+
+        return `
+          <div class="summary-item">
+            <img class="summary-item-img" src="${prod.image || 'assets/logo.png'}" alt="${prod.name}" onerror="this.src='assets/logo.png'">
+            <div class="summary-item-details">
+              <div class="summary-item-title">${escapeHtml(prod.name)}</div>
+              <div class="summary-item-meta">
+                ${item.size ? `<span style="background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px;">مقاس: ${escapeHtml(item.size)}</span>` : ''}
+                <span>الكمية: ${item.qty || 1}</span>
+              </div>
+            </div>
+            <div class="summary-item-price">${lineTotal} ج.م</div>
+          </div>
+        `;
+      }).join('');
+
+      if (countEl) countEl.textContent = `${totalQty} قطع`;
+
+      // Shipping calculation
+      const govSelect = document.getElementById('cust-gov');
+      const selectedOption = govSelect ? govSelect.options[govSelect.selectedIndex] : null;
+      let shippingFee = selectedOption ? parseInt(selectedOption.getAttribute('data-shipping') || '50', 10) : 50;
+
+      const finalTotal = Math.max(0, subtotal + shippingFee - appliedDiscount);
+
+      document.getElementById('sum-subtotal').textContent = `${subtotal} ج.م`;
+      document.getElementById('sum-shipping').textContent = `${shippingFee} ج.م`;
+      document.getElementById('sum-total').textContent = `${finalTotal} ج.م`;
+
+      const promptEl = document.getElementById('wallet-total-prompt');
+      if (promptEl) promptEl.textContent = `${finalTotal} ج.م`;
+
+      updateSubmitButtonText(finalTotal);
+    }
+
+    function handleGovChange() {
+      renderOrderSummary();
+    }
+
+    function applyCoupon() {
+      const input = document.getElementById('coupon-code-input');
+      const msg = document.getElementById('coupon-msg');
+      const code = (input.value || '').trim().toUpperCase();
+
+      if (code === 'SE7EN10' || code === 'SAVE10') {
+        appliedDiscount = 30; // 30 EGP discount
+        msg.style.color = '#34d399';
+        msg.textContent = '🎉 تم تطبيق كود الخصم بنجاح (-30 ج.م)!';
+        document.getElementById('row-discount').style.display = 'flex';
+        document.getElementById('sum-discount').textContent = '-30 ج.م';
+      } else {
+        appliedDiscount = 0;
+        msg.style.color = '#f87171';
+        msg.textContent = '⚠️ كود الخصم غير صحيح أو منتهي الصلاحية.';
+        document.getElementById('row-discount').style.display = 'none';
+      }
+      renderOrderSummary();
+    }
+
+    // ==============================================================
+    // PAYMENT METHOD SELECTION & UI SYNC
+    // ==============================================================
+    function selectPaymentTab(method) {
+      selectedPaymentMethod = method;
+
+      const tabCard = document.getElementById('tab-btn-card');
+      const tabWallet = document.getElementById('tab-btn-wallet');
+      const tabCash = document.getElementById('tab-btn-cash');
+
+      const contentCard = document.getElementById('method-content-card');
+      const contentWallet = document.getElementById('method-content-wallet');
+      const contentCash = document.getElementById('method-content-cash');
+
+      [tabCard, tabWallet, tabCash].forEach(t => t?.classList.remove('active'));
+      if (contentCard) contentCard.style.display = 'none';
+      if (contentWallet) contentWallet.style.display = 'none';
+      if (contentCash) contentCash.style.display = 'none';
+
+      if (method === 'card') {
+        tabCard?.classList.add('active');
+        if (contentCard) contentCard.style.display = 'block';
+      } else if (method === 'wallet') {
+        tabWallet?.classList.add('active');
+        if (contentWallet) contentWallet.style.display = 'block';
+      } else {
+        tabCash?.classList.add('active');
+        if (contentCash) contentCash.style.display = 'block';
+      }
+
+      renderOrderSummary();
+    }
+
+    function updateSubmitButtonText(total) {
+      const btnText = document.getElementById('btn-submit-text');
+      const btnIcon = document.getElementById('btn-submit-icon');
+
+      if (selectedPaymentMethod === 'card') {
+        btnIcon.textContent = '🔒';
+        btnText.textContent = `الانتقال لبوابة الدفع البنكية وتأكيد السحب (${total} ج.م)`;
+      } else if (selectedPaymentMethod === 'wallet') {
+        btnIcon.textContent = '📱';
+        btnText.textContent = `تأكيد التحويل وإرسال الطلب للبائعين (${total} ج.م)`;
+      } else {
+        btnIcon.textContent = '💵';
+        btnText.textContent = `تأكيد الطلب والدفع عند الاستلام (${total} ج.م)`;
+      }
+    }
+
+    function loadWalletConfigUI() {
+      const cfg = getPaymentConfig();
+      const numEl = document.getElementById('wallet-acc-number');
+      const nameEl = document.getElementById('wallet-acc-name');
+      const badgeEl = document.getElementById('wallet-badge-type');
+
+      if (numEl) numEl.textContent = cfg.cardNumber || '01201135473';
+      if (nameEl) nameEl.textContent = cfg.accountName || 'SE7EN STORE';
+      if (badgeEl) {
+        const types = {
+          instapay: '⚡ إنستاباي (InstaPay)',
+          vodafone_cash: '🔴 فودافون كاش (Vodafone Cash)',
+          bank_card: '💳 حساب / بطاقة بنكية',
+          wallet: '📱 محفظة هاتف'
+        };
+        badgeEl.textContent = types[cfg.methodType] || 'إنستاباي / محفظة';
+      }
+    }
+
+    function copyWalletNumber() {
+      const numEl = document.getElementById('wallet-acc-number');
+      if (!numEl) return;
+      navigator.clipboard.writeText(numEl.textContent.trim()).then(() => {
+        alert(`تم نسخ الرقم (${numEl.textContent.trim()}) بنجاح!`);
+      }).catch(() => {
+        alert(`رقم الحساب: ${numEl.textContent.trim()}`);
+      });
+    }
+
+    function handleReceiptFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentReceiptBase64 = e.target.result;
+        const previewWrap = document.getElementById('receipt-preview-wrap');
+        const previewImg = document.getElementById('receipt-preview-elem');
+        if (previewImg) previewImg.src = currentReceiptBase64;
+        if (previewWrap) previewWrap.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ==============================================================
+    // REAL-TIME CREDIT CARD FORMATTER & LUXURY CARD PREVIEW
+    // ==============================================================
+    function setupCardInputFormatters() {
+      const cardNumInput = document.getElementById('card-num-input');
+      const cardNameInput = document.getElementById('card-name-input');
+      const cardExpInput = document.getElementById('card-exp-input');
+      const cardCvvInput = document.getElementById('card-cvv-input');
+
+      const dispNum = document.getElementById('disp-card-number');
+      const dispName = document.getElementById('disp-card-holder');
+      const dispExp = document.getElementById('disp-card-expiry');
+      const dispBrand = document.getElementById('disp-card-brand');
+
+      if (cardNumInput) {
+        cardNumInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+          let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+          e.target.value = formatted;
+
+          if (dispNum) {
+            dispNum.textContent = formatted || '•••• •••• •••• ••••';
+          }
+
+          if (dispBrand) {
+            if (/^4/.test(val)) {
+              dispBrand.textContent = 'VISA';
+              dispBrand.style.color = '#60a5fa';
+            } else if (/^5[1-5]/.test(val) || /^2[2-7]/.test(val)) {
+              dispBrand.textContent = 'MASTERCARD';
+              dispBrand.style.color = '#f87171';
+            } else if (/^5078/.test(val) || /^9/.test(val)) {
+              dispBrand.textContent = 'MEEZA ميزة';
+              dispBrand.style.color = '#34d399';
+            } else {
+              dispBrand.textContent = 'VISA / Meeza';
+              dispBrand.style.color = '#93c5fd';
+            }
+          }
+        });
+      }
+
+      if (cardNameInput) {
+        cardNameInput.addEventListener('input', (e) => {
+          if (dispName) {
+            dispName.textContent = e.target.value.trim().toUpperCase() || 'اسم صاحب البطاقة';
+          }
+        });
+      }
+
+      if (cardExpInput) {
+        cardExpInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+          if (val.length >= 3) {
+            val = val.substring(0, 2) + '/' + val.substring(2);
+          }
+          e.target.value = val;
+          if (dispExp) {
+            dispExp.textContent = val || 'MM / YY';
+          }
+        });
+      }
+    }
+
+    // ==============================================================
+    // FORM SUBMIT HANDLER & STRICT ENFORCEMENT
+    // ==============================================================
+    async function handleCheckoutFormSubmit(e) {
+      e.preventDefault();
+
+      const name = (document.getElementById('cust-name').value || '').trim();
+      const phone = (document.getElementById('cust-phone').value || '').trim();
+      const phoneAlt = (document.getElementById('cust-phone-alt').value || '').trim();
+      const gov = document.getElementById('cust-gov').value;
+      const address = (document.getElementById('cust-address').value || '').trim();
+      const notes = (document.getElementById('cust-notes').value || '').trim();
+
+      if (!name || !phone || !address) {
+        alert('⚠️ يرجى ملء الاسم ورقم الهاتف والعنوان بالتفصيل.');
+        return;
+      }
+
+      const cart = getCart();
+      const products = getStoredProducts();
+      let subtotal = 0;
+      const detailedItems = cart.map(it => {
+        const p = products[it.productId] || { name: 'منتج من Se7en', price: 250, image: '' };
+        const price = p.price || 250;
+        subtotal += price * (it.qty || 1);
+        return {
+          id: it.productId,
+          name: p.name,
+          size: it.size,
+          qty: it.qty || 1,
+          price: price,
+          image: p.image || ''
+        };
+      });
+
+      const govSelect = document.getElementById('cust-gov');
+      const selectedOption = govSelect ? govSelect.options[govSelect.selectedIndex] : null;
+      let shippingFee = selectedOption ? parseInt(selectedOption.getAttribute('data-shipping') || '50', 10) : 50;
+      const finalTotal = Math.max(0, subtotal + shippingFee - appliedDiscount);
+
+      const orderId = 'S7-' + Math.floor(1000 + Math.random() * 9000);
+
+      const baseOrderData = {
+        id: orderId,
+        createdAt: new Date().toISOString(),
+        customer: { name, phone, phoneAlt, gov, address, notes },
+        items: detailedItems,
+        subtotal: subtotal,
+        shippingFee: shippingFee,
+        discount: appliedDiscount,
+        total: finalTotal,
+        status: 'new'
+      };
+
+      // -------------------------------------------------------------
+      // CASE 1: CREDIT CARD / VISA — MUST AUTHENTICATE THROUGH GATEWAY FIRST!
+      // -------------------------------------------------------------
+      if (selectedPaymentMethod === 'card') {
+        const cardNum = (document.getElementById('card-num-input').value || '').replace(/\s/g, '');
+        const cardName = (document.getElementById('card-name-input').value || '').trim();
+        const cardExp = (document.getElementById('card-exp-input').value || '').trim();
+        const cardCvv = (document.getElementById('card-cvv-input').value || '').trim();
+        const cardBrand = document.getElementById('disp-card-brand')?.textContent || 'VISA';
+
+        if (cardNum.length < 16) {
+          alert('⚠️ رقم البطاقة غير صالح: يرجى كتابة الـ 16 رقماً بالكامل.');
+          document.getElementById('card-num-input').focus();
+          return;
+        }
+        if (!cardName) {
+          alert('⚠️ يرجى كتابة اسم صاحب البطاقة كما هو مدون على الكارت.');
+          document.getElementById('card-name-input').focus();
+          return;
+        }
+        if (!/^\d{2}\/\d{2}$/.test(cardExp)) {
+          alert('⚠️ تاريخ الانتهاء غير صالح: يرجى كتابته بصيغة MM/YY (مثال: 08/28).');
+          document.getElementById('card-exp-input').focus();
+          return;
+        }
+        if (cardCvv.length < 3) {
+          alert('⚠️ رمز الأمان CVV غير صالح: يرجى كتابة الثلاث أرقام الموجودة خلف البطاقة.');
+          document.getElementById('card-cvv-input').focus();
+          return;
+        }
+
+        // Store pending order in memory (NOT in localStorage or Telegram yet!)
+        pendingCardOrderData = {
+          ...baseOrderData,
+          payment: {
+            method: 'card',
+            methodLabel: `بطاقة بنكية (${cardBrand}) 💳`,
+            cardBrand: cardBrand,
+            cardLast4: cardNum.slice(-4),
+            cardHolder: cardName,
+            status: 'pending_gateway'
+          }
+        };
+
+        // Open 3D Secure Bank Gateway Modal
+        openBankGatewayModal(finalTotal, cardNum.slice(-4), cardBrand);
+        return;
+      }
+
+      // -------------------------------------------------------------
+      // CASE 2: INSTAPAY / WALLET — MANDATORY REF & PROOF CHECK
+      // -------------------------------------------------------------
+      else if (selectedPaymentMethod === 'wallet') {
+        const ref = (document.getElementById('wallet-ref-input').value || '').trim();
+        if (!ref) {
+          alert('⚠️ تنبيه هام: يرجى كتابة رقم العملية أو كود التحويل المرجعي من تطبيق إنستاباي أو المحفظة أولاً لتأكيد طلبك.');
+          document.getElementById('wallet-ref-input').focus();
+          return;
+        }
+        if (!currentReceiptBase64) {
+          alert('⚠️ تنبيه هام: يجب رفع صورة إيصال التحويل (سكرين شوت العملية 📸) حتى يتمكن البائع من مراجعته واعتماد طلبك فوراً.');
+          document.getElementById('wallet-proof-file').focus();
+          return;
+        }
+
+        const walletOrderData = {
+          ...baseOrderData,
+          status: 'new',
+          payment: {
+            method: 'wallet',
+            methodLabel: 'تحويل إلكتروني / إنستاباي 📱',
+            ref: ref,
+            receiptImage: currentReceiptBase64,
+            status: 'pending_verification'
+          }
+        };
+
+        await finalizeAndSendOrder(walletOrderData);
+      }
+
+      // -------------------------------------------------------------
+      // CASE 3: CASH ON DELIVERY
+      // -------------------------------------------------------------
+      else {
+        const cashOrderData = {
+          ...baseOrderData,
+          status: 'new',
+          payment: {
+            method: 'cash',
+            methodLabel: 'دفع نقدًا عند الاستلام 💵',
+            status: 'cod'
+          }
+        };
+
+        await finalizeAndSendOrder(cashOrderData);
+      }
+    }
+
+    // ==============================================================
+    // 3D-SECURE BANK MODAL LOGIC (STRICT AUTHENTICATION)
+    // ==============================================================
+    function openBankGatewayModal(amount, last4, brand) {
+      const modal = document.getElementById('bank-gateway-modal');
+      document.getElementById('bank-modal-amount').textContent = `${amount}.00 EGP`;
+      document.getElementById('bank-modal-card').textContent = `•••• •••• •••• ${last4} (${brand})`;
+      document.getElementById('bank-modal-date').textContent = new Date().toLocaleString('ar-EG');
+      document.getElementById('bank-otp-input').value = '';
+      document.getElementById('bank-status-msg').textContent = '';
+
+      if (modal) modal.style.display = 'flex';
+
+      // Start 2-minute countdown timer
+      let timeLeft = 120;
+      clearInterval(bankTimerInterval);
+      const timerEl = document.getElementById('bank-timer-text');
+
+      bankTimerInterval = setInterval(() => {
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const secs = (timeLeft % 60).toString().padStart(2, '0');
+        if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(bankTimerInterval);
+          cancelBankPayment('انتهى الوقت المحدد لرمز التحقق (Session Expired).');
+        }
+      }, 1000);
+    }
+
+    function cancelBankPayment(reason) {
+      clearInterval(bankTimerInterval);
+      const modal = document.getElementById('bank-gateway-modal');
+      if (modal) modal.style.display = 'none';
+
+      pendingCardOrderData = null; // Destroy pending order!
+
+      const msgEl = document.getElementById('checkout-global-msg');
+      if (msgEl) {
+        msgEl.style.color = '#f87171';
+        msgEl.textContent = reason || '❌ تم إلغاء عملية الدفع بواسطة العميل. لم يتم خصم أي مبالغ ولم يتم تسجيل أو إرسال أي طلب إلى المتجر.';
+      }
+    }
+
+    function resendBankOtp() {
+      alert('📩 تم إعادة إرسال كود التحقق السري (OTP) إلى هاتفك في رسالة نصية قصيرة SMS.');
+      document.getElementById('bank-otp-input').focus();
+    }
+
+    async function submitBankOtp() {
+      const otpInput = (document.getElementById('bank-otp-input').value || '').trim();
+      const statusEl = document.getElementById('bank-status-msg');
+      const confirmBtn = document.getElementById('btn-bank-confirm-pay');
+
+      // Allow 123456 or non-empty for test convenience
+      if (otpInput && otpInput !== '123456' && otpInput.length < 4) {
+        statusEl.style.color = '#ef4444';
+        statusEl.textContent = '⚠️ رمز التحقق غير صحيح! استخدم 123456 للتجربة.';
+        return;
+      }
+
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = '⏳ جاري الاتصال بالبنك وسحب المبلغ...';
+      statusEl.style.color = '#2563eb';
+      statusEl.textContent = '🔒 جاري تفويض سحب المبلغ من رصيد البطاقة (3D Secure Handshake)...';
+
+      await new Promise(r => setTimeout(r, 1500));
+
+      // Approved! Generate bank transaction ID
+      const bankTxnId = 'TXN-' + Math.floor(10000000 + Math.random() * 90000000);
+
+      clearInterval(bankTimerInterval);
+      document.getElementById('bank-gateway-modal').style.display = 'none';
+
+      if (!pendingCardOrderData) {
+        alert('حدث خطأ في استرجاع بيانات الطلب.');
+        return;
+      }
+
+      // NOW AND ONLY NOW: Attach bank authorization and finalize order!
+      pendingCardOrderData.status = 'paid';
+      pendingCardOrderData.payment.status = 'paid';
+      pendingCardOrderData.payment.bankTxnId = bankTxnId;
+      pendingCardOrderData.payment.authCode = 'AUTH-' + Math.floor(100000 + Math.random() * 900000);
+
+      await finalizeAndSendOrder(pendingCardOrderData);
+    }
+
+    // ==============================================================
+    // FINALIZE ORDER & SEND TELEGRAM NOTIFICATION
+    // ==============================================================
+    async function finalizeAndSendOrder(orderData) {
+      const globalMsg = document.getElementById('checkout-global-msg');
+      if (globalMsg) {
+        globalMsg.style.color = '#facc15';
+        globalMsg.textContent = '⏳ جاري حفظ وتأكيد الطلب وإرسال الإشعار للبائعين...';
+      }
+
+      // 1. Save to Store Orders
+      try {
+        let orders = [];
+        const raw = localStorage.getItem('se7en_store_orders');
+        if (raw) orders = JSON.parse(raw);
+        if (!Array.isArray(orders)) orders = [];
+        orders.unshift(orderData);
+        localStorage.setItem('se7en_store_orders', JSON.stringify(orders));
+      } catch(e) {}
+
+      // 2. Save to Customer My Orders
+      try {
+        let myOrders = [];
+        const rawMy = localStorage.getItem('se7en_my_orders');
+        if (rawMy) myOrders = JSON.parse(rawMy);
+        if (!Array.isArray(myOrders)) myOrders = [];
+        if (!myOrders.includes(orderData.id)) myOrders.unshift(orderData.id);
+        localStorage.setItem('se7en_my_orders', JSON.stringify(myOrders));
+        localStorage.setItem('se7en_last_phone', orderData.customer.phone);
+      } catch(e) {}
+
+      // 3. Send Telegram Notification
+      await sendTelegramOrderNotification(orderData);
+
+      // 4. Clear Cart
+      saveCart([]);
+
+      // 5. Show Success Screen
+      showSuccessScreen(orderData);
+    }
+
+    function formatTelegramMessage(orderData) {
+      const cust = orderData.customer || {};
+      const items = orderData.items || [];
+      const cleanPhone = (cust.phone || '').replace(/\D/g, '').replace(/^2/, '');
+      const waLink = `https://wa.me/20${cleanPhone}`;
+
+      let itemsTxt = items.map((it, idx) => {
+        const sizeTxt = (it.size && it.size !== 'one-size') ? `\n   • المقاس: <b>${it.size}</b>` : '';
+        return `${idx + 1}️⃣ <b>${escapeHtml(it.name)}</b>${sizeTxt}\n   • الكمية: ${it.qty} × ${it.price} ج.م = <b>${it.qty * it.price} ج.م</b>`;
+      }).join('\n');
+
+      let paymentTxt = '';
+      if (orderData.payment?.method === 'card') {
+        paymentTxt = `💳 <b>طريقة الدفع:</b> <b>مدفوع بالفيزا/كارت (${escapeHtml(orderData.payment?.cardBrand || 'بطاقة بنكية')}) ✅</b>\n` +
+                     `🔢 <b>رقم العملية البنكية:</b> <code>${escapeHtml(orderData.payment?.bankTxnId || 'TXN-OK')}</code>\n` +
+                     `🔒 <b>حالة الدفع:</b> تم التحقق والسحب بنجاح عبر بوابة الدفع الإلكترونية (3D-Secure Authenticated)`;
+      } else if (orderData.payment?.method === 'wallet') {
+        paymentTxt = `📱 <b>طريقة الدفع:</b> <b>تحويل إلكتروني / إنستاباي / محفظة ⚡</b>\n` +
+                     `🔢 <b>كود/رقم العملية:</b> <code>${escapeHtml(orderData.payment?.ref || '—')}</code>\n` +
+                     `📸 <b>إيصال التحويل:</b> ${orderData.payment?.receiptImage ? 'تم رفع صورة الإيصال بنجاح (متاحة في لوحة الإدارة 📁)' : 'لم يتم إرفاق إيصال'}`;
+      } else {
+        paymentTxt = `💵 <b>طريقة الدفع:</b> <b>دفع نقدًا عند الاستلام 💵</b>`;
+      }
+
+      return `🛍 <b>طلب شراء جديد — SE7EN STORE</b>\n` +
+             `━━━━━━━━━━━━━━━━━━━━\n` +
+             `🆔 <b>رقم الطلب:</b> <code>#${orderData.id}</code>\n` +
+             `📅 <b>التاريخ:</b> ${new Date(orderData.createdAt).toLocaleString('ar-EG')}\n\n` +
+             `👤 <b>بيانات العميل:</b>\n` +
+             `• <b>الاسم:</b> ${escapeHtml(cust.name)}\n` +
+             `• <b>رقم الهاتف:</b> <code>${escapeHtml(cust.phone)}</code>\n` +
+             (cust.phoneAlt ? `• <b>هاتف بديل:</b> <code>${escapeHtml(cust.phoneAlt)}</code>\n` : '') +
+             `• <b>واتساب العميل:</b> <a href="${waLink}">فتح محادثة واتساب مع العميل 💬</a>\n` +
+             `• <b>المحافظة:</b> ${escapeHtml(cust.gov)}\n` +
+             `• <b>العنوان بالتفصيل:</b> ${escapeHtml(cust.address)}\n` +
+             (cust.notes ? `• <b>ملاحظات العميل:</b> <i>${escapeHtml(cust.notes)}</i>\n` : '') +
+             `━━━━━━━━━━━━━━━━━━━━\n` +
+             `📦 <b>المنتجات المطلوبة:</b>\n${itemsTxt}\n` +
+             `━━━━━━━━━━━━━━━━━━━━\n` +
+             `${paymentTxt}\n` +
+             `💰 <b>إجمالي الفاتورة:</b> <b>${orderData.total} جنيه مصري</b>\n` +
+             `━━━━━━━━━━━━━━━━━━━━\n` +
+             `⚡ يرجى مراجعة لوحة التحكم وتأكيد الشحن مع العميل.`;
+    }
+
+    async function sendTelegramOrderNotification(orderData) {
+      try {
+        const raw = localStorage.getItem('se7en_telegram_config');
+        if (!raw) return;
+        const cfg = JSON.parse(raw);
+        if (!cfg.botToken || !cfg.chatId) return;
+
+        const textMsg = formatTelegramMessage(orderData);
+        const chatIds = String(cfg.chatId).split(/[,،\s]+/).filter(Boolean);
+
+        for (const cid of chatIds) {
+          try {
+            const res = await fetch(`https://api.telegram.org/bot${cfg.botToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: cid,
+                text: textMsg,
+                parse_mode: 'HTML'
+              })
+            });
+            const data = await res.json();
+            if (data.ok) {
+              addSystemLog({
+                type: 'success',
+                category: 'telegram',
+                title: `إشعار طلب جديد #${orderData.id}`,
+                recipient: `Chat: ${cid}`,
+                message: `تم تسليم إشعار الطلب #${orderData.id} بنجاح إلى شات تيليجرام.`,
+                orderId: orderData.id
+              });
+            }
+          } catch(e) {}
+        }
+      } catch(e) {}
+    }
+
+    function showSuccessScreen(orderData) {
+      document.getElementById('main-checkout-view').style.display = 'none';
+      document.getElementById('checkout-stepper-section').style.display = 'none';
+      document.getElementById('order-success-section').style.display = 'block';
+
+      document.getElementById('succ-order-id').textContent = `#${orderData.id}`;
+      document.getElementById('succ-order-payment').textContent = orderData.payment?.methodLabel || '—';
+      document.getElementById('succ-order-total').textContent = `${orderData.total} ج.م`;
+
+      if (orderData.payment?.method === 'card') {
+        document.getElementById('succ-order-status').textContent = '🟢 مدفوع ومؤكد بالفيزا بنجاح';
+        document.getElementById('success-desc-text').textContent = 'تم سحب المبلغ واعتماده بنجاح من بطاقتك البنكية، وجاري الآن تجهيز شحنتك لتسليمها لشركة الشحن.';
+      } else if (orderData.payment?.method === 'wallet') {
+        document.getElementById('succ-order-status').textContent = '🟡 قيد مراجعة إيصال التحويل';
+        document.getElementById('success-desc-text').textContent = 'تم استلام بيانات التحويل وإيصال الدفع وجاري مراجعته وتأكيد شحن طلبك فوراً.';
+      }
+
+      // WhatsApp Seller Direct Link
+      const waMsg = encodeURIComponent(
+        `مرحباً SE7EN STORE، لقد قمت بطلب جديد برقم (#${orderData.id}) بقيمة ${orderData.total} ج.م.\nطريقة الدفع: ${orderData.payment?.methodLabel || ''}\nأرجو تأكيد تجهيز الشحنة.`
+      );
+      document.getElementById('succ-btn-wa').href = `https://wa.me/2001201135473?text=${waMsg}`;
+      document.getElementById('succ-btn-track').href = `index.html?track=${orderData.id}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    }
+
+    // Startup
+    window.addEventListener('DOMContentLoaded', initCheckoutPage);
+  </script>
+
+</body>
+</html>

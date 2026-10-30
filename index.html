@@ -4736,10 +4736,11 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       if(btnProceedCheckout) {
         btnProceedCheckout.onclick = () => {
           const cart = getCart();
-          if(cart.length === 0) return;
-          if(cartItemsView) cartItemsView.style.display = 'none';
-          if(cartCheckoutView) cartCheckoutView.style.display = 'block';
-          if(cartDrawerFooter) cartDrawerFooter.style.display = 'none';
+          if(cart.length === 0) {
+            alert('سلة المشتريات فارغة، يرجى إضافة منتج أولاً.');
+            return;
+          }
+          window.location.href = 'checkout.html';
         };
       }
 
@@ -4779,8 +4780,15 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
                `━━━━━━━━━━━━━━━━━━━━\n` +
                `📦 <b>المنتجات المطلوبة:</b>\n${itemsTxt}\n` +
                `━━━━━━━━━━━━━━━━━━━━\n` +
-               `💳 <b>طريقة الدفع:</b> ${(orderData.payment?.method === 'online' ? 'تحويل أونلاين / إنستاباي ⚡' : 'دفع نقدًا عند الاستلام 💵')}\n` +
-               (orderData.payment?.ref ? `🔢 <b>كود/رقم العملية:</b> <code>${escapeHtml(orderData.payment.ref)}</code>\n` : '') +
+               (orderData.payment?.method === 'card' ?
+                 `💳 <b>طريقة الدفع:</b> <b>مدفوع بالفيزا/كارت (${escapeHtml(orderData.payment?.cardBrand || 'بطاقة بنكية')}) ✅</b>\n` +
+                 `🔢 <b>رقم العملية البنكية:</b> <code>${escapeHtml(orderData.payment?.bankTxnId || 'TXN-OK')}</code>\n` +
+                 `🔒 <b>حالة الدفع:</b> تم التحقق والسحب بنجاح عبر بوابة الدفع الإلكترونية (3D-Secure)\n` :
+               (orderData.payment?.method === 'wallet' || orderData.payment?.method === 'online') ?
+                 `📱 <b>طريقة الدفع:</b> <b>تحويل إلكتروني / إنستاباي / محفظة ⚡</b>\n` +
+                 `🔢 <b>كود/رقم العملية:</b> <code>${escapeHtml(orderData.payment?.ref || '—')}</code>\n` +
+                 `📸 <b>إيصال التحويل:</b> ${orderData.payment?.receiptImage ? 'تم رفع صورة الإيصال بنجاح (متاحة في لوحة الإدارة 📁)' : 'لم يتم إرفاق إيصال'}\n` :
+                 `💵 <b>طريقة الدفع:</b> <b>دفع نقدًا عند الاستلام 💵</b>\n`) +
                `💰 <b>إجمالي الفاتورة:</b> <b>${orderData.total} جنيه مصري</b>\n` +
                `━━━━━━━━━━━━━━━━━━━━\n` +
                `⚡ يرجى التواصل مع العميل لتأكيد الشحن والتوصيل.`;
