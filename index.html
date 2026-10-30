@@ -1962,6 +1962,199 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       border-color: rgba(255, 255, 255, 0.35);
     }
 
+
+    /* ==========================================
+       WISHLIST, SHARE, ORDER TRACKER & TOAST UI
+       ========================================== */
+
+    /* Card Quick Actions (Wishlist & Share on product cards) */
+    .card-quick-actions {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+    .product-card:hover .card-quick-actions {
+      opacity: 1;
+    }
+    .card-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(9, 10, 13, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0;
+      outline: none;
+    }
+    .card-action-btn:hover {
+      background: #ffffff;
+      color: #000;
+      border-color: #fff;
+      transform: scale(1.12);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+    .card-action-btn.active {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.6);
+      color: #ef4444 !important;
+    }
+    .card-action-btn.active svg {
+      fill: #ef4444;
+      stroke: #ef4444;
+    }
+    .card-action-btn svg {
+      width: 15px;
+      height: 15px;
+      pointer-events: none;
+      transition: transform 0.2s;
+    }
+    .card-action-btn:active svg {
+      transform: scale(0.85);
+    }
+
+    /* Wishlist Badge on Header */
+    .wishlist-badge-count {
+      background: #ef4444;
+      color: #fff;
+      font-weight: 900;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .wishlist-badge-count.bounce {
+      transform: scale(1.35);
+    }
+
+    /* Wishlist Drawer */
+    .wishlist-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(440px, 94vw);
+      background: #0c0e12;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 25px 0 70px rgba(0, 0, 0, 0.9);
+      z-index: 2200;
+      transform: translateX(-105%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .wishlist-drawer.active {
+      transform: translateX(0);
+    }
+    .wishlist-item-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .wishlist-item-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .wishlist-item-img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      background: #15171b;
+      border-radius: 6px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+    }
+
+    /* Toast Notification Floating Pill */
+    .toast-notification {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-35px);
+      background: rgba(12, 14, 18, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 3500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      white-space: nowrap;
+    }
+    .toast-notification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Order Tracker Modal UI */
+    .tracker-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+    .tracker-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      opacity: 0.35;
+      transition: opacity 0.3s;
+      position: relative;
+    }
+    .tracker-step.active {
+      opacity: 1;
+    }
+    .tracker-step-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #181b20;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .tracker-step.active .tracker-step-icon {
+      background: #22c55e;
+      color: #000;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.45);
+      border-color: #22c55e;
+    }
+
 </style>
   <script>
     // Global Safety Net: Guarantees intro never freezes under any circumstance
@@ -2012,6 +2205,14 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
       <a class="brand" href="#top" aria-label="Se7en الصفحة الرئيسية"><span class="brand-mark">S<span>7</span></span><span class="brand-name">Se7en<small>SPORTSWEAR / معرض</small></span></a>
       <nav class="nav" aria-label="التنقل الرئيسي"><a href="#collection">المعرض</a><a href="#location">مكاننا</a><a href="#social">تابعنا</a></nav>
       <div class="header-actions">
+        <button class="icon-link header-wishlist-link" id="header-wishlist-btn" type="button" aria-label="عرض قائمة المفضلة" title="المفضلة" style="position:relative;display:inline-flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="wishlist-badge-count" id="header-wishlist-count" style="position:absolute;top:-4px;left:-6px;font-size:9px;min-width:16px;height:16px;padding:0 4px;">0</span>
+        </button>
+        <button class="icon-link header-tracker-link" id="header-tracker-btn" type="button" aria-label="تتبع طلبك" title="تتبع طلبك">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="link-label">تتبع طلبك</span>
+        </button>
         <button class="icon-link header-cart-link" id="header-cart-btn" type="button" aria-label="عرض سلة المشتريات" title="سلة المشتريات" style="position:relative;display:inline-flex;align-items:center;justify-content:center;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px;"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-badge-count" id="header-cart-count" style="position:absolute;top:-4px;left:-6px;font-size:9px;min-width:16px;height:16px;padding:0 4px;">0</span>
@@ -2211,6 +2412,17 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
             </div>
             <button class="btn btn-primary btn-add-to-cart" id="modal-add-to-cart-btn" type="button">
               <span>أضف إلى السلة 🛒</span>
+            </button>
+          </div>
+          <!-- Modal Wishlist & Share Row -->
+          <div style="display:flex;gap:8px;margin-top:10px;margin-bottom:6px;">
+            <button class="btn btn-secondary" id="modal-wishlist-btn" type="button" style="flex:1;font-size:12px;padding:9px 14px;display:flex;align-items:center;justify-content:center;gap:7px;">
+              <svg viewBox="0 0 24 24" id="modal-wishlist-svg" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span id="modal-wishlist-text">حفظ في المفضلة</span>
+            </button>
+            <button class="btn btn-secondary" id="modal-share-btn" type="button" style="font-size:12px;padding:9px 14px;display:flex;align-items:center;justify-content:center;gap:7px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              <span>مشاركة</span>
             </button>
           </div><div class="modal-order-closed-notice" id="modal-order-closed-notice"><span class="closed-dot"></span><div><strong>الطلب أونلاين مغلق حالياً</strong><p id="modal-order-closed-text">استقبال الطلبات عبر الموقع متوقف مؤقتاً. المعاينة والشراء متاحان مباشرة في فرعنا بالإسكندرية.</p></div></div>
           <a class="btn btn-primary btn-order-whatsapp" id="modal-order-btn" href="#" target="_blank" rel="noopener noreferrer" style="display:none"><span>طلب القطعة عبر واتساب 💬</span><span style="font-size:11px;opacity:0.85;font-weight:600">تأكيد فوري مباشرة مع الإدارة</span></a><div class="modal-actions"><a class="btn btn-primary" href="#location" data-scroll-location>مكاننا على الخريطة والمعاينة 📍</a><a class="btn btn-secondary" href="https://www.instagram.com/se7e_n770/" target="_blank" rel="noopener noreferrer">تابعنا على إنستجرام ↗</a></div></div></div></div>
@@ -2804,6 +3016,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
 
         updateModalOrderUI(id);
         updateModalStockFeedback(p, selectedModalSize);
+        updateModalWishlistState(id);
       }
 
       function openModal(id){
@@ -2890,15 +3103,32 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
               }).join('') + `</div>`;
           }
 
-          return `<article class="product-card reveal" data-team="${escapeHtml(teamAttr)}" data-id="${escapeHtml(id)}" style="--delay:${delay}ms"><div class="product-visual"><span class="product-index">${num} / S7</span><span class="product-tag">${escapeHtml(tag)}</span>${hasSides ? '<span class="product-badge-twosided">وش وضهر ✦</span>' : ''}<img class="product-image" src="${escapeHtml(displayImg)}" alt="${escapeHtml(p.alt||p.name)}" loading="lazy" decoding="async"><div class="product-bottomline"><span>${escapeHtml(bottomline1)}</span><span>${escapeHtml(bottomline2)}</span></div></div><div class="product-info"><div><p class="product-type">${p.category === 'bag' ? 'إكسسوار وشنط' : (hasSides ? 'موديل كروي وش وضهر' : 'ستايل كروي')}</p><h3 class="product-name">${escapeHtml(p.name)}</h3><p class="product-description">${escapeHtml(p.desc||'')}</p><p class="product-price">${displayPrice} جنيه</p>${sizesPreviewHtml}</div><span class="product-number">${num}</span></div><button class="view-btn" type="button" data-product="${escapeHtml(id)}"><span>${escapeHtml(viewText)}</span><span>↗</span></button></article>`;
+          return `<article class="product-card reveal" data-team="${escapeHtml(teamAttr)}" data-id="${escapeHtml(id)}" style="--delay:${delay}ms"><div class="product-visual"><div class="card-quick-actions"><button class="card-action-btn btn-wishlist-toggle ${isWishlisted(id) ? 'active' : ''}" data-id="${escapeHtml(id)}" type="button" title="أضف للمفضلة" aria-label="أضف للمفضلة"><svg viewBox="0 0 24 24" fill="${isWishlisted(id) ? '#ef4444' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button><button class="card-action-btn btn-share-item" data-id="${escapeHtml(id)}" type="button" title="مشاركة المنتج" aria-label="مشاركة المنتج"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button></div><span class="product-index">${num} / S7</span><span class="product-tag">${escapeHtml(tag)}</span>${hasSides ? '<span class="product-badge-twosided">وش وضهر ✦</span>' : ''}<img class="product-image" src="${escapeHtml(displayImg)}" alt="${escapeHtml(p.alt||p.name)}" loading="lazy" decoding="async"><div class="product-bottomline"><span>${escapeHtml(bottomline1)}</span><span>${escapeHtml(bottomline2)}</span></div></div><div class="product-info"><div><p class="product-type">${p.category === 'bag' ? 'إكسسوار وشنط' : (hasSides ? 'موديل كروي وش وضهر' : 'ستايل كروي')}</p><h3 class="product-name">${escapeHtml(p.name)}</h3><p class="product-description">${escapeHtml(p.desc||'')}</p><p class="product-price">${displayPrice} جنيه</p>${sizesPreviewHtml}</div><span class="product-number">${num}</span></div><button class="view-btn" type="button" data-product="${escapeHtml(id)}"><span>${escapeHtml(viewText)}</span><span>↗</span></button></article>`;
         }).join('');
 
-        // Bind clicks on each card and button
+        // Bind clicks on each card, quick actions, and buttons
         grid.querySelectorAll('.product-card').forEach(card=>{
-          card.addEventListener('click', ()=>{
-            const id = card.dataset.id;
+          const id = card.dataset.id;
+          card.addEventListener('click', (e)=>{
+            if(e.target.closest('.card-quick-actions')) return;
             if(id) openModal(id);
           });
+
+          const wishBtn = card.querySelector('.btn-wishlist-toggle');
+          if(wishBtn){
+            wishBtn.addEventListener('click', (e)=>{
+              e.stopPropagation();
+              toggleWishlist(id);
+            });
+          }
+
+          const shareBtn = card.querySelector('.btn-share-item');
+          if(shareBtn){
+            shareBtn.addEventListener('click', (e)=>{
+              e.stopPropagation();
+              shareProduct(id);
+            });
+          }
         });
 
         // Fast GPU Reveal
@@ -3207,6 +3437,335 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         if(!cart[index]) return;
         cart.splice(index, 1);
         saveCart(cart);
+      }
+
+      /* ==========================================================
+         WISHLIST & SHARE & ORDER TRACKER SYSTEM
+         ========================================================== */
+      const WISHLIST_STORAGE_KEY = 'se7en_wishlist';
+
+      function getWishlist(){
+        try {
+          const raw = localStorage.getItem(WISHLIST_STORAGE_KEY);
+          if(raw){
+            const parsed = JSON.parse(raw);
+            if(Array.isArray(parsed)) return parsed;
+          }
+        }catch(e){}
+        return [];
+      }
+
+      function saveWishlist(list){
+        try {
+          localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(list));
+        }catch(e){}
+      }
+
+      function isWishlisted(id){
+        return getWishlist().includes(id);
+      }
+
+      let toastTimer = null;
+      function showToast(msg, icon = '✨'){
+        const toast = document.querySelector('#toast-notification');
+        const tMsg = document.querySelector('#toast-msg');
+        const tIcon = document.querySelector('#toast-icon');
+        if(!toast) return;
+        if(tMsg) tMsg.textContent = msg;
+        if(tIcon) tIcon.textContent = icon;
+        toast.classList.add('show');
+        if(toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2800);
+      }
+
+      function shareProduct(id){
+        const p = products[id];
+        if(!p) return;
+        const url = `${window.location.origin}${window.location.pathname}?product=${encodeURIComponent(id)}`;
+        const shareData = {
+          title: `SE7EN | ${p.name}`,
+          text: `شوف كولكشن سيفن: ${p.name} بسعر ${p.price || (p.category === 'bag' ? 450 : 250)} جنيه! 🔥`,
+          url: url
+        };
+
+        if(navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)){
+          navigator.share(shareData).catch(()=>{});
+        } else if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(()=>{
+            showToast('تم نسخ رابط المنتج بنجاح! 📋✨', '🔗');
+          }).catch(()=>{
+            prompt('انسخ رابط المنتج للمشاركة:', url);
+          });
+        } else {
+          prompt('انسخ رابط المنتج للمشاركة:', url);
+        }
+      }
+
+      function toggleWishlist(id){
+        let list = getWishlist();
+        const exists = list.includes(id);
+        const p = products[id];
+        const pName = p ? p.name : 'المنتج';
+
+        if(exists){
+          list = list.filter(item => item !== id);
+          saveWishlist(list);
+          showToast(`تم إزالة "${pName}" من المفضلة`, '💔');
+        } else {
+          list.push(id);
+          saveWishlist(list);
+          showToast(`تمت إضافة "${pName}" لقائمتك المفضلة!`, '❤️');
+        }
+
+        // Update all catalog card buttons for this product
+        document.querySelectorAll(`.btn-wishlist-toggle[data-id="${id}"]`).forEach(btn => {
+          btn.classList.toggle('active', !exists);
+          const svg = btn.querySelector('svg');
+          if(svg){
+            svg.setAttribute('fill', !exists ? '#ef4444' : 'none');
+          }
+        });
+
+        // Update modal wishlist button if open
+        if(currentProductId === id){
+          updateModalWishlistState(id);
+        }
+
+        renderWishlistUI();
+      }
+
+      function updateModalWishlistState(id){
+        const modalWishBtn = document.querySelector('#modal-wishlist-btn');
+        const modalWishText = document.querySelector('#modal-wishlist-text');
+        const modalWishSvg = document.querySelector('#modal-wishlist-svg');
+        const wish = isWishlisted(id);
+
+        if(modalWishBtn){
+          modalWishBtn.classList.toggle('active', wish);
+        }
+        if(modalWishText){
+          modalWishText.textContent = wish ? 'في المفضلة ❤️' : 'حفظ في المفضلة';
+        }
+        if(modalWishSvg){
+          modalWishSvg.setAttribute('fill', wish ? '#ef4444' : 'none');
+          modalWishSvg.setAttribute('stroke', wish ? '#ef4444' : 'currentColor');
+        }
+      }
+
+      function openWishlistDrawer(){
+        const drawer = document.querySelector('#wishlist-drawer');
+        const backdrop = document.querySelector('#cart-backdrop');
+        if(drawer){
+          drawer.classList.add('active');
+          drawer.setAttribute('aria-hidden', 'false');
+        }
+        if(backdrop) backdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        renderWishlistUI();
+      }
+
+      function closeWishlistDrawer(){
+        const drawer = document.querySelector('#wishlist-drawer');
+        const backdrop = document.querySelector('#cart-backdrop');
+        const cartDrawer = document.querySelector('#cart-drawer');
+        if(drawer){
+          drawer.classList.remove('active');
+          drawer.setAttribute('aria-hidden', 'true');
+        }
+        if(!cartDrawer || !cartDrawer.classList.contains('open')){
+          if(backdrop) backdrop.classList.remove('open');
+          if(!modal.classList.contains('open')){
+            document.body.style.overflow = '';
+          }
+        }
+      }
+
+      function renderWishlistUI(){
+        const list = getWishlist();
+        const headerCount = document.querySelector('#header-wishlist-count');
+        const drawerCount = document.querySelector('#wishlist-drawer-count');
+        const listContainer = document.querySelector('#wishlist-items-list');
+
+        if(headerCount){
+          headerCount.textContent = list.length;
+          headerCount.style.display = list.length > 0 ? 'inline-flex' : 'none';
+          headerCount.classList.add('bounce');
+          setTimeout(() => headerCount.classList.remove('bounce'), 320);
+        }
+        if(drawerCount){
+          drawerCount.textContent = list.length;
+        }
+
+        if(!listContainer) return;
+
+        if(list.length === 0){
+          listContainer.innerHTML = `
+            <div style="text-align:center;padding:50px 16px;color:var(--muted);">
+              <div style="font-size:42px;margin-bottom:12px;">🤍</div>
+              <h4 style="margin:0 0 8px;font-size:15px;font-weight:800;color:#fff;">قائمتك المفضلة فارغة</h4>
+              <p style="margin:0;font-size:12px;line-height:1.6;">اضغط على علامة القلب ❤️ على أي تيشرت أو شنطة لحفظها هنا والرجوع إليها أو طلبها في أي وقت.</p>
+            </div>
+          `;
+          return;
+        }
+
+        listContainer.innerHTML = list.map(id => {
+          const p = products[id];
+          if(!p) return '';
+          const img = p.frontImage || p.image || '';
+          const price = p.price || (p.category === 'bag' ? 450 : 250);
+          return `
+            <div class="wishlist-item-card" data-id="${escapeHtml(id)}">
+              <img class="wishlist-item-img" src="${escapeHtml(img)}" alt="${escapeHtml(p.name)}" loading="lazy">
+              <div style="flex:1;min-width:0;">
+                <h4 style="margin:0 0 4px;font-size:13px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(p.name)}</h4>
+                <div style="font-size:12px;font-weight:900;color:var(--accent-glow,#10b981);">${price} ج.م</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <button class="btn btn-primary" type="button" onclick="openModal('${escapeHtml(id)}'); closeWishlistDrawer();" style="padding:6px 12px;font-size:11px;font-weight:850;border-radius:6px;">عرض ومقاس ↗</button>
+                <button class="btn btn-secondary" type="button" onclick="toggleWishlist('${escapeHtml(id)}')" style="padding:6px 9px;font-size:12px;border-radius:6px;color:#ef4444;" title="إزالة من المفضلة">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Order Tracker Modal Logic
+      function openTrackerModal(){
+        const modalEl = document.querySelector('#order-tracker-modal');
+        if(!modalEl) return;
+        modalEl.classList.add('open');
+        modalEl.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        const input = document.querySelector('#tracker-input');
+        if(input) input.focus();
+      }
+
+      function closeTrackerModal(){
+        const modalEl = document.querySelector('#order-tracker-modal');
+        if(!modalEl) return;
+        modalEl.classList.remove('open');
+        modalEl.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      function searchAndRenderOrderStatus(queryRaw){
+        const resArea = document.querySelector('#tracker-result-area');
+        if(!resArea) return;
+        const query = queryRaw.trim();
+        if(!query){
+          resArea.innerHTML = '<p style="color:#ef4444;font-size:12px;text-align:center;">يرجى كتابة رقم الهاتف أو كود الطلب أولاً.</p>';
+          return;
+        }
+
+        const cleanQ = cleanPhone(query);
+        const allOrders = [];
+
+        try {
+          const rawStore = localStorage.getItem('se7en_store_orders');
+          if(rawStore){
+            const parsed = JSON.parse(rawStore);
+            if(Array.isArray(parsed)) allOrders.push(...parsed);
+          }
+        }catch(e){}
+
+        const matches = allOrders.filter(o => {
+          if(!o) return false;
+          const orderId = (o.id || '').toLowerCase();
+          const custPhone = cleanPhone(o.customer?.phone || '');
+          const rawPhone = (o.customer?.phone || '').toLowerCase();
+          return orderId.includes(query.toLowerCase()) || (cleanQ && custPhone.includes(cleanQ)) || rawPhone.includes(query.toLowerCase());
+        });
+
+        if(matches.length === 0){
+          const sellerPhone = cleanPhone(currentSettings.whatsapp || '01201135473');
+          resArea.innerHTML = `
+            <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px;text-align:center;">
+              <span style="font-size:32px;">🔍</span>
+              <h4 style="margin:8px 0 4px;font-size:14px;color:#fff;">لم نجد طلباً مسجلاً بهذا الرقم</h4>
+              <p style="font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.5;">يرجى التأكد من كتابة نفس رقم الهاتف المسجل به الطلب أو كود الطلب الصحيح.</p>
+              <a class="btn btn-secondary" href="https://wa.me/20${sellerPhone}?text=${encodeURIComponent('مرحباً، أود الاستفسار عن حالة طلبي في Se7en: ' + query)}" target="_blank" rel="noopener noreferrer" style="font-size:11px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;">
+                <span>تواصل معنا عبر واتساب للمساعدة 💬</span>
+              </a>
+            </div>
+          `;
+          return;
+        }
+
+        const statusMap = {
+          new: { title: 'تم استلام الطلب', step: 1, color: '#facc15', desc: 'تم استلام طلبك وبانتظار تأكيد الإدارة والتجهيز.' },
+          confirmed: { title: 'تم تأكيد الطلب', step: 2, color: '#60a5fa', desc: 'تمت مراجعة وتأكيد بيانات الطلب وجاري تجهيزه بالمخزن.' },
+          delivering: { title: 'مع مندوب الشحن', step: 3, color: '#a855f7', desc: 'شحنتك خرجت مع مندوب التوصيل ومتوقع وصولها قريباً.' },
+          completed: { title: 'تم التوصيل بنجاح', step: 4, color: '#22c55e', desc: 'تم تسليم الشحنة للعميل بنجاح، شكراً لاختيارك Se7en!' },
+          cancelled: { title: 'الطلب ملغي', step: 0, color: '#ef4444', desc: 'تم إلغاء هذا الطلب. تواصل معنا لمزيد من التفاصيل.' }
+        };
+
+        resArea.innerHTML = matches.map(order => {
+          const st = statusMap[order.status || 'new'] || statusMap.new;
+          const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ar-EG', { dateStyle: 'medium' }) : 'مؤخراً';
+          const itemsSummary = (order.items || []).map(it => `• ${escapeHtml(it.name)} (${it.size !== 'one-size' ? 'مقاس ' + it.size : 'شنطة'}) × ${it.qty}`).join('<br>');
+          const sellerPhone = cleanPhone(currentSettings.whatsapp || '01201135473');
+
+          const stepsHtml = [
+            { num: 1, label: 'استلام الطلب 📋' },
+            { num: 2, label: 'تأكيد وتجهيز 📦' },
+            { num: 3, label: 'مع المندوب 🚚' },
+            { num: 4, label: 'تم التسليم 🎉' }
+          ].map(s => {
+            const isDone = st.step >= s.num;
+            const isCurrent = st.step === s.num;
+            return `
+              <div style="flex:1;text-align:center;position:relative;">
+                <div style="width:26px;height:26px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;border:2px solid ${isDone ? '#22c55e' : 'rgba(255,255,255,0.2)'};background:${isCurrent ? '#22c55e' : (isDone ? 'rgba(34,197,94,0.2)' : '#121418')};color:${isCurrent ? '#000' : (isDone ? '#22c55e' : 'var(--muted)')};">
+                  ${isDone ? '✓' : s.num}
+                </div>
+                <span style="font-size:10px;font-weight:${isCurrent ? '900' : '600'};color:${isCurrent ? '#fff' : (isDone ? '#22c55e' : 'var(--muted)')};">${s.label}</span>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="tracker-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:10px;margin-bottom:12px;">
+                <div>
+                  <span style="background:rgba(255,255,255,0.08);color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-family:monospace;font-weight:900;">#${escapeHtml(order.id || 'ORDER')}</span>
+                  <span style="font-size:11px;color:var(--muted);margin-right:8px;">${dateStr}</span>
+                </div>
+                <span style="background:${st.color}22;color:${st.color};border:1px solid ${st.color}55;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:900;">${st.title}</span>
+              </div>
+
+              <!-- Steps Stepper -->
+              ${st.step > 0 ? `
+                <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0;position:relative;">
+                  <div style="position:absolute;top:13px;left:10%;right:10%;height:2px;background:rgba(255,255,255,0.1);z-index:0;"></div>
+                  <div style="position:absolute;top:13px;right:10%;height:2px;background:#22c55e;width:${Math.max(0, ((st.step - 1) / 3) * 80)}%;z-index:0;transition:width 0.4s ease;"></div>
+                  <div style="display:contents;position:relative;z-index:1;">${stepsHtml}</div>
+                </div>
+              ` : `
+                <div style="background:rgba(239,68,68,0.12);border:1px solid #ef4444;border-radius:8px;padding:10px;text-align:center;color:#ef4444;font-size:12px;font-weight:800;margin:12px 0;">
+                  تم إلغاء هذا الطلب
+                </div>
+              `}
+
+              <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;font-size:11px;line-height:1.6;margin-top:12px;">
+                <div style="color:#fff;font-weight:800;margin-bottom:4px;">محتويات الشحنة:</div>
+                <div style="color:var(--muted);">${itemsSummary}</div>
+                <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;font-weight:900;">
+                  <span style="color:#fff;">المبلغ المطلوب عند الاستلام:</span>
+                  <span style="color:#4ade80;font-size:13px;">${order.total || 0} ج.م</span>
+                </div>
+              </div>
+
+              <div style="margin-top:12px;text-align:center;">
+                <a class="btn btn-secondary" href="https://wa.me/20${sellerPhone}?text=${encodeURIComponent('أهلاً سيفن، أستفسر عن شحنتي رقم #' + (order.id || ''))}" target="_blank" rel="noopener noreferrer" style="font-size:11px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;">
+                  <span>متابعة الشحنة عبر واتساب 💬</span>
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
       }
 
       function renderCartUI(){
@@ -3636,9 +4195,149 @@ ${itemsSummary}
       // Initialize cart UI on page load
       renderCartUI();
 
+      // Wire Wishlist Header & Drawer buttons
+      const headerWishlistBtn = document.querySelector('#header-wishlist-btn');
+      const wishlistCloseBtn = document.querySelector('#wishlist-close-btn');
+      const btnClearWishlist = document.querySelector('#btn-clear-wishlist');
+      const btnAddAllWishlistToCart = document.querySelector('#btn-add-all-wishlist-to-cart');
+
+      if(headerWishlistBtn) headerWishlistBtn.onclick = openWishlistDrawer;
+      if(wishlistCloseBtn) wishlistCloseBtn.onclick = closeWishlistDrawer;
+
+      if(btnClearWishlist){
+        btnClearWishlist.onclick = () => {
+          if(getWishlist().length === 0) return;
+          if(confirm('هل تريد بالتأكيد إفراغ قائمتك المفضلة؟')){
+            saveWishlist([]);
+            renderWishlistUI();
+            renderStoreCatalog();
+            showToast('تم إفراغ المفضلة بنجاح', '🗑️');
+          }
+        };
+      }
+
+      if(btnAddAllWishlistToCart){
+        btnAddAllWishlistToCart.onclick = () => {
+          const list = getWishlist();
+          if(list.length === 0){
+            showToast('قائمتك المفضلة فارغة!', '🤍');
+            return;
+          }
+          const cart = getCart();
+          let addedCount = 0;
+          list.forEach(id => {
+            const p = products[id];
+            if(!p) return;
+            const sz = (p.category === 'bag') ? 'one-size' : 'L';
+            const existing = cart.find(item => item.productId === id && item.size === sz);
+            if(existing){
+              existing.qty = (existing.qty || 1) + 1;
+            } else {
+              cart.push({ productId: id, size: sz, qty: 1 });
+            }
+            addedCount++;
+          });
+          saveCart(cart);
+          renderCartUI();
+          closeWishlistDrawer();
+          openCartDrawer();
+          showToast(`تمت إضافة ${addedCount} منتجات إلى سلة التسوق! 🛒🔥`, '✨');
+        };
+      }
+
+      // Wire Modal Wishlist and Share buttons
+      const modalWishlistBtn = document.querySelector('#modal-wishlist-btn');
+      const modalShareBtn = document.querySelector('#modal-share-btn');
+      if(modalWishlistBtn){
+        modalWishlistBtn.onclick = () => {
+          if(currentProductId) toggleWishlist(currentProductId);
+        };
+      }
+      if(modalShareBtn){
+        modalShareBtn.onclick = () => {
+          if(currentProductId) shareProduct(currentProductId);
+        };
+      }
+
+      // Wire Tracker Header Button & Modal
+      const headerTrackerBtn = document.querySelector('#header-tracker-btn');
+      const closeTrackerModalBtn = document.querySelector('#close-tracker-modal');
+      const orderTrackerForm = document.querySelector('#order-tracker-form');
+      const trackerModalEl = document.querySelector('#order-tracker-modal');
+
+      if(headerTrackerBtn) headerTrackerBtn.onclick = openTrackerModal;
+      if(closeTrackerModalBtn) closeTrackerModalBtn.onclick = closeTrackerModal;
+      if(trackerModalEl){
+        trackerModalEl.addEventListener('click', (e) => {
+          if(e.target === trackerModalEl) closeTrackerModal();
+        });
+      }
+      if(orderTrackerForm){
+        orderTrackerForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const val = document.querySelector('#tracker-input').value;
+          searchAndRenderOrderStatus(val);
+        });
+      }
+
+      // Deep Linking: Auto open product if ?product=<id> in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const deepProdId = urlParams.get('product');
+      if(deepProdId && products[deepProdId]){
+        setTimeout(() => openModal(deepProdId), 450);
+      }
+
+      // Initial Wishlist UI render
+      renderWishlistUI();
+
       document.querySelector('#year').textContent=new Date().getFullYear();
     })();
   </script>
   <script async src="https://www.instagram.com/embed.js"></script>
+  <!-- Wishlist Drawer -->
+  <div class="wishlist-drawer" id="wishlist-drawer" role="dialog" aria-labelledby="wishlist-title" aria-modal="true" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title" id="wishlist-title">
+        <span>❤️ قائمتك المفضلة</span>
+        <span class="wishlist-badge-count" id="wishlist-drawer-count" style="font-size:10px;min-width:18px;height:18px;padding:0 5px;">0</span>
+      </h3>
+      <button class="cart-close-btn" id="wishlist-close-btn" type="button" aria-label="إغلاق المفضلة">×</button>
+    </div>
+    <div class="cart-drawer-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+      <div id="wishlist-items-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+    <div style="padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); background: #08090c; display: flex; gap: 10px;">
+      <button class="btn btn-secondary" id="btn-clear-wishlist" type="button" style="flex: 1; font-size: 11px;">إفراغ المفضلة ✕</button>
+      <button class="btn btn-primary" id="btn-add-all-wishlist-to-cart" type="button" style="flex: 1.5; font-size: 11px;">إضافة الكل للسلة 🛒</button>
+    </div>
+  </div>
+
+  <!-- Order Tracker Modal -->
+  <div class="modal" id="order-tracker-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content" style="max-width: 500px; padding: 28px 24px;">
+      <button class="close-modal" id="close-tracker-modal" type="button" aria-label="إغلاق">×</button>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <span style="font-size: 34px;">🔍</span>
+        <h3 style="margin: 8px 0 4px; font-size: 20px; font-weight: 950; color: #fff;">تتبع حالة طلبك في Se7en</h3>
+        <p style="margin: 0; color: var(--muted); font-size: 12px;">أدخل رقم الهاتف أو رقم الطلب لمعرفة أين وصل طلبك فوراً.</p>
+      </div>
+      <form id="order-tracker-form">
+        <div style="display: flex; gap: 8px;">
+          <input class="form-control" id="tracker-input" type="text" placeholder="اكتب رقم الهاتف (01xxxxxxxxx) أو رقم الطلب" required style="flex: 1; font-size: 12px;">
+          <button class="btn btn-primary" type="submit" style="white-space: nowrap; font-size: 12px; padding: 0 16px;">بحث 🔍</button>
+        </div>
+      </form>
+      <div id="tracker-result-area" style="margin-top: 18px;"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Floating Pill -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <span id="toast-icon">✨</span>
+    <span id="toast-msg">تمت العملية بنجاح!</span>
+  </div>
+
 </body>
 </html>
