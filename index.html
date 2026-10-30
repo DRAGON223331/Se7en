@@ -1563,6 +1563,57 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
     }
 
     /* Checkout view inside drawer */
+    .payment-method-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      position: relative;
+    }
+    .payment-method-card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-1px);
+    }
+    .payment-method-card.active {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
+    }
+    .payment-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 850;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .payment-badge-cash {
+      background: rgba(234, 179, 8, 0.15);
+      color: #facc15;
+      border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+    .payment-badge-online {
+      background: rgba(16, 185, 129, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .order-tracker-card-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s ease;
+    }
+    .order-tracker-card-item:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
     .checkout-form-group {
       margin-bottom: 12px;
     }
@@ -2926,6 +2977,69 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
             <textarea class="checkout-input" id="order-cust-notes" rows="2" placeholder="أي تفاصيل خاصة بوقت الاستلام أو التوصيل..."></textarea>
           </div>
 
+          <!-- Payment Method Selection -->
+          <div class="checkout-form-group" style="margin-top: 16px; margin-bottom: 14px;">
+            <label style="font-weight: 850; color: #fff; font-size: 13px; margin-bottom: 8px; display: block;">
+              💳 تحديد طريقة الدفع وتأكيد الحجز *
+            </label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <!-- Option 1: Cash on Delivery -->
+              <div class="payment-method-card active" id="pay-opt-cash" onclick="selectPaymentMethod('cash')">
+                <input type="radio" name="payment_method" id="pay-radio-cash" value="cash" checked style="display: none;">
+                <div style="font-size: 20px; margin-bottom: 4px;">💵</div>
+                <div style="font-size: 12px; font-weight: 900; color: #fff;">نقدًا عند الاستلام</div>
+                <div style="font-size: 10px; color: var(--muted); line-height: 1.3; margin-top: 2px;">تدفع للمندوب كاش بعد معاينة واستلام القطع</div>
+              </div>
+
+              <!-- Option 2: Online Transfer -->
+              <div class="payment-method-card" id="pay-opt-online" onclick="selectPaymentMethod('online')">
+                <input type="radio" name="payment_method" id="pay-radio-online" value="online" style="display: none;">
+                <div style="font-size: 20px; margin-bottom: 4px;">💳</div>
+                <div style="font-size: 12px; font-weight: 900; color: #fff;">تحويل أونلاين / إنستاباي</div>
+                <div style="font-size: 10px; color: var(--muted); line-height: 1.3; margin-top: 2px;">تحويل فوري لتأكيد وأولوية حجز القطع فوراً</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Online Payment Details Box (Shown only if Online is selected) -->
+          <div id="checkout-online-details" style="display: none; background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(0,0,0,0.5)); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+              <span style="font-size: 12px; font-weight: 900; color: #10b981;">⚡ بيانات تحويل المتجر المعتمدة</span>
+              <span id="pay-badge-type" style="background: rgba(16,185,129,0.15); color: #4ade80; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;">InstaPay / فودافون كاش</span>
+            </div>
+
+            <!-- Transfer Account Number & Copy Button -->
+            <div style="background: #090a0d; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+              <div style="font-size: 10px; color: var(--muted); margin-bottom: 4px;">رقم الحساب / البطاقة / المحفظة للتحويل:</div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <span id="checkout-pay-card-number" style="font-family: monospace; font-size: 15px; font-weight: 950; color: #fff; letter-spacing: 1px; direction: ltr;">01201135473</span>
+                <button type="button" class="btn btn-secondary" id="btn-copy-pay-number" onclick="copyPaymentNumber()" style="font-size: 10px; padding: 4px 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); white-space: nowrap;">
+                  📋 نسخ الرقم
+                </button>
+              </div>
+              <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">
+                اسم الحساب: <strong style="color: #fff;" id="checkout-pay-holder-name">SE7EN STORE</strong>
+              </div>
+            </div>
+
+            <p id="checkout-pay-instructions" style="font-size: 11px; color: #cbd5e1; margin: 0 0 10px; line-height: 1.5; background: rgba(0,0,0,0.25); padding: 8px 10px; border-radius: 6px;">
+              يرجى تحويل قيمة الطلب (<span id="checkout-pay-total-amount" style="color: #4ade80; font-weight: 900;">0 ج.م</span>) على الرقم أعلاه، ثم كتابة رقم العملية بالأسفل.
+            </p>
+
+            <div class="checkout-form-group">
+              <label for="order-payment-ref" style="font-size: 11px; font-weight: 800; color: #fff;">رقم العملية / أو رقم الحساب أو المحفظة المحول منها *</label>
+              <input class="checkout-input" id="order-payment-ref" type="text" placeholder="مثال: رقم محفظتك أو كود العملية من تطبيق البنك">
+            </div>
+
+            <div class="checkout-form-group" style="margin-bottom: 0;">
+              <label for="order-receipt-proof" style="font-size: 11px; font-weight: 800; color: #fff;">صورة إيصال التحويل (اختياري لتسريع التأكيد)</label>
+              <input class="checkout-input" id="order-receipt-proof" type="file" accept="image/*" style="font-size: 11px; padding: 6px;">
+              <div id="receipt-preview-box" style="display: none; margin-top: 8px; text-align: center;">
+                <img id="receipt-preview-img" src="" alt="معاينة الإيصال" style="max-height: 120px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);">
+              </div>
+            </div>
+          </div>
+
           <button class="btn-submit-order" id="btn-submit-telegram-order" type="submit">
             <span>🚀 تأكيد وإرسال الطلب للبائعين عبر تيليجرام</span>
           </button>
@@ -2983,6 +3097,105 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
 
   <button class="back-to-top" id="back-to-top" type="button" aria-label="الرجوع لأعلى الصفحة">↑</button>
   <div class="toast" id="toast" role="status" aria-live="polite">تم فتح تفاصيل التصميم</div>
+  <!-- Wishlist Drawer -->
+  <div class="wishlist-drawer" id="wishlist-drawer" role="dialog" aria-labelledby="wishlist-title" aria-modal="true" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title" id="wishlist-title">
+        <span>❤️ قائمتك المفضلة</span>
+        <span class="wishlist-badge-count" id="wishlist-drawer-count" style="font-size:10px;min-width:18px;height:18px;padding:0 5px;">0</span>
+      </h3>
+      <button class="cart-close-btn" id="wishlist-close-btn" type="button" aria-label="إغلاق المفضلة">×</button>
+    </div>
+    <div class="cart-drawer-body" style="padding: 16px; overflow-y: auto; flex: 1;">
+      <div id="wishlist-items-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+    <div style="padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); background: #08090c; display: flex; gap: 10px;">
+      <button class="btn btn-secondary" id="btn-clear-wishlist" type="button" style="flex: 1; font-size: 11px;">إفراغ المفضلة ✕</button>
+      <button class="btn btn-primary" id="btn-add-all-wishlist-to-cart" type="button" style="flex: 1.5; font-size: 11px;">إضافة الكل للسلة 🛒</button>
+    </div>
+  </div>
+
+  <!-- Order Tracker Modal (Shows All Customer Orders) -->
+  <div class="modal" id="order-tracker-modal" role="dialog" aria-modal="true" aria-hidden="true" onclick="if(event.target === this) closeTrackerModal()">
+    <div class="modal-content" style="max-width: 560px; width: min(560px, 94vw); max-height: 85vh; overflow-y: auto; padding: 24px 20px; position: relative;">
+      <button class="close-modal" id="close-tracker-modal" type="button" aria-label="إغلاق" onclick="closeTrackerModal()" style="position: absolute; top: 16px; left: 16px; width: 34px; height: 34px; font-size: 22px; cursor: pointer; z-index: 10;">×</button>
+      
+      <div style="text-align: center; margin-bottom: 18px; padding-top: 4px;">
+        <span style="font-size: 32px;">🔍</span>
+        <h3 style="margin: 6px 0 4px; font-size: 19px; font-weight: 950; color: #fff;">تتبع ومتابعة كافة طلباتك</h3>
+        <p style="margin: 0; color: var(--muted); font-size: 11px;">عرض تفصيلي لكل طلباتك السابقة والحالية ومراحل الشحن والتوصيل خطوة بخطوة.</p>
+      </div>
+
+      <form id="order-tracker-form" style="margin-bottom: 16px;">
+        <div style="display: flex; gap: 8px;">
+          <input class="form-control" id="tracker-input" type="text" inputmode="tel" placeholder="اكتب رقم الهاتف أو كود الطلب للبحث..." style="flex: 1; font-size: 13px;">
+          <button class="btn btn-primary" type="submit" style="white-space: nowrap; font-size: 12px; padding: 0 16px;">بحث 🔍</button>
+        </div>
+      </form>
+
+      <!-- Customer Orders Container -->
+      <div id="tracker-result-area"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Floating Pill -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <span id="toast-icon">✨</span>
+    <span id="toast-msg">تمت العملية بنجاح!</span>
+  </div>
+
+  <!-- Floating Back to Top Button -->
+  <button class="back-to-top-btn" id="back-to-top-btn" type="button" aria-label="الرجوع لأعلى الصفحة" title="للأعلى">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- PWA Install Floating Banner -->
+  <div class="pwa-install-banner" id="pwa-install-banner" role="banner">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:24px;">📲</span>
+      <div>
+        <div style="font-size:12px;font-weight:900;color:#fff;">تثبيت تطبيق SE7EN</div>
+        <div style="font-size:10px;color:var(--muted);">تصفح أسرع وأخف بدون شريط المتصفح</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button class="btn btn-primary" id="pwa-install-btn" type="button" style="padding:6px 12px;font-size:11px;font-weight:900;">تثبيت ⚡</button>
+      <button class="btn btn-secondary" id="pwa-close-btn" type="button" style="padding:6px 8px;font-size:11px;">✕</button>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom App Dock -->
+  <nav class="mobile-bottom-dock" id="mobile-bottom-dock" aria-label="شريط التنقل السريع">
+    <button class="dock-item active" id="dock-btn-home" type="button" aria-label="الرئيسية">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>الرئيسية</span>
+    </button>
+    <button class="dock-item" id="dock-btn-catalog" type="button" aria-label="الكتالوج">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>الكتالوج</span>
+    </button>
+    <button class="dock-item" id="dock-btn-wishlist" type="button" aria-label="المفضلة">
+      <div style="position:relative;display:inline-block;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="dock-badge" id="dock-wishlist-count" style="display:none;">0</span>
+      </div>
+      <span>المفضلة</span>
+    </button>
+    <button class="dock-item" id="dock-btn-cart" type="button" aria-label="السلة">
+      <div style="position:relative;display:inline-block;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="dock-badge cart-badge" id="dock-cart-count" style="display:none;">0</span>
+      </div>
+      <span>السلة</span>
+    </button>
+    <button class="dock-item" id="dock-btn-tracker" type="button" aria-label="تتبع الطلب">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>تتبع طلبك</span>
+    </button>
+  </nav>
+
   <script src="store-config.js"></script>
   <script>
     (()=>{
@@ -4058,135 +4271,175 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
         }).join('');
       }
 
-      // Order Tracker Modal Logic
-      function openTrackerModal(){
+      // ========================================================
+      // UPGRADED ALL-CUSTOMER-ORDERS TRACKER SYSTEM
+      // ========================================================
+      window.openTrackerModal = function(){
         const modalEl = document.querySelector('#order-tracker-modal');
         if(!modalEl) return;
         modalEl.classList.add('open');
         modalEl.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        const input = document.querySelector('#tracker-input');
-        if(input) input.focus();
-      }
+        
+        // Auto-render all customer's orders
+        renderCustomerOrders();
+      };
 
-      function closeTrackerModal(){
+      window.closeTrackerModal = function(){
         const modalEl = document.querySelector('#order-tracker-modal');
         if(!modalEl) return;
         modalEl.classList.remove('open');
         modalEl.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-      }
+      };
 
-      function searchAndRenderOrderStatus(queryRaw){
+      function renderCustomerOrders(queryRaw){
         const resArea = document.querySelector('#tracker-result-area');
+        const input = document.querySelector('#tracker-input');
         if(!resArea) return;
-        const query = queryRaw.trim();
-        if(!query){
-          resArea.innerHTML = '<p style="color:#ef4444;font-size:12px;text-align:center;">يرجى كتابة رقم الهاتف أو كود الطلب أولاً.</p>';
-          return;
-        }
 
-        const cleanQ = cleanPhone(query);
-        const allOrders = [];
-
+        let allOrders = [];
         try {
           const rawStore = localStorage.getItem('se7en_store_orders');
           if(rawStore){
             const parsed = JSON.parse(rawStore);
-            if(Array.isArray(parsed)) allOrders.push(...parsed);
+            if(Array.isArray(parsed)) allOrders = parsed;
           }
         }catch(e){}
 
-        const matches = allOrders.filter(o => {
-          if(!o) return false;
-          const orderId = (o.id || '').toLowerCase();
-          const custPhone = cleanPhone(o.customer?.phone || '');
-          const rawPhone = (o.customer?.phone || '').toLowerCase();
-          return orderId.includes(query.toLowerCase()) || (cleanQ && custPhone.includes(cleanQ)) || rawPhone.includes(query.toLowerCase());
-        });
+        let myOrderIds = [];
+        try {
+          const rawMy = localStorage.getItem('se7en_my_orders');
+          if(rawMy) myOrderIds = JSON.parse(rawMy);
+        }catch(e){}
+
+        const lastPhone = localStorage.getItem('se7en_last_phone') || '';
+        const cleanLastPhone = cleanPhone(lastPhone);
+
+        let matches = [];
+        const query = (queryRaw !== undefined ? queryRaw : '').trim();
+
+        if (query) {
+          const cleanQ = cleanPhone(query);
+          matches = allOrders.filter(o => {
+            if(!o) return false;
+            const oId = (o.id || '').toLowerCase();
+            const cPhone = cleanPhone(o.customer?.phone || '');
+            return oId.includes(query.toLowerCase()) || (cleanQ && cPhone.includes(cleanQ));
+          });
+        } else {
+          // Default: Show all orders placed by this user or matching their phone
+          matches = allOrders.filter(o => {
+            if(!o) return false;
+            const isMyId = myOrderIds.includes(o.id);
+            const isMyPhone = cleanLastPhone && cleanPhone(o.customer?.phone || '') === cleanLastPhone;
+            return isMyId || isMyPhone;
+          });
+          if(lastPhone && input && !input.value) {
+            input.value = lastPhone;
+          }
+        }
 
         if(matches.length === 0){
           const sellerPhone = cleanPhone(currentSettings.whatsapp || '01201135473');
-          resArea.innerHTML = `
-            <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:16px;text-align:center;">
-              <span style="font-size:32px;">🔍</span>
-              <h4 style="margin:8px 0 4px;font-size:14px;color:#fff;">لم نجد طلباً مسجلاً بهذا الرقم</h4>
-              <p style="font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.5;">يرجى التأكد من كتابة نفس رقم الهاتف المسجل به الطلب أو كود الطلب الصحيح.</p>
-              <a class="btn btn-secondary" href="https://wa.me/20${sellerPhone}?text=${encodeURIComponent('مرحباً، أود الاستفسار عن حالة طلبي في Se7en: ' + query)}" target="_blank" rel="noopener noreferrer" style="font-size:11px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;">
-                <span>تواصل معنا عبر واتساب للمساعدة 💬</span>
-              </a>
-            </div>
-          `;
+          if(query) {
+            resArea.innerHTML = `
+              <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:10px;padding:18px;text-align:center;">
+                <span style="font-size:32px;">🔍</span>
+                <h4 style="margin:8px 0 4px;font-size:14px;color:#fff;">لم نجد طلباً مسجلاً بهذا الرقم</h4>
+                <p style="font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.5;">يرجى التأكد من كتابة نفس رقم الهاتف المسجل به الطلب أو كود الطلب الصحيح.</p>
+                <a class="btn btn-secondary" href="https://wa.me/20${sellerPhone}?text=${encodeURIComponent('مرحباً، أود الاستفسار عن حالة طلبي في Se7en: ' + query)}" target="_blank" rel="noopener noreferrer" style="font-size:11px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;">
+                  <span>تواصل معنا عبر واتساب للمساعدة 💬</span>
+                </a>
+              </div>
+            `;
+          } else {
+            resArea.innerHTML = `
+              <div style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.12);border-radius:10px;padding:22px;text-align:center;">
+                <span style="font-size:32px;">📦</span>
+                <h4 style="margin:8px 0 4px;font-size:14px;color:#fff;">لا توجد طلبات مسجلة على هذا الجهاز حالياً</h4>
+                <p style="font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.5;">اكتب رقم هاتفك في خانة البحث بالأعلى لعرض كافة طلباتك السابقة وتتبع شحناتك فوراً.</p>
+              </div>
+            `;
+          }
           return;
         }
 
         const statusMap = {
-          new: { title: 'تم استلام الطلب', step: 1, color: '#facc15', desc: 'تم استلام طلبك وبانتظار تأكيد الإدارة والتجهيز.' },
-          confirmed: { title: 'تم تأكيد الطلب', step: 2, color: '#60a5fa', desc: 'تمت مراجعة وتأكيد بيانات الطلب وجاري تجهيزه بالمخزن.' },
-          delivering: { title: 'مع مندوب الشحن', step: 3, color: '#a855f7', desc: 'شحنتك خرجت مع مندوب التوصيل ومتوقع وصولها قريباً.' },
-          completed: { title: 'تم التوصيل بنجاح', step: 4, color: '#22c55e', desc: 'تم تسليم الشحنة للعميل بنجاح، شكراً لاختيارك Se7en!' },
+          new: { title: 'تم استلام الطلب', step: 1, color: '#facc15', desc: 'تم استلام طلبك وبانتظار تأكيد الإدارة والتجهيز بالمخزن.' },
+          confirmed: { title: 'تم تأكيد الطلب', step: 2, color: '#60a5fa', desc: 'تمت مراجعة وتأكيد بيانات الطلب وجاري تجهيزه للشحن.' },
+          delivering: { title: 'مع مندوب التوصيل', step: 3, color: '#a855f7', desc: 'شحنتك خرجت مع مندوب الشحن ومتوقع تسليمها قريباً.' },
+          completed: { title: 'تم التسليم بنجاح', step: 4, color: '#22c55e', desc: 'تم تسليم الشحنة للعميل بنجاح، شكراً لاختيارك Se7en! ❤️' },
           cancelled: { title: 'الطلب ملغي', step: 0, color: '#ef4444', desc: 'تم إلغاء هذا الطلب. تواصل معنا لمزيد من التفاصيل.' }
         };
 
-        resArea.innerHTML = matches.map(order => {
+        const sellerPhone = cleanPhone(currentSettings.whatsapp || '01201135473');
+
+        resArea.innerHTML = `
+          <div style="font-size: 12px; font-weight: 850; color: #fff; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <span>📦 كافة طلباتك المسجلة (${matches.length} طلب):</span>
+            <span style="font-size: 10px; color: var(--muted);">تحديث حي 🟢</span>
+          </div>
+        ` + matches.map(order => {
           const st = statusMap[order.status || 'new'] || statusMap.new;
-          const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ar-EG', { dateStyle: 'medium' }) : 'مؤخراً';
-          const itemsSummary = (order.items || []).map(it => `• ${escapeHtml(it.name)} (${it.size !== 'one-size' ? 'مقاس ' + it.size : 'شنطة'}) × ${it.qty}`).join('<br>');
-          const sellerPhone = cleanPhone(currentSettings.whatsapp || '01201135473');
+          const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ar-EG', { dateStyle: 'medium', hour: '2-digit', minute: '2-digit' }) : 'مؤخراً';
+          const itemsSummary = (order.items || []).map(it => `• <b>${escapeHtml(it.name)}</b> (${it.size !== 'one-size' ? 'مقاس ' + it.size : 'شنطة'}) × ${it.qty} [${(it.price || 0) * (it.qty || 1)} ج.م]`).join('<br>');
+          const payLabel = (order.payment?.method === 'online') ? '💳 تحويل أونلاين / إنستاباي' : '💵 دفع نقدًا عند الاستلام';
+          const payClass = (order.payment?.method === 'online') ? 'payment-badge-online' : 'payment-badge-cash';
 
           const stepsHtml = [
             { num: 1, label: 'استلام الطلب 📋' },
-            { num: 2, label: 'تأكيد وتجهيز 📦' },
+            { num: 2, label: 'تجهيز بالمخزن 📦' },
             { num: 3, label: 'مع المندوب 🚚' },
             { num: 4, label: 'تم التسليم 🎉' }
           ].map(s => {
             const isDone = st.step >= s.num;
             const isCurrent = st.step === s.num;
             return `
-              <div style="flex:1;text-align:center;position:relative;">
-                <div style="width:26px;height:26px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;border:2px solid ${isDone ? '#22c55e' : 'rgba(255,255,255,0.2)'};background:${isCurrent ? '#22c55e' : (isDone ? 'rgba(34,197,94,0.2)' : '#121418')};color:${isCurrent ? '#000' : (isDone ? '#22c55e' : 'var(--muted)')};">
+              <div style="flex: 1; text-align: center; position: relative;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; border: 2px solid ${isDone ? '#22c55e' : 'rgba(255,255,255,0.2)'}; background: ${isCurrent ? '#22c55e' : (isDone ? 'rgba(34,197,94,0.2)' : '#121418')}; color: ${isCurrent ? '#000' : (isDone ? '#22c55e' : 'var(--muted)')};">
                   ${isDone ? '✓' : s.num}
                 </div>
-                <span style="font-size:10px;font-weight:${isCurrent ? '900' : '600'};color:${isCurrent ? '#fff' : (isDone ? '#22c55e' : 'var(--muted)')};">${s.label}</span>
+                <span style="font-size: 9px; font-weight: ${isCurrent ? '900' : '600'}; color: ${isCurrent ? '#fff' : (isDone ? '#22c55e' : 'var(--muted)')}; display: block;">${s.label}</span>
               </div>
             `;
           }).join('');
 
           return `
-            <div class="tracker-card">
-              <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:10px;margin-bottom:12px;">
+            <div class="order-tracker-card-item">
+              <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="background: rgba(255,255,255,0.08); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-family: monospace; font-weight: 900;">#${escapeHtml(order.id || 'ORDER')}</span>
+                  <span class="payment-badge-pill ${payClass}">${payLabel}</span>
+                </div>
+                <span style="font-size: 11px; color: var(--muted);">${dateStr}</span>
+              </div>
+
+              <!-- 4-Step Visual Stepper -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin: 12px 0; background: rgba(0,0,0,0.3); padding: 10px 8px; border-radius: 8px; position: relative;">
+                ${stepsHtml}
+              </div>
+
+              <div style="background: rgba(255,255,255,0.03); border-radius: 6px; padding: 8px 10px; font-size: 11px; margin-bottom: 10px; line-height: 1.5;">
+                <div style="color: ${st.color}; font-weight: 850; margin-bottom: 4px;">📍 حالة الطلب: ${st.title} — ${st.desc}</div>
+                <div style="color: #cbd5e1; font-size: 10px;">العنوان: ${escapeHtml(order.customer?.gov || '')} - ${escapeHtml(order.customer?.address || '')}</div>
+                ${order.payment?.ref ? `<div style="color: #93c5fd; font-size: 10px; margin-top: 2px;">رقم عملية التحويل: <code>${escapeHtml(order.payment.ref)}</code></div>` : ''}
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding-top: 4px;">
                 <div>
-                  <span style="background:rgba(255,255,255,0.08);color:#fff;padding:2px 8px;border-radius:4px;font-size:11px;font-family:monospace;font-weight:900;">#${escapeHtml(order.id || 'ORDER')}</span>
-                  <span style="font-size:11px;color:var(--muted);margin-right:8px;">${dateStr}</span>
+                  <div style="color: var(--muted); font-size: 10px;">القطع المطلوبة:</div>
+                  <div style="color: #fff; font-size: 11px; margin-top: 2px;">${itemsSummary}</div>
                 </div>
-                <span style="background:${st.color}22;color:${st.color};border:1px solid ${st.color}55;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:900;">${st.title}</span>
-              </div>
-
-              <!-- Steps Stepper -->
-              ${st.step > 0 ? `
-                <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0;position:relative;">
-                  <div style="position:absolute;top:13px;left:10%;right:10%;height:2px;background:rgba(255,255,255,0.1);z-index:0;"></div>
-                  <div style="position:absolute;top:13px;right:10%;height:2px;background:#22c55e;width:${Math.max(0, ((st.step - 1) / 3) * 80)}%;z-index:0;transition:width 0.4s ease;"></div>
-                  <div style="display:contents;position:relative;z-index:1;">${stepsHtml}</div>
-                </div>
-              ` : `
-                <div style="background:rgba(239,68,68,0.12);border:1px solid #ef4444;border-radius:8px;padding:10px;text-align:center;color:#ef4444;font-size:12px;font-weight:800;margin:12px 0;">
-                  تم إلغاء هذا الطلب
-                </div>
-              `}
-
-              <div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;font-size:11px;line-height:1.6;margin-top:12px;">
-                <div style="color:#fff;font-weight:800;margin-bottom:4px;">محتويات الشحنة:</div>
-                <div style="color:var(--muted);">${itemsSummary}</div>
-                <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;font-weight:900;">
-                  <span style="color:#fff;">المبلغ المطلوب عند الاستلام:</span>
-                  <span style="color:#4ade80;font-size:13px;">${order.total || 0} ج.م</span>
+                <div style="text-align: left;">
+                  <div style="font-size: 10px; color: var(--muted);">الإجمالي:</div>
+                  <div style="font-size: 14px; font-weight: 950; color: #4ade80;">${order.total || 0} ج.م</div>
                 </div>
               </div>
 
-              <div style="margin-top:12px;text-align:center;">
-                <a class="btn btn-secondary" href="https://wa.me/20${sellerPhone}?text=${encodeURIComponent('أهلاً سيفن، أستفسر عن شحنتي رقم #' + (order.id || ''))}" target="_blank" rel="noopener noreferrer" style="font-size:11px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;">
-                  <span>متابعة الشحنة عبر واتساب 💬</span>
+              <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); text-align: left;">
+                <a class="btn btn-secondary" href="https://wa.me/20${sellerPhone}?text=${encodeURIComponent('مرحباً Se7en Store، أود الاستفسار عن تفاصيل طلبي رقم #' + (order.id || ''))}" target="_blank" rel="noopener noreferrer" style="font-size: 10px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 4px;">
+                  <span>💬 استفسار بالواتساب</span>
                 </a>
               </div>
             </div>
@@ -4433,9 +4686,112 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:26px 0 30px}
                `━━━━━━━━━━━━━━━━━━━━\n` +
                `📦 <b>المنتجات المطلوبة:</b>\n${itemsTxt}\n` +
                `━━━━━━━━━━━━━━━━━━━━\n` +
+               `💳 <b>طريقة الدفع:</b> ${(orderData.payment?.method === 'online' ? 'تحويل أونلاين / إنستاباي ⚡' : 'دفع نقدًا عند الاستلام 💵')}\n` +
+               (orderData.payment?.ref ? `🔢 <b>كود/رقم العملية:</b> <code>${escapeHtml(orderData.payment.ref)}</code>\n` : '') +
                `💰 <b>إجمالي الفاتورة:</b> <b>${orderData.total} جنيه مصري</b>\n` +
                `━━━━━━━━━━━━━━━━━━━━\n` +
                `⚡ يرجى التواصل مع العميل لتأكيد الشحن والتوصيل.`;
+      }
+
+      // ==========================================
+      // PAYMENT CONFIGURATION & CHECKOUT HELPERS
+      // ==========================================
+      function getPaymentConfig() {
+        try {
+          const raw = localStorage.getItem('se7en_payment_config');
+          if (raw) return JSON.parse(raw);
+        } catch(e) {}
+        return {
+          enabled: true,
+          methodType: 'instapay',
+          cardNumber: '01201135473',
+          accountName: 'SE7EN STORE',
+          instructions: 'يرجى تحويل إجمالي المبلغ على الرقم أعلاه مع كتابة رقم الطلب في الملاحظات، ثم كتابة رقم العملية لتأكيد الحجز فوراً.'
+        };
+      }
+
+      let currentReceiptBase64 = null;
+
+      window.selectPaymentMethod = function(method) {
+        const cashCard = document.querySelector('#pay-opt-cash');
+        const onlineCard = document.querySelector('#pay-opt-online');
+        const onlineBox = document.querySelector('#checkout-online-details');
+        const radioCash = document.querySelector('#pay-radio-cash');
+        const radioOnline = document.querySelector('#pay-radio-online');
+        const refInput = document.querySelector('#order-payment-ref');
+
+        if (method === 'online') {
+          cashCard?.classList.remove('active');
+          onlineCard?.classList.add('active');
+          if (radioOnline) radioOnline.checked = true;
+          if (onlineBox) onlineBox.style.display = 'block';
+          if (refInput) refInput.required = true;
+          updateCheckoutPaymentDisplay();
+        } else {
+          onlineCard?.classList.remove('active');
+          cashCard?.classList.add('active');
+          if (radioCash) radioCash.checked = true;
+          if (onlineBox) onlineBox.style.display = 'none';
+          if (refInput) {
+            refInput.required = false;
+            refInput.value = '';
+          }
+        }
+      };
+
+      window.copyPaymentNumber = function() {
+        const numEl = document.querySelector('#checkout-pay-card-number');
+        const btn = document.querySelector('#btn-copy-pay-number');
+        if (!numEl) return;
+        const numText = numEl.textContent.trim();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(numText).then(() => {
+            if (btn) {
+              btn.textContent = '✅ تم النسخ!';
+              btn.style.color = '#4ade80';
+              setTimeout(() => {
+                btn.textContent = '📋 نسخ الرقم';
+                btn.style.color = '';
+              }, 2500);
+            }
+          }).catch(() => {
+            prompt('تم تحديد الرقم، يمكنك نسخه الآن:', numText);
+          });
+        } else {
+          prompt('تم تحديد الرقم، يمكنك نسخه الآن:', numText);
+        }
+      };
+
+      function updateCheckoutPaymentDisplay() {
+        const cfg = getPaymentConfig();
+        const cardNumEl = document.querySelector('#checkout-pay-card-number');
+        const holderEl = document.querySelector('#checkout-pay-holder-name');
+        const typeBadge = document.querySelector('#pay-badge-type');
+        const instructEl = document.querySelector('#checkout-pay-instructions');
+        const totalAmountEl = document.querySelector('#checkout-pay-total-amount');
+
+        if (cardNumEl) cardNumEl.textContent = cfg.cardNumber || '01201135473';
+        if (holderEl) holderEl.textContent = cfg.accountName || 'SE7EN STORE';
+
+        const typeLabels = {
+          instapay: 'InstaPay / إنستاباي ⚡',
+          vodafone_cash: 'فودافون كاش 📱',
+          bank_card: 'بطاقة بنكية / حساب بنكي 💳',
+          wallet: 'محفظة إلكترونية 📲'
+        };
+        if (typeBadge) typeBadge.textContent = typeLabels[cfg.methodType] || 'تحويل إلكتروني معتمد';
+
+        const cart = getCart();
+        let total = 0;
+        cart.forEach(it => {
+          const p = products[it.productId] || { price: 250 };
+          total += (p.price || 250) * (it.qty || 1);
+        });
+
+        if (totalAmountEl) totalAmountEl.textContent = total + ' ج.م';
+        if (instructEl) {
+          instructEl.innerHTML = `يرجى تحويل قيمة الطلب (<span style="color:#4ade80;font-weight:900;">${total} ج.م</span>) على الرقم أعلاه، ثم كتابة رقم العملية بالأسفل.<br><small style="color:var(--muted);">${escapeHtml(cfg.instructions || '')}</small>`;
+        }
       }
 
       /* Shared System & Notification Logs */
@@ -4816,24 +5172,55 @@ ${itemsSummary}
         };
       }
 
-      // Wire Tracker Header Button & Modal
+      // Wire Tracker Header Button, Dock Button & Modal
       const headerTrackerBtn = document.querySelector('#header-tracker-btn');
+      const dockTrackerBtn = document.querySelector('#dock-btn-tracker');
       const closeTrackerModalBtn = document.querySelector('#close-tracker-modal');
       const orderTrackerForm = document.querySelector('#order-tracker-form');
       const trackerModalEl = document.querySelector('#order-tracker-modal');
 
-      if(headerTrackerBtn) headerTrackerBtn.onclick = openTrackerModal;
-      if(closeTrackerModalBtn) closeTrackerModalBtn.onclick = closeTrackerModal;
+      if(headerTrackerBtn) headerTrackerBtn.onclick = () => window.openTrackerModal();
+      if(dockTrackerBtn) dockTrackerBtn.onclick = () => window.openTrackerModal();
+      if(closeTrackerModalBtn) closeTrackerModalBtn.onclick = () => window.closeTrackerModal();
       if(trackerModalEl){
         trackerModalEl.addEventListener('click', (e) => {
-          if(e.target === trackerModalEl) closeTrackerModal();
+          if(e.target === trackerModalEl) window.closeTrackerModal();
         });
       }
       if(orderTrackerForm){
         orderTrackerForm.addEventListener('submit', (e) => {
           e.preventDefault();
-          const val = document.querySelector('#tracker-input').value;
-          searchAndRenderOrderStatus(val);
+          const query = document.querySelector('#tracker-input')?.value || '';
+          renderCustomerOrders(query);
+        });
+      }
+      window.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape') window.closeTrackerModal();
+      });
+
+      // Wire receipt upload preview
+      const receiptFileInput = document.querySelector('#order-receipt-proof');
+      if (receiptFileInput) {
+        receiptFileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+              alert('حجم الصورة كبير، يرجى اختيار صورة أقل من 5 ميجابايت.');
+              receiptFileInput.value = '';
+              return;
+            }
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              currentReceiptBase64 = evt.target.result;
+              const previewBox = document.querySelector('#receipt-preview-box');
+              const previewImg = document.querySelector('#receipt-preview-img');
+              if (previewBox && previewImg) {
+                previewImg.src = currentReceiptBase64;
+                previewBox.style.display = 'block';
+              }
+            };
+            reader.readAsDataURL(file);
+          }
         });
       }
 
@@ -5046,100 +5433,6 @@ ${itemsSummary}
     })();
   </script>
   <script async src="https://www.instagram.com/embed.js"></script>
-  <!-- Wishlist Drawer -->
-  <div class="wishlist-drawer" id="wishlist-drawer" role="dialog" aria-labelledby="wishlist-title" aria-modal="true" aria-hidden="true">
-    <div class="cart-drawer-header">
-      <h3 class="cart-drawer-title" id="wishlist-title">
-        <span>❤️ قائمتك المفضلة</span>
-        <span class="wishlist-badge-count" id="wishlist-drawer-count" style="font-size:10px;min-width:18px;height:18px;padding:0 5px;">0</span>
-      </h3>
-      <button class="cart-close-btn" id="wishlist-close-btn" type="button" aria-label="إغلاق المفضلة">×</button>
-    </div>
-    <div class="cart-drawer-body" style="padding: 16px; overflow-y: auto; flex: 1;">
-      <div id="wishlist-items-list">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-    <div style="padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); background: #08090c; display: flex; gap: 10px;">
-      <button class="btn btn-secondary" id="btn-clear-wishlist" type="button" style="flex: 1; font-size: 11px;">إفراغ المفضلة ✕</button>
-      <button class="btn btn-primary" id="btn-add-all-wishlist-to-cart" type="button" style="flex: 1.5; font-size: 11px;">إضافة الكل للسلة 🛒</button>
-    </div>
-  </div>
-
-  <!-- Order Tracker Modal -->
-  <div class="modal" id="order-tracker-modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-content" style="max-width: 500px; padding: 28px 24px;">
-      <button class="close-modal" id="close-tracker-modal" type="button" aria-label="إغلاق">×</button>
-      <div style="text-align: center; margin-bottom: 20px;">
-        <span style="font-size: 34px;">🔍</span>
-        <h3 style="margin: 8px 0 4px; font-size: 20px; font-weight: 950; color: #fff;">تتبع حالة طلبك في Se7en</h3>
-        <p style="margin: 0; color: var(--muted); font-size: 12px;">أدخل رقم الهاتف أو رقم الطلب لمعرفة أين وصل طلبك فوراً.</p>
-      </div>
-      <form id="order-tracker-form">
-        <div style="display: flex; gap: 8px;">
-          <input class="form-control" id="tracker-input" type="text" inputmode="tel" placeholder="اكتب رقم الهاتف (01xxxxxxxxx) أو رقم الطلب" required style="flex: 1; font-size: 14px;">
-          <button class="btn btn-primary" type="submit" style="white-space: nowrap; font-size: 12px; padding: 0 16px;">بحث 🔍</button>
-        </div>
-      </form>
-      <div id="tracker-result-area" style="margin-top: 18px;"></div>
-    </div>
-  </div>
-
-  <!-- Toast Notification Floating Pill -->
-  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
-    <span id="toast-icon">✨</span>
-    <span id="toast-msg">تمت العملية بنجاح!</span>
-  </div>
-
-  <!-- Floating Back to Top Button -->
-  <button class="back-to-top-btn" id="back-to-top-btn" type="button" aria-label="الرجوع لأعلى الصفحة" title="للأعلى">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
-  </button>
-
-  <!-- PWA Install Floating Banner -->
-  <div class="pwa-install-banner" id="pwa-install-banner" role="banner">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span style="font-size:24px;">📲</span>
-      <div>
-        <div style="font-size:12px;font-weight:900;color:#fff;">تثبيت تطبيق SE7EN</div>
-        <div style="font-size:10px;color:var(--muted);">تصفح أسرع وأخف بدون شريط المتصفح</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:6px;">
-      <button class="btn btn-primary" id="pwa-install-btn" type="button" style="padding:6px 12px;font-size:11px;font-weight:900;">تثبيت ⚡</button>
-      <button class="btn btn-secondary" id="pwa-close-btn" type="button" style="padding:6px 8px;font-size:11px;">✕</button>
-    </div>
-  </div>
-
-  <!-- Mobile Bottom App Dock -->
-  <nav class="mobile-bottom-dock" id="mobile-bottom-dock" aria-label="شريط التنقل السريع">
-    <button class="dock-item active" id="dock-btn-home" type="button" aria-label="الرئيسية">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>الرئيسية</span>
-    </button>
-    <button class="dock-item" id="dock-btn-catalog" type="button" aria-label="الكتالوج">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span>الكتالوج</span>
-    </button>
-    <button class="dock-item" id="dock-btn-wishlist" type="button" aria-label="المفضلة">
-      <div style="position:relative;display:inline-block;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <span class="dock-badge" id="dock-wishlist-count" style="display:none;">0</span>
-      </div>
-      <span>المفضلة</span>
-    </button>
-    <button class="dock-item" id="dock-btn-cart" type="button" aria-label="السلة">
-      <div style="position:relative;display:inline-block;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span class="dock-badge cart-badge" id="dock-cart-count" style="display:none;">0</span>
-      </div>
-      <span>السلة</span>
-    </button>
-    <button class="dock-item" id="dock-btn-tracker" type="button" aria-label="تتبع الطلب">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <span>تتبع طلبك</span>
-    </button>
-  </nav>
-
+  
 </body>
 </html>

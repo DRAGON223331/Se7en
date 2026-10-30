@@ -1759,6 +1759,64 @@
             <button class="btn btn-primary" type="submit" style="margin-top: 10px;">حفظ وتطبيق الإعدادات فوراً 💾</button>
             <span id="settings-status" style="margin-right: 14px; font-size: 11px; font-weight: 800; color: #4ade80;"></span>
           </form>
+
+          <!-- PAYMENT CARD MANAGEMENT & 7-DAY COOLDOWN SECURITY SECTION -->
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin-top: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="margin: 0; font-size: 16px; font-weight: 950; color: #fff;">💳 بيانات بطاقة وحساب التحويل الإلكتروني (InstaPay / فودافون كاش)</h3>
+                <p style="margin: 4px 0 0; font-size: 11px; color: var(--muted);">هذه البيانات تظهر للعملاء في المتجر عند اختيارهم الدفع أونلاين وتحويل المبلغ.</p>
+              </div>
+              <span id="pay-cooldown-badge" class="admin-phone-pill" style="font-size: 11px; font-weight: 800;">جاري فحص الصلاحية...</span>
+            </div>
+
+            <!-- Security Status Banner -->
+            <div id="pay-security-banner" style="margin-bottom: 16px; padding: 12px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5;"></div>
+
+            <form id="payment-settings-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="pay-cfg-type">طريقة التحويل / المنصة</label>
+                  <select class="form-control" id="pay-cfg-type">
+                    <option value="instapay">إنستاباي (InstaPay) ⚡</option>
+                    <option value="vodafone_cash">فودافون كاش (Vodafone Cash) 📱</option>
+                    <option value="bank_card">بطاقة بنكية / حساب بنكي 💳</option>
+                    <option value="wallet">محفظة إلكترونية أخرى 📲</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="pay-cfg-number">رقم البطاقة / الحساب / عنوان إنستاباي *</label>
+                  <input class="form-control" id="pay-cfg-number" type="text" placeholder="مثال: 01201135473 أو اسم_المستخدم@instapay" dir="ltr" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="pay-cfg-holder">اسم صاحب الحساب / المستفيد *</label>
+                  <input class="form-control" id="pay-cfg-holder" type="text" placeholder="مثال: SE7EN STORE" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="pay-cfg-enabled">حالة الدفع الإلكتروني بالموقع</label>
+                  <select class="form-control" id="pay-cfg-enabled">
+                    <option value="true">مفعل ويظهر للعملاء في السلة 🟢</option>
+                    <option value="false">معطل (الدفع نقدًا عند الاستلام فقط) 🔒</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pay-cfg-instructions">تعليمات التحويل للعميل</label>
+                <textarea class="form-control" id="pay-cfg-instructions" rows="2" placeholder="أي تعليمات تظهر للعميل مثل كتابة رقم الطلب في خانة الملاحظات لتأكيد الحجز..."></textarea>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <button class="btn btn-primary" id="btn-save-payment-config" type="submit" style="font-size: 12px; padding: 9px 22px;">
+                  💾 حفظ بيانات الحساب البنكي
+                </button>
+                <span id="pay-cfg-status" style="font-size: 11px; font-weight: 800;"></span>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -2937,6 +2995,162 @@
       const settingAddress = document.querySelector('#setting-address');
       const settingsStatus = document.querySelector('#settings-status');
 
+      // ==========================================
+      // PAYMENT CONFIGURATION & 7-DAY COOLDOWN SECURITY
+      // ==========================================
+      function getPaymentConfig() {
+        try {
+          const raw = localStorage.getItem('se7en_payment_config');
+          if (raw) return JSON.parse(raw);
+        } catch(e) {}
+        return {
+          enabled: true,
+          methodType: 'instapay',
+          cardNumber: '01201135473',
+          accountName: 'SE7EN STORE',
+          instructions: 'يرجى تحويل إجمالي المبلغ على الرقم أعلاه مع كتابة رقم الطلب في الملاحظات، ثم كتابة رقم العملية لتأكيد الحجز فوراً.',
+          lastChangedAt: 0,
+          lastChangedBy: '01201135473'
+        };
+      }
+
+      function savePaymentConfig(cfg) {
+        try {
+          localStorage.setItem('se7en_payment_config', JSON.stringify(cfg));
+        } catch(e) {}
+      }
+
+      function isCurrentAdminDeveloper() {
+        try {
+          const userRaw = sessionStorage.getItem('se7en_admin_user');
+          if (userRaw) {
+            const u = JSON.parse(userRaw);
+            return isProtectedDeveloper(u.phone) || u.role === 'developer' || u.isDeveloper;
+          }
+        } catch(e) {}
+        return false;
+      }
+
+      function updatePaymentSettingsUI() {
+        const cfg = getPaymentConfig();
+        const isDev = isCurrentAdminDeveloper();
+
+        const typeInput = document.querySelector('#pay-cfg-type');
+        const numInput = document.querySelector('#pay-cfg-number');
+        const holderInput = document.querySelector('#pay-cfg-holder');
+        const enabledInput = document.querySelector('#pay-cfg-enabled');
+        const instructionsInput = document.querySelector('#pay-cfg-instructions');
+        const saveBtn = document.querySelector('#btn-save-payment-config');
+        const badge = document.querySelector('#pay-cooldown-badge');
+        const banner = document.querySelector('#pay-security-banner');
+
+        if (typeInput) typeInput.value = cfg.methodType || 'instapay';
+        if (numInput) numInput.value = cfg.cardNumber || '';
+        if (holderInput) holderInput.value = cfg.accountName || '';
+        if (enabledInput) enabledInput.value = String(cfg.enabled !== false);
+        if (instructionsInput) instructionsInput.value = cfg.instructions || '';
+
+        const COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
+        const lastChanged = Number(cfg.lastChangedAt || 0);
+        const elapsed = Date.now() - lastChanged;
+        const isWithinCooldown = (elapsed < COOLDOWN_MS);
+
+        if (isDev) {
+          // Developer: Unlimited access at ANY time!
+          if (badge) {
+            badge.textContent = 'صلاحية مطور (متاح ف أي وقت) 💻';
+            badge.style.background = 'rgba(16,185,129,0.15)';
+            badge.style.color = '#4ade80';
+          }
+          if (banner) {
+            banner.style.background = 'rgba(16,185,129,0.08)';
+            banner.style.border = '1px solid rgba(16,185,129,0.3)';
+            banner.style.color = '#86efac';
+            banner.innerHTML = '🔓 <strong>صلاحية مطور معتمد:</strong> بصفتك مبرمج ومطور المتجر، يمكنك تعديل رقم البطاقة وبيانات التحويل <strong>في أي وقت دون أي قيود زمنية</strong> ⚡.';
+          }
+          [typeInput, numInput, holderInput, enabledInput, instructionsInput].forEach(el => {
+            if (el) el.disabled = false;
+          });
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.style.opacity = '1';
+            saveBtn.style.cursor = 'pointer';
+            saveBtn.title = 'حفظ التعديلات في أي وقت';
+          }
+        } else {
+          // Store Owner / Partner: 7-day cooldown strictly enforced!
+          if (isWithinCooldown && lastChanged > 0) {
+            const remaining = COOLDOWN_MS - elapsed;
+            const days = Math.floor(remaining / (24 * 3600 * 1000));
+            const hours = Math.floor((remaining % (24 * 3600 * 1000)) / (3600 * 1000));
+            const minutes = Math.floor((remaining % (3600 * 1000)) / (60 * 1000));
+            const timeStr = `${days} يوم و ${hours} ساعة و ${minutes} دقيقة`;
+
+            if (badge) {
+              badge.textContent = `مقفول أمنياً (متبقي ${days} يوم) 🔒`;
+              badge.style.background = 'rgba(239,68,68,0.15)';
+              badge.style.color = '#f87171';
+            }
+            if (banner) {
+              banner.style.background = 'rgba(239,68,68,0.08)';
+              banner.style.border = '1px solid rgba(239,68,68,0.3)';
+              banner.style.color = '#fca5a5';
+              banner.innerHTML = `🛡️ <strong>حماية أمنية للمتجر (أصحاب المحل):</strong><br>لحماية أموال ومبيعات المتجر من أي تلاعب، يمكن لأصحاب المحل تعديل رقم البطاقة <strong>مرة واحدة فقط كل 7 أيام</strong>.<br>متبقي: <b>${timeStr}</b> حتى يُسمح بالتعديل القادم.<br><small style="color:var(--muted);">ℹ️ في حالات الطوارئ لتغيير الرقم فوراً، يرجى التواصل مع المبرمجين حيث يمتلكون صلاحية التعديل في أي وقت.</small>`;
+            }
+            [typeInput, numInput, holderInput, enabledInput, instructionsInput].forEach(el => {
+              if (el) el.disabled = true;
+            });
+            if (saveBtn) {
+              saveBtn.disabled = true;
+              saveBtn.style.opacity = '0.5';
+              saveBtn.style.cursor = 'not-allowed';
+              saveBtn.title = `مقفول أمنياً: يرجى الانتظار ${timeStr}`;
+            }
+          } else {
+            // 7 days have passed!
+            if (badge) {
+              badge.textContent = 'متاح التعديل الآن (كل 7 أيام) 🟢';
+              badge.style.background = 'rgba(59,130,246,0.15)';
+              badge.style.color = '#93c5fd';
+            }
+            if (banner) {
+              banner.style.background = 'rgba(59,130,246,0.08)';
+              banner.style.border = '1px solid rgba(59,130,246,0.3)';
+              banner.style.color = '#bfdbfe';
+              banner.innerHTML = '✅ <strong>متاح تعديل رقم الحساب:</strong> لقد انقضت فترة الـ 7 أيام منذ آخر تعديل. يمكنك الآن تحديث رقم البطاقة، وسيتم قفل التعديل لمدة 7 أيام جديدة فور الحفظ.';
+            }
+            [typeInput, numInput, holderInput, enabledInput, instructionsInput].forEach(el => {
+              if (el) el.disabled = false;
+            });
+            if (saveBtn) {
+              saveBtn.disabled = false;
+              saveBtn.style.opacity = '1';
+              saveBtn.style.cursor = 'pointer';
+            }
+          }
+        }
+      }
+
+      window.viewReceiptImage = function(orderId) {
+        const orders = getStoredOrders();
+        const order = orders.find(o => o.id === orderId);
+        if (order && order.payment && order.payment.receiptImage) {
+          const modal = document.querySelector('#receipt-preview-modal');
+          const img = document.querySelector('#modal-receipt-img');
+          if (modal && img) {
+            img.src = order.payment.receiptImage;
+            modal.style.display = 'flex';
+          }
+        } else {
+          alert('لا توجد صورة إيصال مرفقة لهذا الطلب.');
+        }
+      };
+
+      window.closeReceiptModal = function() {
+        const modal = document.querySelector('#receipt-preview-modal');
+        if (modal) modal.style.display = 'none';
+      };
+
       function loadSettingsUI() {
         const s = getStoredSettings();
         settingOrderStatus.value = s.orderStatus || 'closed';
@@ -2947,6 +3161,67 @@
         settingInstagram.value = s.instagram || 'https://www.instagram.com/se7e_n770/';
         settingAddress.value = s.address || 'شارع النصر، الإسكندرية';
         updateOrderStatusUI(s.orderStatus);
+        updatePaymentSettingsUI();
+      }
+
+      // Wire Payment Settings Form with 7-Day Security Check
+      const paymentSettingsForm = document.querySelector('#payment-settings-form');
+      if (paymentSettingsForm) {
+        paymentSettingsForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const isDev = isCurrentAdminDeveloper();
+          const cfg = getPaymentConfig();
+          const COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+          const elapsed = Date.now() - (cfg.lastChangedAt || 0);
+
+          if (!isDev && elapsed < COOLDOWN_MS && cfg.lastChangedAt > 0) {
+            alert('⚠️ غير مصرح بالتعديل حالياً: يحق لأصحاب المحل تعديل رقم البطاقة مرة واحدة كل 7 أيام فقط.');
+            return;
+          }
+
+          let curPhone = '01201135473';
+          try {
+            const u = JSON.parse(sessionStorage.getItem('se7en_admin_user') || '{}');
+            if (u.phone) curPhone = u.phone;
+          } catch(err) {}
+
+          const newNumber = document.querySelector('#pay-cfg-number').value.trim();
+          const newHolder = document.querySelector('#pay-cfg-holder').value.trim();
+          const newType = document.querySelector('#pay-cfg-type').value;
+          const newEnabled = document.querySelector('#pay-cfg-enabled').value === 'true';
+          const newInstructions = document.querySelector('#pay-cfg-instructions').value.trim();
+
+          const isCardNumberChanged = (newNumber !== cfg.cardNumber);
+
+          cfg.cardNumber = newNumber;
+          cfg.accountName = newHolder;
+          cfg.methodType = newType;
+          cfg.enabled = newEnabled;
+          cfg.instructions = newInstructions;
+
+          if (isCardNumberChanged || !cfg.lastChangedAt) {
+            cfg.lastChangedAt = Date.now();
+            cfg.lastChangedBy = curPhone;
+          }
+
+          savePaymentConfig(cfg);
+          updatePaymentSettingsUI();
+
+          addSystemLog({
+            type: 'warning',
+            category: 'status',
+            title: 'تعديل بيانات بطاقة التحويل الإلكتروني',
+            recipient: curPhone,
+            message: `تم تحديث رقم الحساب إلى (${newNumber}) بواسطة (${curPhone}) [${isDev ? 'مبرمج' : 'صاحب محل'}]`
+          });
+
+          const statusEl = document.querySelector('#pay-cfg-status');
+          if (statusEl) {
+            statusEl.style.color = '#4ade80';
+            statusEl.textContent = '✅ تم حفظ بيانات الحساب البنكي بنجاح!';
+            setTimeout(() => { statusEl.textContent = ''; }, 4000);
+          }
+        });
       }
 
       settingsForm.addEventListener('submit', e => {
@@ -3398,6 +3673,7 @@
                   <span class="order-id-badge">#${escapeHtml(order.id || 'ORDER')}</span>
                   <span class="order-status-badge status-${status}">${statusLabels[status] || status}</span>
                   ${tgStatusBadgeHtml}
+                  ${order.payment?.method === 'online' ? '<span style="background:rgba(16,185,129,0.15);color:#4ade80;border:1px solid rgba(16,185,129,0.3);padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">💳 تحويل إلكتروني</span>' : '<span style="background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(234,179,8,0.3);padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;">💵 نقدًا عند الاستلام</span>'}
                   <span style="font-size: 11px; color: var(--muted);">${dateStr}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -3434,6 +3710,19 @@
                   <div style="grid-column: 1 / -1; background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 6px;">
                     <strong style="color: #facc15;">ملاحظات العميل:</strong>
                     <span>${escapeHtml(cust.notes)}</span>
+                  </div>
+                ` : ''}
+                ${(order.payment?.method === 'online' || order.payment?.ref || order.payment?.receiptImage) ? `
+                  <div style="grid-column: 1 / -1; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <strong style="color: #4ade80;">💳 تحويل أونلاين:</strong>
+                      <span style="color: #fff; margin-right: 6px;">كود/رقم العملية: <code style="color:#93c5fd;font-size:12px;">${escapeHtml(order.payment?.ref || 'قيد المراجعة')}</code></span>
+                    </div>
+                    ${order.payment?.receiptImage ? `
+                      <button class="btn btn-secondary" onclick="viewReceiptImage('${order.id}')" type="button" style="font-size: 11px; padding: 4px 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                        🖼️ معاينة إيصال التحويل
+                      </button>
+                    ` : '<span style="font-size:10px;color:var(--muted);">(لم يُرفق صورة إيصال)</span>'}
                   </div>
                 ` : ''}
               </div>
@@ -4659,6 +4948,17 @@
           ✅ اعتماد وإضافة المحددين فقط
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: View Payment Receipt -->
+  <div id="receipt-preview-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10001; align-items: center; justify-content: center; padding: 20px;" onclick="if(event.target === this) closeReceiptModal()">
+    <div style="background: var(--panel); border: 1px solid var(--line); border-radius: var(--card-radius); max-width: 500px; width: 100%; padding: 20px; text-align: center;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h4 style="margin: 0; color: #fff; font-size: 14px; font-weight: 850;">🖼️ إيصال تحويل الطلب</h4>
+        <button type="button" onclick="closeReceiptModal()" style="background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <img id="modal-receipt-img" src="" style="max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain; border: 1px solid rgba(255,255,255,0.1);">
     </div>
   </div>
 
