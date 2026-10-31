@@ -1600,17 +1600,21 @@
                   <label class="form-label" for="partner-phone">رقم هاتف الشريك</label>
                   <input class="form-control" id="partner-phone" type="tel" placeholder="01xxxxxxxxx" required dir="ltr">
                 </div>
-                <div class="form-group" style="flex: 1.5;">
+                <div class="form-group" style="flex: 1.3;">
                   <label class="form-label" for="partner-name">اسم الشريك / المسمى</label>
                   <input class="form-control" id="partner-name" type="text" placeholder="مثلاً: كابتن أحمد (شريك المحل)" required>
                 </div>
-                <div class="form-group" style="flex: 1;">
+                <div class="form-group" style="flex: 1.1;">
                   <label class="form-label" for="partner-role">نوع الصلاحية</label>
                   <select class="form-control" id="partner-role">
                     <option value="owner">صاحب المحل / شريك أساسي 👑</option>
                     <option value="seller">بائع ومسؤول مبيعات بالمحل 🏷️</option>
                     <option value="manager">مدير فرع / متجر 👔</option>
                   </select>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label" for="partner-pin">رمز دخول مخصص (اختياري)</label>
+                  <input class="form-control" id="partner-pin" type="text" placeholder="فارغ = الرمز العام 7770" dir="ltr" maxlength="6">
                 </div>
               </div>
               <div style="display: flex; align-items: center; gap: 14px; margin-top: 8px;">
@@ -1630,8 +1634,9 @@
                     <th>الرقم المسجل</th>
                     <th>الاسم / الدور</th>
                     <th>الصفة والمسؤولية</th>
+                    <th>رمز الدخول (PIN)</th>
                     <th>تاريخ التسجيل</th>
-                    <th style="text-align: center;">إجراء</th>
+                    <th style="text-align: center;">إجراءات ورابط التفعيل</th>
                   </tr>
                 </thead>
                 <tbody id="partners-table-body">
@@ -2512,6 +2517,22 @@
         });
       }
 
+      // Generate Instant WhatsApp / Direct Mobile Activation Link
+      function generatePartnerInviteLink(partner) {
+        const payload = {
+          phone: cleanPhone(partner.phone),
+          name: partner.name || 'شريك',
+          role: partner.role || 'owner',
+          roleLabel: partner.roleLabel || 'صاحب المحل / شريك أساسي 👑',
+          pin: partner.pin || null,
+          v: 1
+        };
+        const jsonStr = JSON.stringify(payload);
+        const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+        const origin = window.location.origin + window.location.pathname;
+        return `${origin}?invite=${encodeURIComponent(b64)}`;
+      }
+
       function renderPartnersList() {
         const tbody = document.querySelector('#partners-table-body');
         const countPill = document.querySelector('#admins-count-pill');
@@ -2544,26 +2565,73 @@
           }
 
           const phoneDisplay = u.phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3');
+          const pinDisplay = u.pin ? `<code style="color:#38bdf8; font-weight:800;">${escapeHtml(u.pin)}</code>` : `<span style="color:var(--muted); font-size:11px;">7770 (العام)</span>`;
 
-          // Strict Protection: Programmers CANNOT be deleted by anyone!
-          const actionHtml = isDev
-            ? `<span style="background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.45); color: #4ade80; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; display: inline-flex; align-items: center; gap: 4px;">💻 مبرمج محمي 🔒</span>`
-            : `<button class="btn btn-danger btn-sm" type="button" data-del-partner="${escapeHtml(u.phone)}">إلغاء الصلاحية ✕</button>`;
+          // Actions
+          let actionHtml = '';
+          if (isDev) {
+            actionHtml = `<span style="background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.45); color: #4ade80; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 900; display: inline-flex; align-items: center; gap: 4px;">💻 مبرمج محمي 🔒</span>`;
+          } else {
+            actionHtml = `
+              <div style="display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                <button class="btn btn-secondary btn-sm" type="button" data-invite-partner="${escapeHtml(u.phone)}" title="نسخ رابط مباشر يفتح به الشريك لوحة التحكم من موبايله" style="font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 4px; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
+                  <span>🔗 نسخ رابط التفعيل</span>
+                </button>
+                <button class="btn btn-danger btn-sm" type="button" data-del-partner="${escapeHtml(u.phone)}" style="font-size: 11px; padding: 4px 8px;">إلغاء ✕</button>
+              </div>
+            `;
+          }
 
           return `
             <tr>
               <td><strong style="font-family:monospace; direction:ltr; display:inline-block; font-size:13px; color:#fff;">${escapeHtml(phoneDisplay)}</strong></td>
               <td><span style="font-weight:800; color:#fff;">${escapeHtml(u.name || 'شريك')}</span></td>
               <td><span class="${badgeClass}">${escapeHtml(roleName)}</span></td>
+              <td style="text-align: center;">${pinDisplay}</td>
               <td style="color:var(--muted); font-size:11px;">${escapeHtml(u.addedAt || '—')}</td>
               <td style="text-align: center;">${actionHtml}</td>
             </tr>
           `;
         }).join('');
 
+        // Del button listeners
         tbody.querySelectorAll('[data-del-partner]').forEach(btn => {
           btn.addEventListener('click', () => {
             deletePartner(btn.dataset.delPartner);
+          });
+        });
+
+        // Invite button listeners
+        tbody.querySelectorAll('[data-invite-partner]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const pPhone = btn.dataset.invitePartner;
+            const target = users.find(u => cleanPhone(u.phone) === cleanPhone(pPhone));
+            if (!target) return;
+            const inviteUrl = generatePartnerInviteLink(target);
+
+            try {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(inviteUrl);
+              } else {
+                const ta = document.createElement('textarea');
+                ta.value = inviteUrl;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+              }
+              const oldHtml = btn.innerHTML;
+              btn.innerHTML = '<span>✅ تم النسخ!</span>';
+              btn.style.background = 'rgba(34, 197, 94, 0.3)';
+              btn.style.color = '#4ade80';
+              setTimeout(() => {
+                btn.innerHTML = oldHtml;
+                btn.style.background = '';
+                btn.style.color = '';
+              }, 2500);
+            } catch (err) {
+              prompt('انسخ رابط التفعيل التالي وأرسله للشريك على واتساب:', inviteUrl);
+            }
           });
         });
 
@@ -2572,7 +2640,6 @@
 
       function deletePartner(phone) {
         const clean = cleanPhone(phone);
-        // Absolute lock against removing developers
         if (isProtectedDeveloper(clean)) {
           alert('❌ غير مصرح: هذا الرقم لمبرمج الموقع الأساسي وهو محمي بنظام الأمان البرمجي ولا يمكن حذفه نهائياً من لوحة التحكم.');
           return;
@@ -2593,6 +2660,7 @@
       const partnerPhoneInput = document.querySelector('#partner-phone');
       const partnerNameInput = document.querySelector('#partner-name');
       const partnerRoleInput = document.querySelector('#partner-role');
+      const partnerPinInput = document.querySelector('#partner-pin');
       const partnerAddStatus = document.querySelector('#partner-add-status');
 
       if (addPartnerForm) {
@@ -2602,13 +2670,14 @@
           const phone = cleanPhone(rawPhone);
           const name = partnerNameInput.value.trim() || 'صاحب المحل / البائع';
           const role = partnerRoleInput.value;
+          const customPin = partnerPinInput ? normalizeDigits(partnerPinInput.value.trim()) : '';
           let roleLabel = 'صاحب المحل / شريك أساسي 👑';
           if (role === 'seller') roleLabel = 'بائع ومسؤول مبيعات بالمحل 🏷️';
           else if (role === 'manager') roleLabel = 'مدير ومسؤول فرع 👔';
 
           if (phone.length < 10) {
             partnerAddStatus.style.color = 'var(--danger)';
-            partnerAddStatus.textContent = '❌ يرجى كتابة رقم هاتف صحيح.';
+            partnerAddStatus.textContent = '❌ يرجى كتابة رقم هاتف صحيح (11 رقم).';
             return;
           }
 
@@ -2620,10 +2689,11 @@
           }
 
           users.push({
-            phone: rawPhone,
+            phone: phone,
             name: name,
             role: role,
             roleLabel: roleLabel,
+            pin: customPin || null,
             isPrimary: false,
             isDeveloper: false,
             addedAt: new Date().toLocaleDateString('ar-EG')
@@ -2634,13 +2704,71 @@
 
           partnerPhoneInput.value = '';
           partnerNameInput.value = '';
+          if (partnerPinInput) partnerPinInput.value = '';
           partnerAddStatus.style.color = 'var(--success)';
-          partnerAddStatus.textContent = `✅ تم إضافة (${name}) بنجاح! يمكنه الآن تسجيل الدخول برقم هاتفه وإدارة المتجر.`;
+          partnerAddStatus.textContent = `✅ تم إضافة (${name}) بنجاح! يمكنه الآن تسجيل الدخول مباشرة برقم هاتفه.`;
           setTimeout(() => { partnerAddStatus.textContent = ''; }, 4500);
         });
       }
 
+            function handleInviteOnLoad() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const invite = params.get('invite') || params.get('auth_invite');
+          if (!invite) return;
+
+          let data = null;
+          try {
+            data = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(invite)))));
+          } catch(e) {
+            try {
+              data = JSON.parse(decodeURIComponent(invite));
+            } catch(e2) {}
+          }
+
+          if (data && data.phone) {
+            const cleanInvPhone = cleanPhone(data.phone);
+            if (cleanInvPhone.length >= 10) {
+              const users = getStoredAdminUsers();
+              let user = users.find(u => cleanPhone(u.phone) === cleanInvPhone);
+              if (!user) {
+                user = {
+                  phone: cleanInvPhone,
+                  name: data.name || 'شريك معتمد',
+                  role: data.role || 'owner',
+                  roleLabel: data.roleLabel || 'صاحب المحل / شريك أساسي 👑',
+                  pin: data.pin || null,
+                  isPrimary: false,
+                  isDeveloper: false,
+                  addedAt: new Date().toLocaleDateString('ar-EG')
+                };
+                users.push(user);
+                saveStoredAdminUsers(users);
+              }
+
+              const phoneInput = document.getElementById('login-phone');
+              if (phoneInput) {
+                phoneInput.value = cleanInvPhone;
+              }
+              const pinInput = document.getElementById('login-pin');
+              if (pinInput) {
+                pinInput.focus();
+              }
+              const loginStatus = document.getElementById('login-status');
+              if (loginStatus) {
+                loginStatus.style.color = '#4ade80';
+                loginStatus.innerHTML = `🎉 <strong>أهلاً بك يا ${escapeHtml(data.name || 'شريكنا')}!</strong><br>تم تفعيل وتفويض جهازك بنجاح. أدخل الرمز السري واضغط مربع التحقق للدخول ↗`;
+              }
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+          }
+        } catch(err) {
+          console.warn('Invite error:', err);
+        }
+      }
+
       function checkAuth() {
+        handleInviteOnLoad();
         const isAuth = sessionStorage.getItem('se7en_admin_auth') === 'true';
         if (isAuth) {
           showAdmin();
@@ -2764,9 +2892,27 @@
         });
       }
 
-      // Normalize phone number (Egyptian)
+      // Universal Numeral Normalizer (Arabic/Persian numerals to standard ASCII 0-9)
+      function normalizeDigits(str) {
+        if (!str) return '';
+        const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+        let res = String(str);
+        for (let i = 0; i < 10; i++) {
+          res = res.replaceAll(arabicDigits[i], String(i)).replaceAll(persianDigits[i], String(i));
+        }
+        return res;
+      }
+
+      // Robust Phone Number Normalizer (Egyptian & International formatting)
       function cleanPhone(num) {
-        return num.replace(/\D/g, '').replace(/^20/, '0');
+        if (!num) return '';
+        const norm = normalizeDigits(num);
+        let cleaned = norm.replace(/\D/g, '');
+        if (cleaned.startsWith('0020')) cleaned = '0' + cleaned.slice(4);
+        else if (cleaned.startsWith('20') && cleaned.length >= 12) cleaned = '0' + cleaned.slice(2);
+        else if (/^1[0125]\d{8}$/.test(cleaned)) cleaned = '0' + cleaned;
+        return cleaned;
       }
 
       // Login handler
@@ -2800,8 +2946,8 @@
         }
 
         const enteredPhone = cleanPhone(loginPhone.value);
-        const enteredPin = loginPin.value.trim();
-        const validPin = getStoredPin();
+        const enteredPin = normalizeDigits(loginPin.value.trim());
+        const validPin = normalizeDigits(getStoredPin());
 
         // 600ms artificial latency to defeat automated brute-force scripts
         const submitBtn = loginForm.querySelector('button[type="submit"]');
@@ -2818,9 +2964,25 @@
         const adminUsers = getStoredAdminUsers();
         const matchedUser = adminUsers.find(u => cleanPhone(u.phone) === enteredPhone);
 
+        // Check PIN validity: matches master PIN OR custom user PIN
+        const userCustomPin = (matchedUser && matchedUser.pin) ? normalizeDigits(matchedUser.pin) : null;
+        const isPinValid = (enteredPin === validPin) || (userCustomPin && enteredPin === userCustomPin);
+
+        // Emergency Developer Unlock
+        if (isProtectedDeveloper(enteredPhone) && enteredPin === validPin) {
+          saveLockoutState({ attempts: 0, lockedUntil: 0 });
+        }
+
         const lockout = getLockoutState();
 
-        if (!matchedUser || enteredPin !== validPin) {
+        if (!matchedUser || !isPinValid) {
+          // Special friendly guidance if PIN is valid but phone is unregistered
+          if (enteredPin === validPin && !matchedUser) {
+            loginStatus.style.color = '#f59e0b';
+            loginStatus.innerHTML = `⚠️ رمز المرور (PIN) صحيح، لكن رقم الهاتف <strong>(${escapeHtml(loginPhone.value)})</strong> غير مسجل في قائمة المصرح لهم بالدخول.<br><small style="color:#aaa;">💡 اطلب من مدير المتجر تسجيل رقمك أو إرسال رابط التفعيل المباشر لك على واتساب.</small>`;
+            return;
+          }
+
           lockout.attempts = (lockout.attempts || 0) + 1;
           const remaining = MAX_LOGIN_ATTEMPTS - lockout.attempts;
 
@@ -2905,6 +3067,14 @@
           window.switchTab(target);
         });
       });
+
+      // Deep Link to Tab via URL Hash (#tab-admins, #tab-orders, etc.)
+      try {
+        const initialHash = (window.location.hash || '').replace('#', '');
+        if (initialHash && document.getElementById(initialHash)) {
+          window.switchTab(initialHash);
+        }
+      } catch(e) {}
 
       const floatingLogsWidget = document.querySelector('#floating-logs-widget');
       if (floatingLogsWidget) {
@@ -3706,7 +3876,7 @@
 
       changePinForm.addEventListener('submit', e => {
         e.preventDefault();
-        const pin = newPinInput.value.trim();
+        const pin = normalizeDigits(newPinInput.value.trim());
         if (pin.length < 4) {
           pinStatus.style.color = 'var(--danger)';
           pinStatus.textContent = '❌ يجب أن يكون الرمز 4 أرقام على الأقل.';
