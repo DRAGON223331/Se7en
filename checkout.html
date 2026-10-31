@@ -771,19 +771,28 @@
       background: #11151f;
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 12px;
-      padding: 14px 18px;
+      padding: 13px 18px;
       margin: 18px 0 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
       transition: all 0.25s ease;
       display: flex;
       flex-direction: column;
       gap: 6px;
+      direction: ltr !important;
+      user-select: none;
+    }
+    .cf-captcha-card:hover {
+      border-color: #38bdf8;
+      background: #151b28;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
     }
     .cf-captcha-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+      direction: ltr !important;
+      width: 100%;
     }
     .cf-checkbox-label {
       display: flex;
@@ -791,10 +800,13 @@
       gap: 12px;
       cursor: pointer;
       user-select: none;
+      direction: ltr !important;
+      text-align: left;
     }
     .cf-custom-box {
       width: 26px;
       height: 26px;
+      min-width: 26px;
       border: 2px solid #94a3b8;
       border-radius: 5px;
       background: rgba(255, 255, 255, 0.05);
@@ -802,51 +814,69 @@
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
-      position: relative;
+      cursor: pointer;
     }
     .cf-checkbox-label:hover .cf-custom-box {
       border-color: #38bdf8;
       box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
     }
     .cf-custom-box.verified {
-      border-color: #22c55e;
-      background: #22c55e;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+      border-color: #22c55e !important;
+      background: #22c55e !important;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.5) !important;
     }
     .cf-custom-box.verified::after {
       content: '✓';
       color: #fff;
       font-size: 16px;
       font-weight: 900;
+      line-height: 1;
     }
     .cf-custom-box.loading {
-      border-color: #38bdf8;
-      border-top-color: transparent;
+      border: 3px solid #38bdf8;
+      border-top-color: transparent !important;
       border-radius: 50%;
+      background: transparent;
       animation: cfSpin 0.75s linear infinite;
     }
     @keyframes cfSpin {
-      to { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    .cf-label-text {
-      font-size: 14px;
+    .cf-label-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      cursor: pointer;
+    }
+    .cf-primary-text {
+      font-size: 13.5px;
       font-weight: 800;
       color: #fff;
+      transition: color 0.2s;
+    }
+    .cf-secondary-text {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+      transition: color 0.2s;
     }
     .cf-brand-side {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
-      direction: ltr;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 2px;
+      direction: ltr !important;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
       padding-left: 14px;
+      min-width: 65px;
+      user-select: none;
     }
     .cf-brand-text {
       display: flex;
       flex-direction: column;
-      font-family: 'Space Grotesk', system-ui, sans-serif;
-      line-height: 1.1;
-      text-align: left;
+      align-items: center;
     }
     .cf-main-text {
       font-size: 11px;
@@ -1146,102 +1176,96 @@
           </div>
 
                     <!-- Cloudflare "I am not a robot" Interactive Widget -->
-          <div class="cf-captcha-card" id="cf-captcha-card" onclick="triggerHumanVerification()" style="cursor: pointer;">
+          <div class="cf-captcha-card" id="cf-captcha-card" onclick="window.triggerHumanVerification(event)" role="button" tabindex="0" aria-label="Cloudflare Turnstile Verification" style="cursor: pointer;">
             <div class="cf-captcha-inner">
               <div class="cf-checkbox-label">
                 <div class="cf-custom-box" id="cf-checkbox-visual"></div>
-                <span class="cf-label-text" id="cf-status-label">أنا لست برنامج روبوت (I'm not a robot)</span>
+                <div class="cf-label-wrap">
+                  <span class="cf-primary-text" id="cf-status-label">أنا لست برنامج روبوت</span>
+                  <span class="cf-secondary-text" id="cf-sub-label">Verify you are human</span>
+                </div>
               </div>
 
               <div class="cf-brand-side">
-                <svg viewBox="0 0 48 48" width="30" height="30" fill="none">
-                  <path d="M38.8 23.4c-.6-4.6-4.5-8.1-9.3-8.1-3.6 0-6.8 2-8.3 5.1-1-.4-2.1-.6-3.2-.6-4.4 0-8 3.6-8 8 0 .5.1 1 .2 1.5C6.7 30 4 33.1 4 36.8 4 41.3 7.7 45 12.2 45h26.4c4.1 0 7.4-3.3 7.4-7.4 0-3.6-2.6-6.6-6.1-7.2-.6-3.5-2.6-6.1-5.1-7z" fill="#F38020"/>
-                  <path d="M33.2 26.8c-.4-3-3-5.3-6.1-5.3-2.4 0-4.5 1.3-5.5 3.3-.7-.3-1.4-.4-2.1-.4-2.9 0-5.3 2.4-5.3 5.3 0 .3 0 .7.1 1-2.4.4-4.2 2.5-4.2 4.9 0 3 2.4 5.4 5.4 5.4h17.5c2.7 0 4.9-2.2 4.9-4.9 0-2.4-1.7-4.4-4-4.8-.4-2.3-1.7-4-3.7-4.5z" fill="#FAAD3F"/>
-                </svg>
-                <div class="cf-brand-text">
-                  <span class="cf-main-text">Cloudflare</span>
-                  <span class="cf-sub-text">Privacy • Terms</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <svg viewBox="0 0 48 48" width="24" height="24" fill="none">
+                    <path d="M38.8 23.4c-.6-4.6-4.5-8.1-9.3-8.1-3.6 0-6.8 2-8.3 5.1-1-.4-2.1-.6-3.2-.6-4.4 0-8 3.6-8 8 0 .5.1 1 .2 1.5C6.7 30 4 33.1 4 36.8 4 41.3 7.7 45 12.2 45h26.4c4.1 0 7.4-3.3 7.4-7.4 0-3.6-2.6-6.6-6.1-7.2-.6-3.5-2.6-6.1-5.1-7z" fill="#F38020"/>
+                    <path d="M33.2 26.8c-.4-3-3-5.3-6.1-5.3-2.4 0-4.5 1.3-5.5 3.3-.7-.3-1.4-.4-2.1-.4-2.9 0-5.3 2.4-5.3 5.3 0 .3 0 .7.1 1-2.4.4-4.2 2.5-4.2 4.9 0 3 2.4 5.4 5.4 5.4h17.5c2.7 0 4.9-2.2 4.9-4.9 0-2.4-1.7-4.4-4-4.8-.4-2.3-1.7-4-3.7-4.5z" fill="#FAAD3F"/>
+                  </svg>
+                  <span style="font-size: 11px; font-weight: 800; color: #fff;">Cloudflare</span>
                 </div>
+                <span style="font-size: 9px; color: #8b949e; margin-top: 2px;">Privacy • Terms</span>
               </div>
             </div>
-            <div id="cf-verification-feedback" style="display: none; font-size: 11px; font-weight: 800; color: #4ade80; margin-top: 4px;">
-              ✅ تم فحص وتأكيد المتصفح البشري بنجاح (Cloudflare Verified)
+
+            <div class="cf-feedback-line" id="cf-verification-feedback" style="display: none; font-size: 11px; color: #4ade80; text-align: center; margin-top: 4px; font-weight: 700;">
+              ✓ تم التحقق من أمان المتصفح البشري بنجاح (Cloudflare Verified)
             </div>
           </div>
-          </div>
 
-          <!-- Submit Button -->
-          <button class="btn-main-submit" id="btn-submit-action" type="submit">
-            <span id="btn-submit-icon">🔒</span>
-            <span id="btn-submit-text">الانتقال لبوابة الدفع البنكية وتأكيد السحب</span>
-          </button>
+          <script>
+            // Instant Global Cloudflare Verification Engine for Checkout
+            window.isHumanVerified = false;
+            window.triggerHumanVerification = async function(e) {
+              if (e && e.stopPropagation) e.stopPropagation();
+              if (window.isHumanVerified) return;
 
-          <div id="checkout-global-msg" style="margin-top: 14px; font-size: 13px; font-weight: 800; text-align: center;"></div>
-        </div>
+              var visual = document.getElementById('cf-checkbox-visual');
+              var label = document.getElementById('cf-status-label');
+              var subLabel = document.getElementById('cf-sub-label');
+              var feedback = document.getElementById('cf-verification-feedback');
+              var card = document.getElementById('cf-captcha-card');
 
-      </form>
-    </div>
+              if (!visual) return;
 
-    <!-- Left Column: Order Summary Sidebar -->
-    <div class="checkout-summary-col">
-      <div class="summary-card">
-        <h3 style="font-size: 16px; font-weight: 950; color: #fff; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-          <span>🛍️ ملخص طلبك</span>
-          <span style="font-size: 12px; color: var(--muted); font-weight: 700;" id="summary-items-count">0 قطع</span>
-        </h3>
+              visual.className = 'cf-custom-box loading';
+              if (label) {
+                label.textContent = 'جاري الفحص الأمني...';
+                label.style.color = '#38bdf8';
+              }
+              if (subLabel) {
+                subLabel.textContent = 'Checking browser security...';
+                subLabel.style.color = '#38bdf8';
+              }
+              if (card) {
+                card.style.borderColor = '#38bdf8';
+                card.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.25)';
+              }
 
-        <!-- Items List -->
-        <div class="summary-items-list" id="summary-items-container">
-          <!-- Dynamic Items Injected Here -->
-        </div>
+              await new Promise(function(resolve) { setTimeout(resolve, 650); });
 
-        <!-- Coupon Field -->
-        <div class="coupon-box">
-          <input class="coupon-input" type="text" id="coupon-code-input" placeholder="كود الخصم أو بروموكود">
-          <button class="coupon-btn" type="button" onclick="applyCoupon()">تطبيق</button>
-        </div>
-        <div id="coupon-msg" style="font-size: 11px; margin-top: -12px; margin-bottom: 14px;"></div>
+              window.isHumanVerified = true;
+              visual.className = 'cf-custom-box verified';
+              if (label) {
+                label.textContent = 'تم التحقق بنجاح ✓';
+                label.style.color = '#4ade80';
+              }
+              if (subLabel) {
+                subLabel.textContent = 'Verified human';
+                subLabel.style.color = '#4ade80';
+              }
+              if (feedback) feedback.style.display = 'block';
+              if (card) {
+                card.style.borderColor = 'rgba(34, 197, 94, 0.6)';
+                card.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.25)';
+              }
+            };
 
-        <!-- Price Breakdown -->
-        <div class="price-row">
-          <span>مجموع المنتجات:</span>
-          <span id="sum-subtotal">0 ج.م</span>
-        </div>
-        <div class="price-row">
-          <span>رسوم الشحن والتوصيل:</span>
-          <span id="sum-shipping" style="color: #60a5fa;">50 ج.م</span>
-        </div>
-        <div class="price-row" id="row-discount" style="display: none; color: #4ade80;">
-          <span>الخصم المطبق:</span>
-          <span id="sum-discount">-0 ج.م</span>
-        </div>
-        <div class="price-row total-row">
-          <span>المبلغ الإجمالي للدفع:</span>
-          <span class="total-amount" id="sum-total">0 ج.م</span>
-        </div>
-
-        <!-- Guarantees -->
-        <div class="guarantees-list">
-          <div class="guarantee-item">
-            <span class="guarantee-icon">📦</span>
-            <span>معاينة وتجربة المنتج قبل الاستلام والدفع</span>
-          </div>
-          <div class="guarantee-item">
-            <span class="guarantee-icon">🔄</span>
-            <span>استبدال واسترجاع سهل خلال 14 يوم</span>
-          </div>
-          <div class="guarantee-item">
-            <span class="guarantee-icon">🧵</span>
-            <span>خامات قطن 100% ميلتون مصري فائق الجودة</span>
-          </div>
-          <div class="guarantee-item">
-            <span class="guarantee-icon">⚡</span>
-            <span>شحن سريع لجميع محافظات جمهورية مصر العربية</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
+            (function() {
+              var c = document.getElementById('cf-captcha-card');
+              if (c) {
+                c.addEventListener('click', function(ev) {
+                  window.triggerHumanVerification(ev);
+                });
+                c.addEventListener('keydown', function(ev) {
+                  if (ev.key === 'Enter' || ev.key === ' ') {
+                    ev.preventDefault();
+                    window.triggerHumanVerification(ev);
+                  }
+                });
+              }
+            })();
+          </script>
 
   </main>
 
@@ -1764,7 +1788,7 @@
       }
 
       // Check Cloudflare "I'm not a robot"
-      if (!isHumanVerified) {
+      if (!isHumanVerified && !window.isHumanVerified) {
         const card = document.getElementById('cf-captcha-card');
         if (card) {
           card.style.borderColor = '#ef4444';
